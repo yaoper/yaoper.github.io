@@ -17,7 +17,7 @@
 
 
 
-  <meta name="keywords" content="Java Local Cache,Guava Cache,Ehcache,">
+  <meta name="keywords" content="Guava Cache,Ehcache,Java Local Cache,">
 
 
 
@@ -36,7 +36,7 @@
 
 
 <meta name="description" content="Java的本地缓存实现应用场景主要是应用在单体业务的缓存组件，其最大的优点是应用和Cache是在同一个进程内部，获取缓存中的数据非常高效，基本没有网络开销，在单体业务应用中不需要集群支持或者集群场景下各节点无需互相通知或者共享缓存内容的场景下使用本地缓存较合适，比较适用于缓存业务应用中不常变化的局数据；同时，它的缺点也是由于本地缓存与业务应用服务耦合过于紧密，多个应用程序无法直接共享缓存内容，在大">
-<meta name="keywords" content="Java Local Cache,Guava Cache,Ehcache">
+<meta name="keywords" content="Guava Cache,Ehcache,Java Local Cache">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Local Cache">
 <meta property="og:url" content="http://yaoper.github.io/2019/06/25/Local-Cache/index.html">
@@ -44,7 +44,7 @@
 <meta property="og:description" content="Java的本地缓存实现应用场景主要是应用在单体业务的缓存组件，其最大的优点是应用和Cache是在同一个进程内部，获取缓存中的数据非常高效，基本没有网络开销，在单体业务应用中不需要集群支持或者集群场景下各节点无需互相通知或者共享缓存内容的场景下使用本地缓存较合适，比较适用于缓存业务应用中不常变化的局数据；同时，它的缺点也是由于本地缓存与业务应用服务耦合过于紧密，多个应用程序无法直接共享缓存内容，在大">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="https://uufe-web.oss-cn-beijing.aliyuncs.com/PicLib/uunote/images/4325076-5a0a17ca8cb06f24_1561517853516.png">
-<meta property="og:updated_time" content="2019-06-26T03:52:41.192Z">
+<meta property="og:updated_time" content="2019-06-26T10:59:57.646Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Local Cache">
 <meta name="twitter:description" content="Java的本地缓存实现应用场景主要是应用在单体业务的缓存组件，其最大的优点是应用和Cache是在同一个进程内部，获取缓存中的数据非常高效，基本没有网络开销，在单体业务应用中不需要集群支持或者集群场景下各节点无需互相通知或者共享缓存内容的场景下使用本地缓存较合适，比较适用于缓存业务应用中不常变化的局数据；同时，它的缺点也是由于本地缓存与业务应用服务耦合过于紧密，多个应用程序无法直接共享缓存内容，在大">
@@ -160,6 +160,7 @@
 <li>e.缓存的Value被封装在WeakReference或SoftReference引用内；</li>
 <li>f.统计缓存使用过程中命中率、异常率、未命中率等统计数据;<br>Google Guava Cache 秉承了ConcurrentHashMap的设计思路与理念，使用多个segments方式的细粒度锁，在保证线程安全的同时，支持高并发场景需求。</li>
 </ul>
+<h5 id="4-Caffeine"><a href="#4-Caffeine" class="headerlink" title="4.Caffeine"></a>4.Caffeine</h5><p>Caffeine是使用Java8对Guava缓存的重写版本，在Spring Boot 2.0中将取代Guava。从官方提供的性能测试数据来看，Caffeine的性能都比Guava要好。</p>
 
             </div>
           
@@ -169,11 +170,11 @@
 		
 		<div class="post-tags">
 		  
-			<a href="/tags/Java-Local-Cache/">Java Local Cache</a>
-		  
 			<a href="/tags/Guava-Cache/">Guava Cache</a>
 		  
 			<a href="/tags/Ehcache/">Ehcache</a>
+		  
+			<a href="/tags/Java-Local-Cache/">Java Local Cache</a>
 		  
 		</div>
 		
