@@ -5,15 +5,22 @@
   
 
   
-  <title>One Zero</title>
+  <title>Local Cache | One Zero</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta property="og:type" content="website">
-<meta property="og:title" content="One Zero">
-<meta property="og:url" content="http://yaoper.github.io/index.html">
+  <meta name="description" content="Java的本地缓存实现应用场景主要是应用在单体业务的缓存组件，其最大的优点是应用和Cache是在同一个进程内部，获取缓存中的数据非常高效，基本没有网络开销，在单体业务应用中不需要集群支持或者集群场景下各节点无需互相通知或者共享缓存内容的场景下使用本地缓存较合适，比较适用于缓存业务应用中不常变化的局数据；同时，它的缺点也是由于本地缓存与业务应用服务耦合过于紧密，多个应用程序无法直接共享缓存内容，在大">
+<meta name="keywords" content="JavaLocalCache Guava Cache Ehcache">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Local Cache">
+<meta property="og:url" content="http://yaoper.github.io/2019/06/25/Local-Cache/index.html">
 <meta property="og:site_name" content="One Zero">
+<meta property="og:description" content="Java的本地缓存实现应用场景主要是应用在单体业务的缓存组件，其最大的优点是应用和Cache是在同一个进程内部，获取缓存中的数据非常高效，基本没有网络开销，在单体业务应用中不需要集群支持或者集群场景下各节点无需互相通知或者共享缓存内容的场景下使用本地缓存较合适，比较适用于缓存业务应用中不常变化的局数据；同时，它的缺点也是由于本地缓存与业务应用服务耦合过于紧密，多个应用程序无法直接共享缓存内容，在大">
 <meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://uufe-web.oss-cn-beijing.aliyuncs.com/PicLib/uunote/images/4325076-5a0a17ca8cb06f24_1561517853516.png">
+<meta property="og:updated_time" content="2019-06-26T03:07:16.511Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="One Zero">
+<meta name="twitter:title" content="Local Cache">
+<meta name="twitter:description" content="Java的本地缓存实现应用场景主要是应用在单体业务的缓存组件，其最大的优点是应用和Cache是在同一个进程内部，获取缓存中的数据非常高效，基本没有网络开销，在单体业务应用中不需要集群支持或者集群场景下各节点无需互相通知或者共享缓存内容的场景下使用本地缓存较合适，比较适用于缓存业务应用中不常变化的局数据；同时，它的缺点也是由于本地缓存与业务应用服务耦合过于紧密，多个应用程序无法直接共享缓存内容，在大">
+<meta name="twitter:image" content="https://uufe-web.oss-cn-beijing.aliyuncs.com/PicLib/uunote/images/4325076-5a0a17ca8cb06f24_1561517853516.png">
   
     <link rel="alternate" href="/atom.xml" title="One Zero" type="application/atom+xml">
   
@@ -60,9 +67,7 @@
   </div>
 </header>
       <div class="outer">
-        <section id="main">
-  
-    <article id="post-Local-Cache" class="article article-type-post" itemscope itemprop="blogPost">
+        <section id="main"><article id="post-Local-Cache" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2019/06/25/Local-Cache/" class="article-date">
   <time datetime="2019-06-25T09:41:56.000Z" itemprop="datePublished">2019-06-25</time>
@@ -75,8 +80,8 @@
       <header class="article-header">
         
   
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/06/25/Local-Cache/">Local Cache</a>
+    <h1 class="article-title" itemprop="name">
+      Local Cache
     </h1>
   
 
@@ -124,55 +129,19 @@
     </footer>
   </div>
   
-</article>
-
-
+    
+<nav id="article-nav">
   
-    <article id="post-gRPC跨语言（Java，-Net）调用注意事项" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2019/06/22/gRPC跨语言（Java，-Net）调用注意事项/" class="article-date">
-  <time datetime="2019-06-22T05:58:11.000Z" itemprop="datePublished">2019-06-22</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
   
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/06/22/gRPC跨语言（Java，-Net）调用注意事项/">gRPC跨语言（Java，.Net）调用注意事项</a>
-    </h1>
+    <a href="/2019/06/22/gRPC跨语言（Java，-Net）调用注意事项/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">gRPC跨语言（Java，.Net）调用注意事项</div>
+    </a>
   
+</nav>
 
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h3 id="1-协议必须一致"><a href="#1-协议必须一致" class="headerlink" title="1.协议必须一致"></a>1.协议必须一致</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">syntax = &quot;proto3&quot;;</span><br></pre></td></tr></table></figure>
-
-<h4 id="2-包名必须要一致"><a href="#2-包名必须要一致" class="headerlink" title="2.包名必须要一致"></a>2.包名必须要一致</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">package UUPT.Stunner.CustomerMicroServiceGrpc;</span><br></pre></td></tr></table></figure>
-
-<h4 id="3-服务名和方法名必须保持一致"><a href="#3-服务名和方法名必须保持一致" class="headerlink" title="3.服务名和方法名必须保持一致"></a>3.服务名和方法名必须保持一致</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">service CustomerMicroGrpcService &#123; </span><br><span class="line">    rpc FindCustomerByUserId(findCustomerByUserIdRequest) returns FindCustomerByUserIdResponse)&#123;&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h4 id="4-消息类型首字母不区分大小，大小写均可调用"><a href="#4-消息类型首字母不区分大小，大小写均可调用" class="headerlink" title="4.消息类型首字母不区分大小，大小写均可调用"></a>4.消息类型首字母不区分大小，大小写均可调用</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">message findCustomerByUserIdRequest &#123; </span><br><span class="line">    int64 UserId = 1;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">message FindCustomerByUserIdResponse &#123;</span><br><span class="line">    int32 State = 1;</span><br><span class="line">    string Msg = 2;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yaoper.github.io/2019/06/22/gRPC跨语言（Java，-Net）调用注意事项/" data-id="cjxcnrue70001xgrahm9wazup" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/gRPC-Java-Net/">gRPC Java .Net</a></li></ul>
-
-    </footer>
-  </div>
   
 </article>
-
-
-  
-
 
 </section>
         
