@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang>
+  <head><meta name="generator" content="Hexo 3.9.0">
+    
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1,minimum-scale=1,maximum-scale=1">
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+  <meta name="description" content="Win7下安装Anaconda3">
+
+
+
+
+  <meta name="keywords" content="Anaconda3,">
+
+
+
+
+
+  <link rel="alternate" href="/default" title="Illusory">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=1.1">
+
+
+
+<link rel="canonical" href="http://yaoper.github.io/2019/07/03/Win7下安装Anaconda3/">
+
+
+<meta name="description" content="1.下载安装包官网安装包下载地址 安装包下载地址，Win下注意区分要下载的是32bit还是64bit，一路Next完成安装。 2.运行 jupyter notebook在CMD命令行输入 jupyter notebook, 默认浏览器会打一个地址http://localhost:8888/tree/jupyter notebook运行成功 3.可能遇到的问题 a.jupyter’不是内部或外部命令">
+<meta name="keywords" content="Anaconda3">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Win7下安装Anaconda3">
+<meta property="og:url" content="http://yaoper.github.io/2019/07/03/Win7下安装Anaconda3/index.html">
+<meta property="og:site_name" content="Illusory">
+<meta property="og:description" content="1.下载安装包官网安装包下载地址 安装包下载地址，Win下注意区分要下载的是32bit还是64bit，一路Next完成安装。 2.运行 jupyter notebook在CMD命令行输入 jupyter notebook, 默认浏览器会打一个地址http://localhost:8888/tree/jupyter notebook运行成功 3.可能遇到的问题 a.jupyter’不是内部或外部命令">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2019-07-03T06:36:21.418Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Win7下安装Anaconda3">
+<meta name="twitter:description" content="1.下载安装包官网安装包下载地址 安装包下载地址，Win下注意区分要下载的是32bit还是64bit，一路Next完成安装。 2.运行 jupyter notebook在CMD命令行输入 jupyter notebook, 默认浏览器会打一个地址http://localhost:8888/tree/jupyter notebook运行成功 3.可能遇到的问题 a.jupyter’不是内部或外部命令">
+
+
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=1.1">
+<link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+
+
+
+
+
+<script type="text/javascript">
+  var themeConfig = {
+    fancybox: {
+      enable: false
+    },
+  };
+</script>
+
+
+
+
+  
+
+
+
+    <title> Win7下安装Anaconda3 - Illusory </title>
+  </head>
+
+  <body>
+    <div id="page">
+      <header id="masthead"><div class="site-header-inner">
+    <h1 class="site-title">
+        <a href="/." class="logo">Illusory</a>
+    </h1>
+
+    <nav id="nav-top">
+        
+            <ul id="menu-top" class="nav-top-items">
+                
+                    <li class="menu-item">
+                        <a href="/archives">
+                            
+                            
+                                Archives
+                            
+                        </a>
+                    </li>
+                
+                    <li class="menu-item">
+                        <a href="/about">
+                            
+                            
+                                About
+                            
+                        </a>
+                    </li>
+                
+            </ul>
+        
+  </nav>
+</div>
+
+      </header>
+      <div id="content">
+        
+    <div id="primary">
+        
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          Win7下安装Anaconda3
+        
+      </h1>
+
+      <time class="post-time">
+          Jul 03 2019
+      </time>
+    </header>
+
+
+
+    
+            <div class="post-content">
+            <h5 id="1-下载安装包"><a href="#1-下载安装包" class="headerlink" title="1.下载安装包"></a>1.下载安装包</h5><p>官网安装包下载地址 <a href="https://www.anaconda.com/distribution/" target="_blank" rel="noopener">安装包下载地址</a>，Win下注意区分要下载的是32bit还是64bit，一路Next完成安装。</p>
+<h5 id="2-运行-jupyter-notebook"><a href="#2-运行-jupyter-notebook" class="headerlink" title="2.运行 jupyter notebook"></a>2.运行 jupyter notebook</h5><p>在CMD命令行输入 jupyter notebook, 默认浏览器会打一个地址<a href="http://localhost:8888/tree/" target="_blank" rel="noopener">http://localhost:8888/tree/</a><br>jupyter notebook运行成功</p>
+<h5 id="3-可能遇到的问题"><a href="#3-可能遇到的问题" class="headerlink" title="3.可能遇到的问题"></a>3.可能遇到的问题</h5><ul>
+<li>a.jupyter’不是内部或外部命令，也不是可运行的程序或批处理文件<br>  Path里面配置<br>  C:\Users\Administrator\Anaconda3\Scripts;<br>  C:\Users\Administrator\Anaconda3;<br>  C:\Users\Administrator\Anaconda3\Library\bin  </li>
+</ul>
+<h5 id="4-更换jupyter工作空间"><a href="#4-更换jupyter工作空间" class="headerlink" title="4.更换jupyter工作空间"></a>4.更换jupyter工作空间</h5><p>jupyter默认的工作空间是C:\Users\Administrator,修改默认的工作空间要打开C:\Users\Administrator.jupyter找到<strong>jupyter_notebook_config.py</strong>文件修改c.NotebookApp.notebook_dir = ‘(自己的路径)’，工作空间目录要提前创建<br>如果找不到jupyter_notebook_config.py这个文件，可使用jupyter notebook –generate-config命令生成  </p>
+<h5 id="5-关于网页无法访问的问题"><a href="#5-关于网页无法访问的问题" class="headerlink" title="5.关于网页无法访问的问题"></a>5.关于网页无法访问的问题</h5><p>命令行启动jupyter能正常打开浏览器访问，但是你可能打不开其他网页了，百度新浪都不行。可尝试重启电脑后重试（不一定有用）。</p>
+
+            </div>
+          
+
+    
+      <footer class="post-footer">
+		
+		<div class="post-tags">
+		  
+			<a href="/tags/Anaconda3/">Anaconda3</a>
+		  
+		</div>
+		
+
+        
+        
+  <nav class="post-nav">
+    
+    
+      <a class="next" href="/2019/06/29/docker常用命令/">
+        <span class="next-text nav-default">docker常用命令</span>
+        <span class="prev-text nav-mobile">Next</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    
+  </nav>
+
+        
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+      </footer>
+    
+  </article>
+
+    </div>
+
+      </div>
+
+      <footer id="colophon"><span class="copyright-year">
+    
+        &copy;
+    
+        2014 -
+    
+    2019
+    <span class="footer-author">yaoper.</span>
+    <span class="power-by">
+        Powered by <a class="hexo-link" href="https://hexo.io/">Hexo</a> and <a class="theme-link" href="https://github.com/frostfan/hexo-theme-polarbear">Polar Bear</a>
+    </span>
+</span>
+
+      </footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div>
+    
+
+
+    
+
+
+
+
+  
+    <script type="text/javascript" src="/lib/jquery/jquery-3.1.1.min.js"></script>
+  
+
+  
+
+    <script type="text/javascript" src="/js/src/theme.js?v=1.1"></script>
+<script type="text/javascript" src="/js/src/bootstrap.js?v=1.1"></script>
+
+  </body>
+</html>
