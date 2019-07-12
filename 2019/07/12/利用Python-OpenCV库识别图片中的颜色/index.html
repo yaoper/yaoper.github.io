@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang>
+  <head><meta name="generator" content="Hexo 3.9.0">
+    
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1,minimum-scale=1,maximum-scale=1">
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+  <meta name="description" content="利用Python OpenCV库识别图片中的颜色">
+
+
+
+
+  <meta name="keywords" content="Python,opencv,">
+
+
+
+
+
+  <link rel="alternate" href="/default" title="Illusory">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=1.1">
+
+
+
+<link rel="canonical" href="http://yaoper.github.io/2019/07/12/利用Python-OpenCV库识别图片中的颜色/">
+
+
+<meta name="description" content="1.RGB转HSVHSV颜色模型表达颜色的方式在日常生活中很常见，因为它更符合人们描述颜色的方式。生活中很多时候我们会问什么颜色？颜色有多深？颜色有多亮？H——Hue即色相，就是我们平时所说的红、绿，如果你分的更细的话可能还会有洋红、草绿等等；在HSV模型中，用度数来描述色相，其中红色对应0度，绿色对应120度，蓝色对应240度。S——Saturation即饱和度，色彩的深浅度(0-100%) ，">
+<meta name="keywords" content="Python,opencv">
+<meta property="og:type" content="article">
+<meta property="og:title" content="利用Python OpenCV库识别图片中的颜色">
+<meta property="og:url" content="http://yaoper.github.io/2019/07/12/利用Python-OpenCV库识别图片中的颜色/index.html">
+<meta property="og:site_name" content="Illusory">
+<meta property="og:description" content="1.RGB转HSVHSV颜色模型表达颜色的方式在日常生活中很常见，因为它更符合人们描述颜色的方式。生活中很多时候我们会问什么颜色？颜色有多深？颜色有多亮？H——Hue即色相，就是我们平时所说的红、绿，如果你分的更细的话可能还会有洋红、草绿等等；在HSV模型中，用度数来描述色相，其中红色对应0度，绿色对应120度，蓝色对应240度。S——Saturation即饱和度，色彩的深浅度(0-100%) ，">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://uufe-web.oss-cn-beijing.aliyuncs.com/PicLib/uunote/images/900592-20160727130101544-2044756507_1562916454626.png">
+<meta property="og:updated_time" content="2019-07-12T07:30:47.795Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="利用Python OpenCV库识别图片中的颜色">
+<meta name="twitter:description" content="1.RGB转HSVHSV颜色模型表达颜色的方式在日常生活中很常见，因为它更符合人们描述颜色的方式。生活中很多时候我们会问什么颜色？颜色有多深？颜色有多亮？H——Hue即色相，就是我们平时所说的红、绿，如果你分的更细的话可能还会有洋红、草绿等等；在HSV模型中，用度数来描述色相，其中红色对应0度，绿色对应120度，蓝色对应240度。S——Saturation即饱和度，色彩的深浅度(0-100%) ，">
+<meta name="twitter:image" content="https://uufe-web.oss-cn-beijing.aliyuncs.com/PicLib/uunote/images/900592-20160727130101544-2044756507_1562916454626.png">
+
+
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=1.1">
+<link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+
+
+
+
+
+<script type="text/javascript">
+  var themeConfig = {
+    fancybox: {
+      enable: false
+    },
+  };
+</script>
+
+
+
+
+  
+
+
+
+    <title> 利用Python OpenCV库识别图片中的颜色 - Illusory </title>
+  </head>
+
+  <body>
+    <div id="page">
+      <header id="masthead"><div class="site-header-inner">
+    <h1 class="site-title">
+        <a href="/." class="logo">Illusory</a>
+    </h1>
+
+    <nav id="nav-top">
+        
+            <ul id="menu-top" class="nav-top-items">
+                
+                    <li class="menu-item">
+                        <a href="/archives">
+                            
+                            
+                                Archives
+                            
+                        </a>
+                    </li>
+                
+                    <li class="menu-item">
+                        <a href="/about">
+                            
+                            
+                                About
+                            
+                        </a>
+                    </li>
+                
+            </ul>
+        
+  </nav>
+</div>
+
+      </header>
+      <div id="content">
+        
+    <div id="primary">
+        
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          利用Python OpenCV库识别图片中的颜色
+        
+      </h1>
+
+      <time class="post-time">
+          Jul 12 2019
+      </time>
+    </header>
+
+
+
+    
+            <div class="post-content">
+            <h4 id="1-RGB转HSV"><a href="#1-RGB转HSV" class="headerlink" title="1.RGB转HSV"></a>1.RGB转HSV</h4><p>HSV颜色模型表达颜色的方式在日常生活中很常见，因为它更符合人们描述颜色的方式。生活中很多时候我们会问什么颜色？颜色有多深？颜色有多亮？<br>H——Hue即色相，就是我们平时所说的红、绿，如果你分的更细的话可能还会有洋红、草绿等等；在HSV模型中，用度数来描述色相，其中红色对应0度，绿色对应120度，蓝色对应240度。<br>S——Saturation即饱和度，色彩的深浅度(0-100%) ，对于一种颜色比如红色，我们可以用浅红——大红——深红——红得发紫等等语言来描述它，对应在画水彩的时候即一种颜料加上不同分量的水形成不同的饱和度。<br>V——Value即色调，纯度，色彩的亮度(0-100%) ，这个在调整屏幕亮度的时候比较常见。</p>
+<p>opencv中有多种色彩空间，包括 RGB、HSI、HSL、HSV、HSB、YCrCb、CIE XYZ、CIE Lab8种，使用中经常要遇到色彩空间的转化，以便生成mask图等操作。<br>可以使用下面的色彩空间转化函数 cv2.cvtColor( )进行色彩空间的转换</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">image_hsv = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)</span><br></pre></td></tr></table></figure>
+
+<h4 id="2-阈值化处理"><a href="#2-阈值化处理" class="headerlink" title="2.阈值化处理"></a>2.阈值化处理</h4><p>使用如下函数对图片进行阈值化处理</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mask = cv2.inRange(hsv, lower_color, upper_color)</span><br></pre></td></tr></table></figure>
+
+<p>三个参数hsv, lower_color, upper_color分别表示hsv图片，hsv颜色的最小范围，hsv颜色的最大范围<br>图片的hsv值在对应的范围区间内，则该图像值变成255，否者变成0</p>
+<h4 id="3-膨胀处理"><a href="#3-膨胀处理" class="headerlink" title="3.膨胀处理"></a>3.膨胀处理</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cv2.dilate(binary, <span class="literal">None</span>, iterations=<span class="number">2</span>)</span><br></pre></td></tr></table></figure>
+
+<p>图片进行膨胀处理，方便轮廓检测</p>
+<h4 id="4-轮廓检测"><a href="#4-轮廓检测" class="headerlink" title="4.轮廓检测"></a>4.轮廓检测</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cnts, hiera = cv2.findContours(binary.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>cv2.RETR_EXTERNAL 表示只检测外轮廓  </li>
+<li>cv2.CHAIN_APPROX_SIMPLE 压缩水平方向，垂直方向，对角线方向的元素，只保留该方向的终点坐标，例如一个矩形轮廓只需4个点来保存轮廓信息  </li>
+<li>cv2.findContours()函数返回两个值，一个是轮廓本身，还有一个是每条轮廓对应的属性  </li>
+<li>cnts是一个list，list中每个元素都是图像中的一个轮廓，用numpy中的ndarray表示  </li>
+<li>hiera是一个ndarray，其中的元素个数和轮廓个数相同，每个轮廓contours[i]对应4个hierarchy元素hierarchy[i][0] ~hierarchy[i][3]，分别表示后一个轮廓、前一个轮廓、父轮廓、内嵌轮廓的索引编号，如果没有对应项，则该值为负数  </li>
+</ul>
+<h4 id="5-计算轮廓面积"><a href="#5-计算轮廓面积" class="headerlink" title="5.计算轮廓面积"></a>5.计算轮廓面积</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cv2.contourArea(contour)</span><br></pre></td></tr></table></figure>
+
+<h4 id="6-计算各颜色面积"><a href="#6-计算各颜色面积" class="headerlink" title="6.计算各颜色面积"></a>6.计算各颜色面积</h4><p>根据颜色分量范围，计算各种颜色的轮廓面积</p>
+<p><img src="https://uufe-web.oss-cn-beijing.aliyuncs.com/PicLib/uunote/images/900592-20160727130101544-2044756507_1562916454626.png" alt="HSV颜色分量范围"></p>
+
+            </div>
+          
+
+    
+      <footer class="post-footer">
+		
+		<div class="post-tags">
+		  
+			<a href="/tags/Python/">Python</a>
+		  
+			<a href="/tags/opencv/">opencv</a>
+		  
+		</div>
+		
+
+        
+        
+  <nav class="post-nav">
+    
+    
+      <a class="next" href="/2019/07/12/Python-安装第三方库慢，没速度的解决方法/">
+        <span class="next-text nav-default">Python 安装第三方库慢，没速度的解决方法</span>
+        <span class="prev-text nav-mobile">Next</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    
+  </nav>
+
+        
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+      </footer>
+    
+  </article>
+
+    </div>
+
+      </div>
+
+      <footer id="colophon"><span class="copyright-year">
+    
+        &copy;
+    
+        2014 -
+    
+    2019
+    <span class="footer-author">yaoper.</span>
+    <span class="power-by">
+        Powered by <a class="hexo-link" href="https://hexo.io/">Hexo</a> and <a class="theme-link" href="https://github.com/frostfan/hexo-theme-polarbear">Polar Bear</a>
+    </span>
+</span>
+
+      </footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div>
+    
+
+
+    
+
+
+
+
+  
+    <script type="text/javascript" src="/lib/jquery/jquery-3.1.1.min.js"></script>
+  
+
+  
+
+    <script type="text/javascript" src="/js/src/theme.js?v=1.1"></script>
+<script type="text/javascript" src="/js/src/bootstrap.js?v=1.1"></script>
+
+  </body>
+</html>
