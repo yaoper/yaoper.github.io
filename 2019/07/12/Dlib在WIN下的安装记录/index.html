@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang>
+  <head><meta name="generator" content="Hexo 3.9.0">
+    
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1,minimum-scale=1,maximum-scale=1">
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+  <meta name="description" content="Dlib在WIN下的安装记录">
+
+
+
+
+  <meta name="keywords" content="Python,dlib,">
+
+
+
+
+
+  <link rel="alternate" href="/default" title="Illusory">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=1.1">
+
+
+
+<link rel="canonical" href="http://yaoper.github.io/2019/07/12/Dlib在WIN下的安装记录/">
+
+
+<meta name="description" content="1.dlib简介dlib 是一个机器学习的开源工具包（官网：http://dlib.net/ ），用于机器人、嵌入式设备、移动电话和大型高性能计算环境，也可以做人脸检测识别等；官网给出的Python Examples:  Binary Classification CNN Face Detector Face Alignment Face Clustering Face Detector Face">
+<meta name="keywords" content="Python,dlib">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Dlib在WIN下的安装记录">
+<meta property="og:url" content="http://yaoper.github.io/2019/07/12/Dlib在WIN下的安装记录/index.html">
+<meta property="og:site_name" content="Illusory">
+<meta property="og:description" content="1.dlib简介dlib 是一个机器学习的开源工具包（官网：http://dlib.net/ ），用于机器人、嵌入式设备、移动电话和大型高性能计算环境，也可以做人脸检测识别等；官网给出的Python Examples:  Binary Classification CNN Face Detector Face Alignment Face Clustering Face Detector Face">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2019-07-13T02:25:54.825Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Dlib在WIN下的安装记录">
+<meta name="twitter:description" content="1.dlib简介dlib 是一个机器学习的开源工具包（官网：http://dlib.net/ ），用于机器人、嵌入式设备、移动电话和大型高性能计算环境，也可以做人脸检测识别等；官网给出的Python Examples:  Binary Classification CNN Face Detector Face Alignment Face Clustering Face Detector Face">
+
+
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=1.1">
+<link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+
+
+
+
+
+<script type="text/javascript">
+  var themeConfig = {
+    fancybox: {
+      enable: false
+    },
+  };
+</script>
+
+
+
+
+  
+
+
+
+    <title> Dlib在WIN下的安装记录 - Illusory </title>
+  </head>
+
+  <body>
+    <div id="page">
+      <header id="masthead"><div class="site-header-inner">
+    <h1 class="site-title">
+        <a href="/." class="logo">Illusory</a>
+    </h1>
+
+    <nav id="nav-top">
+        
+            <ul id="menu-top" class="nav-top-items">
+                
+                    <li class="menu-item">
+                        <a href="/archives">
+                            
+                            
+                                Archives
+                            
+                        </a>
+                    </li>
+                
+                    <li class="menu-item">
+                        <a href="/about">
+                            
+                            
+                                About
+                            
+                        </a>
+                    </li>
+                
+            </ul>
+        
+  </nav>
+</div>
+
+      </header>
+      <div id="content">
+        
+    <div id="primary">
+        
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          Dlib在WIN下的安装记录
+        
+      </h1>
+
+      <time class="post-time">
+          Jul 12 2019
+      </time>
+    </header>
+
+
+
+    
+            <div class="post-content">
+            <h4 id="1-dlib简介"><a href="#1-dlib简介" class="headerlink" title="1.dlib简介"></a>1.dlib简介</h4><p>dlib 是一个机器学习的开源工具包（官网：<a href="http://dlib.net/" target="_blank" rel="noopener">http://dlib.net/</a> ），用于机器人、嵌入式设备、移动电话和大型高性能计算环境，也可以做人脸检测识别等；官网给出的Python Examples:</p>
+<ul>
+<li>Binary Classification</li>
+<li>CNN Face Detector</li>
+<li>Face Alignment</li>
+<li>Face Clustering</li>
+<li>Face Detector</li>
+<li>Face Jittering/Augmentation</li>
+<li>Face Landmark Detection</li>
+<li>Face Recognition</li>
+<li>Find Candidate Object Locations</li>
+<li>Global Optimization</li>
+<li>Linear Assignment Problems</li>
+<li>Sequence Segmenter</li>
+<li>Structural Support Vector Machines</li>
+<li>SVM-Rank</li>
+<li>Train Object Detector</li>
+<li>Train Shape Predictor</li>
+<li>Video Object Tracking</li>
+</ul>
+<p>dlib的安装在WIN下不是很友好，这里推荐在Anaconda环境下安装，这样就省去了build 和 make dlib 的源码，这样安装会更顺利。</p>
+<h4 id="2-安装包下载"><a href="#2-安装包下载" class="headerlink" title="2.安装包下载"></a>2.安装包下载</h4><ul>
+<li><a href="https://mirrors.tuna.tsinghua.edu.cn/anaconda/archive/Anaconda3-5.1.0-Windows-x86_64.exe" target="_blank" rel="noopener">Anaconda3-5.1.0</a> </li>
+<li><a href="https://raw.githubusercontent.com/coneypo/Dlib_install/master/dlib-19.7.0-cp36-cp36m-win_amd64.whl" target="_blank" rel="noopener">dlib</a></li>
+<li><a href="https://raw.githubusercontent.com/coneypo/Dlib_install/master/pip-9.0.1-py2.py3-none-any.whl" target="_blank" rel="noopener">pip</a></li>
+</ul>
+<p>强烈建议按照上述地址下载，因为Anacon3-5.1.0需要与dlib的版本匹配，后面会讲版本不匹配的问题。如上述下载地址不能下载可访问<a href="https://mirrors.tuna.tsinghua.edu.cn/anaconda/archive/" target="_blank" rel="noopener">清华大学开源软件镜像站</a>、<a href="https://github.com/coneypo/Dlib_install" target="_blank" rel="noopener">Git个人站</a>自行下载。</p>
+<h4 id="3-软件安装"><a href="#3-软件安装" class="headerlink" title="3.软件安装"></a>3.软件安装</h4><p>1.Anaconda3安装（略）  </p>
+<p>2.安装dlib<br>打开Anaconda Promopt，cd到dlib-19.7.0-cp36-cp36m-win_amd64.whl所在路径，然后利用pip安装dlib的命令：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pip install dlib-19.7.0-cp36-cp36m-win_amd64.whl</span><br></pre></td></tr></table></figure>
+
+<p>安装之后显示 Successfully installed dlib-19.7.0</p>
+<p>如果你下载的Anaconda3是5.1.0以上，安装后的Python版本就会是v3.7，在这一步骤可能会遇到安装提示</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">dlib-19.7.0-cp36-cp36m-win_amd64.whl is not a supported wheel on this platform</span><br></pre></td></tr></table></figure>
+
+<p>pip文件cp36只能支持到Python3.6，所以需要特别注意。如果安装过程提示升级pip，按照提示升级即可。</p>
+<h4 id="4-测试验证"><a href="#4-测试验证" class="headerlink" title="4.测试验证"></a>4.测试验证</h4><p>进入python输入如下代码</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> pip</span><br><span class="line"><span class="keyword">import</span> dlib</span><br><span class="line">dlib.get_frontal_face_detector()</span><br></pre></td></tr></table></figure>
+
+<p>显示&lt;dlib.dlib.fhog_object_detector object at 0x00000289F92318A0&gt;则可正常使用。</p>
+
+            </div>
+          
+
+    
+      <footer class="post-footer">
+		
+		<div class="post-tags">
+		  
+			<a href="/tags/Python/">Python</a>
+		  
+			<a href="/tags/dlib/">dlib</a>
+		  
+		</div>
+		
+
+        
+        
+  <nav class="post-nav">
+    
+    
+      <a class="next" href="/2019/07/12/利用Python-OpenCV库识别图片中的颜色/">
+        <span class="next-text nav-default">利用Python OpenCV库识别图片中的颜色</span>
+        <span class="prev-text nav-mobile">Next</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    
+  </nav>
+
+        
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+      </footer>
+    
+  </article>
+
+    </div>
+
+      </div>
+
+      <footer id="colophon"><span class="copyright-year">
+    
+        &copy;
+    
+        2014 -
+    
+    2019
+    <span class="footer-author">yaoper.</span>
+    <span class="power-by">
+        Powered by <a class="hexo-link" href="https://hexo.io/">Hexo</a> and <a class="theme-link" href="https://github.com/frostfan/hexo-theme-polarbear">Polar Bear</a>
+    </span>
+</span>
+
+      </footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div>
+    
+
+
+    
+
+
+
+
+  
+    <script type="text/javascript" src="/lib/jquery/jquery-3.1.1.min.js"></script>
+  
+
+  
+
+    <script type="text/javascript" src="/js/src/theme.js?v=1.1"></script>
+<script type="text/javascript" src="/js/src/bootstrap.js?v=1.1"></script>
+
+  </body>
+</html>
