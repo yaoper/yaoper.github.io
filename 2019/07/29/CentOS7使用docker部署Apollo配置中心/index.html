@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang>
+  <head><meta name="generator" content="Hexo 3.9.0">
+    
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1,minimum-scale=1,maximum-scale=1">
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+  <meta name="description" content="CentOS7使用docker部署Apollo配置中心">
+
+
+
+
+  <meta name="keywords" content="apollo,">
+
+
+
+
+
+  <link rel="alternate" href="/default" title="Illusory">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=1.1">
+
+
+
+<link rel="canonical" href="http://yaoper.github.io/2019/07/29/CentOS7使用docker部署Apollo配置中心/">
+
+
+<meta name="description" content="Apollo开源地址：https://github.com/ctripcorp/apollo 第一步将项目clone到本地，然后在github的releases页面中下载三个zip文件 第二步打开clone到本地的项目，目录结构如下 第三步在此目录下创建docker-compose.yml文件，写入内容： 1234567891011121314151617181920212223242526272">
+<meta name="keywords" content="apollo">
+<meta property="og:type" content="article">
+<meta property="og:title" content="CentOS7使用docker部署Apollo配置中心">
+<meta property="og:url" content="http://yaoper.github.io/2019/07/29/CentOS7使用docker部署Apollo配置中心/index.html">
+<meta property="og:site_name" content="Illusory">
+<meta property="og:description" content="Apollo开源地址：https://github.com/ctripcorp/apollo 第一步将项目clone到本地，然后在github的releases页面中下载三个zip文件 第二步打开clone到本地的项目，目录结构如下 第三步在此目录下创建docker-compose.yml文件，写入内容： 1234567891011121314151617181920212223242526272">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://uufe-web.oss-cn-beijing.aliyuncs.com/PicLib/uunote/images/QQ%E6%88%AA%E5%9B%BE20190729175843_1564394338274.png">
+<meta property="og:updated_time" content="2019-07-29T10:13:16.341Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="CentOS7使用docker部署Apollo配置中心">
+<meta name="twitter:description" content="Apollo开源地址：https://github.com/ctripcorp/apollo 第一步将项目clone到本地，然后在github的releases页面中下载三个zip文件 第二步打开clone到本地的项目，目录结构如下 第三步在此目录下创建docker-compose.yml文件，写入内容： 1234567891011121314151617181920212223242526272">
+<meta name="twitter:image" content="https://uufe-web.oss-cn-beijing.aliyuncs.com/PicLib/uunote/images/QQ%E6%88%AA%E5%9B%BE20190729175843_1564394338274.png">
+
+
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=1.1">
+<link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+
+
+
+
+
+<script type="text/javascript">
+  var themeConfig = {
+    fancybox: {
+      enable: false
+    },
+  };
+</script>
+
+
+
+
+  
+
+
+
+    <title> CentOS7使用docker部署Apollo配置中心 - Illusory </title>
+  </head>
+
+  <body>
+    <div id="page">
+      <header id="masthead"><div class="site-header-inner">
+    <h1 class="site-title">
+        <a href="/." class="logo">Illusory</a>
+    </h1>
+
+    <nav id="nav-top">
+        
+            <ul id="menu-top" class="nav-top-items">
+                
+                    <li class="menu-item">
+                        <a href="/archives">
+                            
+                            
+                                Archives
+                            
+                        </a>
+                    </li>
+                
+                    <li class="menu-item">
+                        <a href="/about">
+                            
+                            
+                                About
+                            
+                        </a>
+                    </li>
+                
+            </ul>
+        
+  </nav>
+</div>
+
+      </header>
+      <div id="content">
+        
+    <div id="primary">
+        
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          CentOS7使用docker部署Apollo配置中心
+        
+      </h1>
+
+      <time class="post-time">
+          Jul 29 2019
+      </time>
+    </header>
+
+
+
+    
+            <div class="post-content">
+            <p>Apollo开源地址：<a href="https://github.com/ctripcorp/apollo" target="_blank" rel="noopener">https://github.com/ctripcorp/apollo</a></p>
+<p>第一步<br>将项目clone到本地，然后在github的releases页面中下载三个zip文件</p>
+<p>第二步<br>打开clone到本地的项目，目录结构如下<br><img src="https://uufe-web.oss-cn-beijing.aliyuncs.com/PicLib/uunote/images/QQ%E6%88%AA%E5%9B%BE20190729175843_1564394338274.png" alt="apollo项目目录结构"></p>
+<p>第三步<br>在此目录下创建docker-compose.yml文件，写入内容：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">version:</span> <span class="string">"3"</span></span><br><span class="line"></span><br><span class="line"><span class="attr">services:</span></span><br><span class="line"><span class="attr">  apollo-configservice:</span></span><br><span class="line"><span class="attr">    container_name:</span> <span class="string">apollo-configservice</span></span><br><span class="line"><span class="attr">    build:</span> <span class="string">apollo-configservice/src/main/docker/</span></span><br><span class="line"><span class="attr">    image:</span> <span class="string">apollo-configservice</span></span><br><span class="line"><span class="attr">    ports:</span></span><br><span class="line"><span class="bullet">      -</span> <span class="string">"9180:8080"</span></span><br><span class="line"><span class="attr">    volumes:</span></span><br><span class="line"><span class="bullet">      -</span> <span class="string">"/opt/logs/100003171"</span></span><br><span class="line"><span class="attr">    environment:</span></span><br><span class="line"><span class="bullet">      -</span> <span class="string">spring_datasource_url=jdbc:mysql://192.168.6.32:3306/ApolloConfigDB?characterEncoding=utf8</span></span><br><span class="line"><span class="bullet">      -</span> <span class="string">spring_datasource_username=root</span></span><br><span class="line"><span class="bullet">      -</span> <span class="string">spring_datasource_password=123456</span></span><br><span class="line"></span><br><span class="line"><span class="attr">  apollo-adminservice:</span></span><br><span class="line"><span class="attr">    container_name:</span> <span class="string">apollo-adminservice</span></span><br><span class="line"><span class="attr">    build:</span> <span class="string">apollo-adminservice/src/main/docker/</span></span><br><span class="line"><span class="attr">    image:</span> <span class="string">apollo-adminservice</span></span><br><span class="line"><span class="attr">    ports:</span></span><br><span class="line"><span class="bullet">      -</span> <span class="string">"9181:8090"</span></span><br><span class="line"><span class="attr">    depends_on:</span></span><br><span class="line"><span class="bullet">      -</span> <span class="string">apollo-configservice</span></span><br><span class="line"><span class="attr">    volumes:</span></span><br><span class="line"><span class="bullet">      -</span> <span class="string">"/opt/logs/100003172"</span></span><br><span class="line"><span class="attr">    environment:</span></span><br><span class="line"><span class="bullet">      -</span> <span class="string">spring_datasource_url=jdbc:mysql://192.168.6.32:3306/ApolloConfigDB?characterEncoding=utf8</span></span><br><span class="line"><span class="bullet">      -</span> <span class="string">spring_datasource_username=root</span></span><br><span class="line"><span class="bullet">      -</span> <span class="string">spring_datasource_password=123456</span></span><br><span class="line"></span><br><span class="line"><span class="attr">  apollo-portal:</span></span><br><span class="line"><span class="attr">    container_name:</span> <span class="string">apollo-portal</span></span><br><span class="line"><span class="attr">    build:</span> <span class="string">apollo-portal/src/main/docker/</span></span><br><span class="line"><span class="attr">    image:</span> <span class="string">apollo-portal</span></span><br><span class="line"><span class="attr">    ports:</span></span><br><span class="line"><span class="bullet">      -</span> <span class="string">"9182:8070"</span></span><br><span class="line"><span class="attr">    depends_on:</span></span><br><span class="line"><span class="bullet">      -</span> <span class="string">apollo-adminservice</span></span><br><span class="line"><span class="attr">    volumes:</span></span><br><span class="line"><span class="bullet">      -</span> <span class="string">"/opt/logs/100003173"</span></span><br><span class="line"><span class="attr">    environment:</span></span><br><span class="line"><span class="bullet">      -</span> <span class="string">spring_datasource_url=jdbc:mysql://192.168.6.32:3306/ApolloPortalDB?characterEncoding=utf8</span></span><br><span class="line"><span class="bullet">      -</span> <span class="string">spring_datasource_username=root</span></span><br><span class="line"><span class="bullet">      -</span> <span class="string">spring_datasource_password=123456</span></span><br></pre></td></tr></table></figure>
+
+<p>注意端口映射和MySQL地址端口修改</p>
+<p>第四步<br>将第一步下载的三个zip文件分别复制到以下目录中<br>apollo/apollo-adminservice/src/main/docker<br>apollo/apollo-configservice/src/main/docker<br>apollo/apollo-portal/src/main/docker<br>同时我们需要分别对这三个目录下的Dockerfile文件进行修改，版本号与zip文件的版本保持一致  </p>
+<figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">ENV</span> VERSION <span class="number">1.4</span>.<span class="number">0</span></span><br></pre></td></tr></table></figure>
+
+<p>第五步<br>登录mysql，进行数据库初始化。(初始化sql文件从GitHub上下载)</p>
+<p>第六步<br>将整个项目apollo文件夹打包成zip文件，使用ftp或scp命令将文件上传到centos7服务器中，在服务器上执行以下命令</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">unzip apollo.zip</span><br><span class="line">cd apollo</span><br><span class="line">docker-compose up -d</span><br></pre></td></tr></table></figure>
+
+<p>可能遇到需要安装Docker Compose<br>Step0:首先检查linux有没有安装python-pip包，直接执行 yum install python-pip<br>Step1:没有python-pip包就执行命令 yum -y install epel-release<br>Step2:执行成功之后，再次执行 yum install python-pip<br>Step3:对安装好的pip进行升级 pip install –upgrade pip<br>Step4:安装Docker Compose，执行pip install -U docker-compose<br>Step5:检验docker-compose是否安装成功,执行docker-compose –version  </p>
+
+            </div>
+          
+
+    
+      <footer class="post-footer">
+		
+		<div class="post-tags">
+		  
+			<a href="/tags/apollo/">apollo</a>
+		  
+		</div>
+		
+
+        
+        
+  <nav class="post-nav">
+    
+    
+      <a class="next" href="/2019/07/22/MySQL数据库使用规范/">
+        <span class="next-text nav-default">MySQL数据库使用规范</span>
+        <span class="prev-text nav-mobile">Next</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    
+  </nav>
+
+        
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+      </footer>
+    
+  </article>
+
+    </div>
+
+      </div>
+
+      <footer id="colophon"><span class="copyright-year">
+    
+        &copy;
+    
+        2014 -
+    
+    2019
+    <span class="footer-author">yaoper.</span>
+    <span class="power-by">
+        Powered by <a class="hexo-link" href="https://hexo.io/">Hexo</a> and <a class="theme-link" href="https://github.com/frostfan/hexo-theme-polarbear">Polar Bear</a>
+    </span>
+</span>
+
+      </footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div>
+    
+
+
+    
+
+
+
+
+  
+    <script type="text/javascript" src="/lib/jquery/jquery-3.1.1.min.js"></script>
+  
+
+  
+
+    <script type="text/javascript" src="/js/src/theme.js?v=1.1"></script>
+<script type="text/javascript" src="/js/src/bootstrap.js?v=1.1"></script>
+
+  </body>
+</html>
