@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang>
+  <head><meta name="generator" content="Hexo 3.9.0">
+    
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1,minimum-scale=1,maximum-scale=1">
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+  <meta name="description" content="neo4j安装教程">
+
+
+
+
+  <meta name="keywords" content="neo4j,">
+
+
+
+
+
+  <link rel="alternate" href="/default" title="Illusory">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=1.1">
+
+
+
+<link rel="canonical" href="http://yaoper.github.io/2019/08/06/neo4j安装教程/">
+
+
+<meta name="description" content="1.安装包下载neo4j提供Unix/Mac/Win平台的安装包，这里我们下载Unix平台 neo4j-community-3.5.8-unix.tar.gz 2.依赖环境准备neo4j使用Java语言开发，所以需要安装Java环境，这里推荐至少安装Java 8及其以上。 3.修改配置文件配置环境变量, vi /etc/profile  12export NEO4J_HOME=/usr/local">
+<meta name="keywords" content="neo4j">
+<meta property="og:type" content="article">
+<meta property="og:title" content="neo4j安装教程">
+<meta property="og:url" content="http://yaoper.github.io/2019/08/06/neo4j安装教程/index.html">
+<meta property="og:site_name" content="Illusory">
+<meta property="og:description" content="1.安装包下载neo4j提供Unix/Mac/Win平台的安装包，这里我们下载Unix平台 neo4j-community-3.5.8-unix.tar.gz 2.依赖环境准备neo4j使用Java语言开发，所以需要安装Java环境，这里推荐至少安装Java 8及其以上。 3.修改配置文件配置环境变量, vi /etc/profile  12export NEO4J_HOME=/usr/local">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2019-08-06T08:39:28.138Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="neo4j安装教程">
+<meta name="twitter:description" content="1.安装包下载neo4j提供Unix/Mac/Win平台的安装包，这里我们下载Unix平台 neo4j-community-3.5.8-unix.tar.gz 2.依赖环境准备neo4j使用Java语言开发，所以需要安装Java环境，这里推荐至少安装Java 8及其以上。 3.修改配置文件配置环境变量, vi /etc/profile  12export NEO4J_HOME=/usr/local">
+
+
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=1.1">
+<link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+
+
+
+
+
+<script type="text/javascript">
+  var themeConfig = {
+    fancybox: {
+      enable: false
+    },
+  };
+</script>
+
+
+
+
+  
+
+
+
+    <title> neo4j安装教程 - Illusory </title>
+  </head>
+
+  <body>
+    <div id="page">
+      <header id="masthead"><div class="site-header-inner">
+    <h1 class="site-title">
+        <a href="/." class="logo">Illusory</a>
+    </h1>
+
+    <nav id="nav-top">
+        
+            <ul id="menu-top" class="nav-top-items">
+                
+                    <li class="menu-item">
+                        <a href="/archives">
+                            
+                            
+                                Archives
+                            
+                        </a>
+                    </li>
+                
+                    <li class="menu-item">
+                        <a href="/about">
+                            
+                            
+                                About
+                            
+                        </a>
+                    </li>
+                
+            </ul>
+        
+  </nav>
+</div>
+
+      </header>
+      <div id="content">
+        
+    <div id="primary">
+        
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          neo4j安装教程
+        
+      </h1>
+
+      <time class="post-time">
+          Aug 06 2019
+      </time>
+    </header>
+
+
+
+    
+            <div class="post-content">
+            <h4 id="1-安装包下载"><a href="#1-安装包下载" class="headerlink" title="1.安装包下载"></a>1.安装包下载</h4><p>neo4j提供Unix/Mac/Win平台的安装包，这里我们下载Unix平台 neo4j-community-3.5.8-unix.tar.gz</p>
+<h4 id="2-依赖环境准备"><a href="#2-依赖环境准备" class="headerlink" title="2.依赖环境准备"></a>2.依赖环境准备</h4><p>neo4j使用Java语言开发，所以需要安装Java环境，这里推荐至少安装Java 8及其以上。</p>
+<h4 id="3-修改配置文件"><a href="#3-修改配置文件" class="headerlink" title="3.修改配置文件"></a>3.修改配置文件</h4><p>配置环境变量, vi /etc/profile </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">export NEO4J_HOME=/usr/local/neo4j</span><br><span class="line">export PATH=$PATH:$NEO4J_HOME/bin</span><br></pre></td></tr></table></figure>
+
+<p>vi /etc/security/limits.conf</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">neo4j   soft    nofile  40000</span><br><span class="line">neo4j   hard    nofile  40000</span><br></pre></td></tr></table></figure>
+
+<p>配置允许远程WEB访问， vin /usr/local/neo4j/conf/neo4j.conf,打开这些配置</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">dbms.connectors.default_listen_address=0.0.0.0</span><br><span class="line">dbms.connector.bolt.enabled=true</span><br><span class="line">dbms.connector.bolt.listen_address=:7687</span><br><span class="line">dbms.connector.http.enabled=true</span><br><span class="line">dbms.connector.http.listen_address=:7474</span><br><span class="line">dbms.connector.https.enabled=true</span><br><span class="line">dbms.connector.https.listen_address=:7473</span><br></pre></td></tr></table></figure>
+
+<p>启动neo4j, cd /usr/local/neo4j/conf/</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./neo4j start</span><br></pre></td></tr></table></figure>
+
+<h4 id="4-设置账号密码"><a href="#4-设置账号密码" class="headerlink" title="4.设置账号密码"></a>4.设置账号密码</h4><p>wen登录ip:7474,使用账号密码neo4j/neo4j登录成功后，修改密码。</p>
+<h4 id="5-安装完成检测"><a href="#5-安装完成检测" class="headerlink" title="5.安装完成检测"></a>5.安装完成检测</h4><p>cd /usr/local/neo4j/bin</p>
+<p>./cypher-shell</p>
+<p>CREATE (A {id:1,name:’张飞’}), (B {id:2,name:’张小二’}), (C {id:3,name:’张三’}), (D {id:4,name:’张凯’}),(E {id:5,name:’张雨’}),(A)-[:Son]-&gt;(B),(A)-[:Son]-&gt;(C),(B)-[:Son]-&gt;(D),(C)-[:Son]-&gt;(E); </p>
+<p>match (n) return n;</p>
+
+            </div>
+          
+
+    
+      <footer class="post-footer">
+		
+		<div class="post-tags">
+		  
+			<a href="/tags/neo4j/">neo4j</a>
+		  
+		</div>
+		
+
+        
+        
+  <nav class="post-nav">
+    
+    
+      <a class="next" href="/2019/07/29/CentOS7使用docker部署Apollo配置中心/">
+        <span class="next-text nav-default">CentOS7使用docker部署Apollo配置中心</span>
+        <span class="prev-text nav-mobile">Next</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    
+  </nav>
+
+        
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+      </footer>
+    
+  </article>
+
+    </div>
+
+      </div>
+
+      <footer id="colophon"><span class="copyright-year">
+    
+        &copy;
+    
+        2014 -
+    
+    2019
+    <span class="footer-author">yaoper.</span>
+    <span class="power-by">
+        Powered by <a class="hexo-link" href="https://hexo.io/">Hexo</a> and <a class="theme-link" href="https://github.com/frostfan/hexo-theme-polarbear">Polar Bear</a>
+    </span>
+</span>
+
+      </footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div>
+    
+
+
+    
+
+
+
+
+  
+    <script type="text/javascript" src="/lib/jquery/jquery-3.1.1.min.js"></script>
+  
+
+  
+
+    <script type="text/javascript" src="/js/src/theme.js?v=1.1"></script>
+<script type="text/javascript" src="/js/src/bootstrap.js?v=1.1"></script>
+
+  </body>
+</html>
