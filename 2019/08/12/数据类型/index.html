@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang>
+  <head><meta name="generator" content="Hexo 3.9.0">
+    
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1,minimum-scale=1,maximum-scale=1">
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+  <meta name="description" content="数据类型">
+
+
+
+
+  <meta name="keywords" content="JavaBasics,">
+
+
+
+
+
+  <link rel="alternate" href="/default" title="Illusory">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=1.1">
+
+
+
+<link rel="canonical" href="http://yaoper.github.io/2019/08/12/数据类型/">
+
+
+<meta name="description" content="八个基本类型： boolean/1  byte/8 char/16 short/16 int/32 float/32 long/64 double/64  基本类型都有对应的包装类型，基本类型与其对应的包装类型之间的赋值使用自动装箱与自动拆箱完成。 缓存池new Integer(123) 与 Integer.valueOf(123) 的区别在于：new Integer(123) 每次都会新建一个对">
+<meta name="keywords" content="JavaBasics">
+<meta property="og:type" content="article">
+<meta property="og:title" content="数据类型">
+<meta property="og:url" content="http://yaoper.github.io/2019/08/12/数据类型/index.html">
+<meta property="og:site_name" content="Illusory">
+<meta property="og:description" content="八个基本类型： boolean/1  byte/8 char/16 short/16 int/32 float/32 long/64 double/64  基本类型都有对应的包装类型，基本类型与其对应的包装类型之间的赋值使用自动装箱与自动拆箱完成。 缓存池new Integer(123) 与 Integer.valueOf(123) 的区别在于：new Integer(123) 每次都会新建一个对">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2019-08-12T07:54:52.188Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="数据类型">
+<meta name="twitter:description" content="八个基本类型： boolean/1  byte/8 char/16 short/16 int/32 float/32 long/64 double/64  基本类型都有对应的包装类型，基本类型与其对应的包装类型之间的赋值使用自动装箱与自动拆箱完成。 缓存池new Integer(123) 与 Integer.valueOf(123) 的区别在于：new Integer(123) 每次都会新建一个对">
+
+
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=1.1">
+<link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+
+
+
+
+
+<script type="text/javascript">
+  var themeConfig = {
+    fancybox: {
+      enable: false
+    },
+  };
+</script>
+
+
+
+
+  
+
+
+
+    <title> 数据类型 - Illusory </title>
+  </head>
+
+  <body>
+    <div id="page">
+      <header id="masthead"><div class="site-header-inner">
+    <h1 class="site-title">
+        <a href="/." class="logo">Illusory</a>
+    </h1>
+
+    <nav id="nav-top">
+        
+            <ul id="menu-top" class="nav-top-items">
+                
+                    <li class="menu-item">
+                        <a href="/archives">
+                            
+                            
+                                Archives
+                            
+                        </a>
+                    </li>
+                
+                    <li class="menu-item">
+                        <a href="/about">
+                            
+                            
+                                About
+                            
+                        </a>
+                    </li>
+                
+            </ul>
+        
+  </nav>
+</div>
+
+      </header>
+      <div id="content">
+        
+    <div id="primary">
+        
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          数据类型
+        
+      </h1>
+
+      <time class="post-time">
+          Aug 12 2019
+      </time>
+    </header>
+
+
+
+    
+            <div class="post-content">
+            <h4 id="八个基本类型："><a href="#八个基本类型：" class="headerlink" title="八个基本类型："></a>八个基本类型：</h4><ul>
+<li>boolean/1 </li>
+<li>byte/8</li>
+<li>char/16</li>
+<li>short/16</li>
+<li>int/32</li>
+<li>float/32</li>
+<li>long/64</li>
+<li>double/64</li>
+</ul>
+<p>基本类型都有对应的包装类型，基本类型与其对应的包装类型之间的赋值使用自动装箱与自动拆箱完成。</p>
+<h4 id="缓存池"><a href="#缓存池" class="headerlink" title="缓存池"></a>缓存池</h4><p>new Integer(123) 与 Integer.valueOf(123) 的区别在于：<br>new Integer(123) 每次都会新建一个对象；<br>Integer.valueOf(123) 会使用缓存池中的对象，多次调用会取得同一个对象的引用。<br>valueOf() 方法的实现比较简单，就是先判断值是否在缓存池中，如果在的话就直接返回缓存池的内容。<br>在 Java 8 中，Integer 缓存池的大小默认为 -128~127。  </p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Integer <span class="title">valueOf</span><span class="params">(<span class="keyword">int</span> i)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (i &gt;= IntegerCache.low &amp;&amp; i &lt;= IntegerCache.high)</span><br><span class="line">        <span class="keyword">return</span> IntegerCache.cache[i + (-IntegerCache.low)];</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> Integer(i);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+
+            </div>
+          
+
+    
+      <footer class="post-footer">
+		
+		<div class="post-tags">
+		  
+			<a href="/tags/JavaBasics/">JavaBasics</a>
+		  
+		</div>
+		
+
+        
+        
+  <nav class="post-nav">
+    
+      <a class="prev" href="/2019/08/12/String类/">
+        <i class="iconfont icon-left"></i>
+        <span class="prev-text nav-default">String类</span>
+        <span class="prev-text nav-mobile">Prev</span>
+      </a>
+    
+    
+      <a class="next" href="/2019/08/06/neo4j安装教程/">
+        <span class="next-text nav-default">neo4j安装教程</span>
+        <span class="prev-text nav-mobile">Next</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    
+  </nav>
+
+        
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+      </footer>
+    
+  </article>
+
+    </div>
+
+      </div>
+
+      <footer id="colophon"><span class="copyright-year">
+    
+        &copy;
+    
+        2014 -
+    
+    2019
+    <span class="footer-author">yaoper.</span>
+    <span class="power-by">
+        Powered by <a class="hexo-link" href="https://hexo.io/">Hexo</a> and <a class="theme-link" href="https://github.com/frostfan/hexo-theme-polarbear">Polar Bear</a>
+    </span>
+</span>
+
+      </footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div>
+    
+
+
+    
+
+
+
+
+  
+    <script type="text/javascript" src="/lib/jquery/jquery-3.1.1.min.js"></script>
+  
+
+  
+
+    <script type="text/javascript" src="/js/src/theme.js?v=1.1"></script>
+<script type="text/javascript" src="/js/src/bootstrap.js?v=1.1"></script>
+
+  </body>
+</html>
