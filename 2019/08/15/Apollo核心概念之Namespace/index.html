@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang>
+  <head><meta name="generator" content="Hexo 3.9.0">
+    
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1,minimum-scale=1,maximum-scale=1">
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+  <meta name="description" content="Apollo核心概念之Namespace">
+
+
+
+
+  <meta name="keywords" content="apollo,">
+
+
+
+
+
+  <link rel="alternate" href="/default" title="Illusory">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=1.1">
+
+
+
+<link rel="canonical" href="http://yaoper.github.io/2019/08/15/Apollo核心概念之Namespace/">
+
+
+<meta name="description" content="1. 什么是Namespace?Namespace是配置项的集合，类似于一个配置文件的概念。 2. 什么是“application”的Namespace？Apollo在创建项目的时候，都会默认创建一个“application”的Namespace。顾名思义，“application”是给应用自身使用的，熟悉Spring Boot的同学都知道，Spring Boot项目都有一个默认配置文件appli">
+<meta name="keywords" content="apollo">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Apollo核心概念之Namespace">
+<meta property="og:url" content="http://yaoper.github.io/2019/08/15/Apollo核心概念之Namespace/index.html">
+<meta property="og:site_name" content="Illusory">
+<meta property="og:description" content="1. 什么是Namespace?Namespace是配置项的集合，类似于一个配置文件的概念。 2. 什么是“application”的Namespace？Apollo在创建项目的时候，都会默认创建一个“application”的Namespace。顾名思义，“application”是给应用自身使用的，熟悉Spring Boot的同学都知道，Spring Boot项目都有一个默认配置文件appli">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2019-08-15T07:29:46.953Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Apollo核心概念之Namespace">
+<meta name="twitter:description" content="1. 什么是Namespace?Namespace是配置项的集合，类似于一个配置文件的概念。 2. 什么是“application”的Namespace？Apollo在创建项目的时候，都会默认创建一个“application”的Namespace。顾名思义，“application”是给应用自身使用的，熟悉Spring Boot的同学都知道，Spring Boot项目都有一个默认配置文件appli">
+
+
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=1.1">
+<link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+
+
+
+
+
+<script type="text/javascript">
+  var themeConfig = {
+    fancybox: {
+      enable: false
+    },
+  };
+</script>
+
+
+
+
+  
+
+
+
+    <title> Apollo核心概念之Namespace - Illusory </title>
+  </head>
+
+  <body>
+    <div id="page">
+      <header id="masthead"><div class="site-header-inner">
+    <h1 class="site-title">
+        <a href="/." class="logo">Illusory</a>
+    </h1>
+
+    <nav id="nav-top">
+        
+            <ul id="menu-top" class="nav-top-items">
+                
+                    <li class="menu-item">
+                        <a href="/archives">
+                            
+                            
+                                Archives
+                            
+                        </a>
+                    </li>
+                
+                    <li class="menu-item">
+                        <a href="/about">
+                            
+                            
+                                About
+                            
+                        </a>
+                    </li>
+                
+            </ul>
+        
+  </nav>
+</div>
+
+      </header>
+      <div id="content">
+        
+    <div id="primary">
+        
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          Apollo核心概念之Namespace
+        
+      </h1>
+
+      <time class="post-time">
+          Aug 15 2019
+      </time>
+    </header>
+
+
+
+    
+            <div class="post-content">
+            <h4 id="1-什么是Namespace"><a href="#1-什么是Namespace" class="headerlink" title="1. 什么是Namespace?"></a>1. 什么是Namespace?</h4><p>Namespace是配置项的集合，类似于一个配置文件的概念。</p>
+<h4 id="2-什么是“application”的Namespace？"><a href="#2-什么是“application”的Namespace？" class="headerlink" title="2. 什么是“application”的Namespace？"></a>2. 什么是“application”的Namespace？</h4><p>Apollo在创建项目的时候，都会默认创建一个“application”的Namespace。顾名思义，“application”是给应用自身使用的，熟悉Spring Boot的同学都知道，Spring Boot项目都有一个默认配置文件application.yml。在这里application.yml就等同于“application”的Namespace。对于90%的应用来说，“application”的Namespace已经满足日常配置使用场景了。<br>客户端获取“application” Namespace的代码如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Config config = ConfigService.getAppConfig();</span><br></pre></td></tr></table></figure>
+
+<p>也可以使用注解的方式获取“application” Namespace</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@ApolloConfig</span>()</span><br><span class="line"><span class="keyword">private</span> Config config;</span><br></pre></td></tr></table></figure>
+
+<p>客户端获取非“application” Namespace的代码如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Config config = ConfigService.getConfig(namespaceName);</span><br></pre></td></tr></table></figure>
+
+<h4 id="3-Namespace的格式有哪些？"><a href="#3-Namespace的格式有哪些？" class="headerlink" title="3. Namespace的格式有哪些？"></a>3. Namespace的格式有哪些？</h4><p>配置文件有多种格式，例如：properties、xml、yml、yaml、json等。同样Namespace也具有这些格式。在Portal UI中可以看到“application”的Namespace上有一个“properties”标签，表明“application”是properties格式的。<br>非properties格式的namespace，在客户端使用时需要调用如下代码来获取，如果使用Http接口直接调用时，对应的namespace参数需要传入namespace的名字加上后缀名，如bootstrap.yml。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ConfigService.getConfigFile(String namespace, ConfigFileFormat configFileFormat)</span><br></pre></td></tr></table></figure>
+
+<h4 id="4-Namespace的获取权限分类"><a href="#4-Namespace的获取权限分类" class="headerlink" title="4. Namespace的获取权限分类"></a>4. Namespace的获取权限分类</h4><p>Namespace的获取权限分为两种：</p>
+<ul>
+<li>private （私有的）</li>
+<li>public  （公共的）<br>这里的获取权限是相对于Apollo客户端来说的。</li>
+</ul>
+<h5 id="4-1-private权限"><a href="#4-1-private权限" class="headerlink" title="4.1 private权限"></a>4.1 private权限</h5><p>private权限的Namespace，只能被所属的应用获取到。一个应用尝试获取其它应用private的Namespace，Apollo会报“404”异常。</p>
+<h5 id="4-2-public权限"><a href="#4-2-public权限" class="headerlink" title="4.2 public权限"></a>4.2 public权限</h5><p>public权限的Namespace，能被任何应用获取。</p>
+<h4 id="5-Namespace的类型"><a href="#5-Namespace的类型" class="headerlink" title="5. Namespace的类型"></a>5. Namespace的类型</h4><p>Namespace类型有三种：</p>
+<ul>
+<li>私有类型</li>
+<li>公共类型</li>
+<li>关联类型（继承类型）</li>
+</ul>
+<h5 id="5-1-私有类型"><a href="#5-1-私有类型" class="headerlink" title="5.1 私有类型"></a>5.1 私有类型</h5><p>私有类型的Namespace具有private权限。例如上文提到的“application” Namespace就是私有类型。</p>
+<h5 id="5-2-公共类型"><a href="#5-2-公共类型" class="headerlink" title="5.2 公共类型"></a>5.2 公共类型</h5><p><strong><u>含义</u></strong><br>公共类型的Namespace具有public权限。公共类型的Namespace相当于游离于应用之外的配置，且通过Namespace的名称去标识公共Namespace，所以公共的Namespace的名称必须全局唯一。<br><strong><u>使用场景</u></strong><br>部门级别共享的配置、小组级别共享的配置、几个项目之间共享的配置、中间件客户端的配置</p>
+<h5 id="5-3-关联类型"><a href="#5-3-关联类型" class="headerlink" title="5.3 关联类型"></a>5.3 关联类型</h5><p><strong><u>含义</u></strong><br>关联类型又可称为继承类型，关联类型具有private权限。关联类型的Namespace继承于公共类型的Namespace，用于覆盖公共Namespace的某些配置。例如公共的Namespace有两个配置项</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">k1 = v1</span><br><span class="line">k2 = v2</span><br></pre></td></tr></table></figure>
+
+<p>然后应用A有一个关联类型的Namespace关联了此公共Namespace，且覆盖了配置项k1，新值为v3。那么在应用A实际运行时，获取到的公共Namespace的配置为：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">k1 = v3</span><br><span class="line">k2 = v2</span><br></pre></td></tr></table></figure>
+            </div>
+          
+
+    
+      <footer class="post-footer">
+		
+		<div class="post-tags">
+		  
+			<a href="/tags/apollo/">apollo</a>
+		  
+		</div>
+		
+
+        
+        
+  <nav class="post-nav">
+    
+    
+      <a class="next" href="/2019/08/12/运算/">
+        <span class="next-text nav-default">运算</span>
+        <span class="prev-text nav-mobile">Next</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    
+  </nav>
+
+        
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+      </footer>
+    
+  </article>
+
+    </div>
+
+      </div>
+
+      <footer id="colophon"><span class="copyright-year">
+    
+        &copy;
+    
+        2014 -
+    
+    2019
+    <span class="footer-author">yaoper.</span>
+    <span class="power-by">
+        Powered by <a class="hexo-link" href="https://hexo.io/">Hexo</a> and <a class="theme-link" href="https://github.com/frostfan/hexo-theme-polarbear">Polar Bear</a>
+    </span>
+</span>
+
+      </footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div>
+    
+
+
+    
+
+
+
+
+  
+    <script type="text/javascript" src="/lib/jquery/jquery-3.1.1.min.js"></script>
+  
+
+  
+
+    <script type="text/javascript" src="/js/src/theme.js?v=1.1"></script>
+<script type="text/javascript" src="/js/src/bootstrap.js?v=1.1"></script>
+
+  </body>
+</html>
