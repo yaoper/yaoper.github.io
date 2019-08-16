@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang>
+  <head><meta name="generator" content="Hexo 3.9.0">
+    
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1,minimum-scale=1,maximum-scale=1">
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+  <meta name="description" content="apollo部署支持多环境">
+
+
+
+
+  <meta name="keywords" content="apollo,">
+
+
+
+
+
+  <link rel="alternate" href="/default" title="Illusory">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=1.1">
+
+
+
+<link rel="canonical" href="http://yaoper.github.io/2019/08/16/apollo部署支持多环境/">
+
+
+<meta name="description" content="在上一篇文章《编译Apollo源代码编译docker部署》的基础上我们稍作修改，让Apollo支持多环境，我们添加对FAT环境的支持。 1.数据库导入创建数据库ApolloConfigDB_FAT，使用官方提供的sql对数据库进行初始化。 2.部署configservice修改config文件夹中的app.properties，避免appid冲突。 1appId=200003171  修改conf">
+<meta name="keywords" content="apollo">
+<meta property="og:type" content="article">
+<meta property="og:title" content="apollo部署支持多环境">
+<meta property="og:url" content="http://yaoper.github.io/2019/08/16/apollo部署支持多环境/index.html">
+<meta property="og:site_name" content="Illusory">
+<meta property="og:description" content="在上一篇文章《编译Apollo源代码编译docker部署》的基础上我们稍作修改，让Apollo支持多环境，我们添加对FAT环境的支持。 1.数据库导入创建数据库ApolloConfigDB_FAT，使用官方提供的sql对数据库进行初始化。 2.部署configservice修改config文件夹中的app.properties，避免appid冲突。 1appId=200003171  修改conf">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://uufe-web.oss-cn-beijing.aliyuncs.com/PicLib/uunote/images/QQ%E6%88%AA%E5%9B%BE20190816171731_1565947261962.png">
+<meta property="og:updated_time" content="2019-08-16T09:32:59.492Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="apollo部署支持多环境">
+<meta name="twitter:description" content="在上一篇文章《编译Apollo源代码编译docker部署》的基础上我们稍作修改，让Apollo支持多环境，我们添加对FAT环境的支持。 1.数据库导入创建数据库ApolloConfigDB_FAT，使用官方提供的sql对数据库进行初始化。 2.部署configservice修改config文件夹中的app.properties，避免appid冲突。 1appId=200003171  修改conf">
+<meta name="twitter:image" content="https://uufe-web.oss-cn-beijing.aliyuncs.com/PicLib/uunote/images/QQ%E6%88%AA%E5%9B%BE20190816171731_1565947261962.png">
+
+
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=1.1">
+<link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+
+
+
+
+
+<script type="text/javascript">
+  var themeConfig = {
+    fancybox: {
+      enable: false
+    },
+  };
+</script>
+
+
+
+
+  
+
+
+
+    <title> apollo部署支持多环境 - Illusory </title>
+  </head>
+
+  <body>
+    <div id="page">
+      <header id="masthead"><div class="site-header-inner">
+    <h1 class="site-title">
+        <a href="/." class="logo">Illusory</a>
+    </h1>
+
+    <nav id="nav-top">
+        
+            <ul id="menu-top" class="nav-top-items">
+                
+                    <li class="menu-item">
+                        <a href="/archives">
+                            
+                            
+                                Archives
+                            
+                        </a>
+                    </li>
+                
+                    <li class="menu-item">
+                        <a href="/about">
+                            
+                            
+                                About
+                            
+                        </a>
+                    </li>
+                
+            </ul>
+        
+  </nav>
+</div>
+
+      </header>
+      <div id="content">
+        
+    <div id="primary">
+        
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          apollo部署支持多环境
+        
+      </h1>
+
+      <time class="post-time">
+          Aug 16 2019
+      </time>
+    </header>
+
+
+
+    
+            <div class="post-content">
+            <p><u><strong>在上一篇文章《编译Apollo源代码编译docker部署》的基础上我们稍作修改，让Apollo支持多环境，我们添加对FAT环境的支持。</strong></u></p>
+<h4 id="1-数据库导入"><a href="#1-数据库导入" class="headerlink" title="1.数据库导入"></a>1.数据库导入</h4><p>创建数据库ApolloConfigDB_FAT，使用官方提供的sql对数据库进行初始化。</p>
+<h4 id="2-部署configservice"><a href="#2-部署configservice" class="headerlink" title="2.部署configservice"></a>2.部署configservice</h4><p>修改config文件夹中的app.properties，避免appid冲突。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">appId=200003171</span><br></pre></td></tr></table></figure>
+
+<p>修改config文件夹中的application-github.properties，数据库修改成ApolloConfigDB_FAT相对应的用户名密码，修改HomePageUrl</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"># DataSource</span><br><span class="line">spring.datasource.url = jdbc:mysql://192.168.6.36:3306/ApolloConfigDB_FAT?characterEncoding=utf8</span><br><span class="line">spring.datasource.username = root</span><br><span class="line">spring.datasource.password = 123456</span><br><span class="line"># HomePageUrl</span><br><span class="line">eureka.instance.homePageUrl = http://192.168.6.32:28080</span><br><span class="line">eureka.instance.preferIpAddress = false</span><br></pre></td></tr></table></figure>
+
+<p>然后生成镜像文件，推送到portainer.io上，然后启动</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">docker build -t apollo-configservice-fat .  </span><br><span class="line">docker tag apollo-configservice-fat:latest hub.uupt-docker.com/local-test/apollo-configservice-fat:latest</span><br><span class="line">docker push hub.uupt-docker.com/local-test/apollo-configservice-fat:latest</span><br></pre></td></tr></table></figure>
+
+<h4 id="3-部署adminservice"><a href="#3-部署adminservice" class="headerlink" title="3.部署adminservice"></a>3.部署adminservice</h4><p>修改config文件夹中的app.properties，避免appid冲突。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">appId=200003172</span><br></pre></td></tr></table></figure>
+
+<p>修改config文件夹中的application-github.properties，数据库修改成ApolloConfigDB_FAT相对应的用户名密码，修改HomePageUrl</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"># DataSource</span><br><span class="line">spring.datasource.url = jdbc:mysql://192.168.6.36:3306/ApolloConfigDB_FAT?characterEncoding=utf8</span><br><span class="line">spring.datasource.username = root</span><br><span class="line">spring.datasource.password = 123456</span><br><span class="line"># HomePageUrl</span><br><span class="line">eureka.instance.homePageUrl = http://192.168.6.32:28090</span><br><span class="line">eureka.instance.preferIpAddress = false</span><br></pre></td></tr></table></figure>
+
+<p>然后生成镜像文件，推送到portainer.io上，然后启动</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">docker build -t apollo-adminservice-fat .  </span><br><span class="line">docker tag apollo-adminservice-fat:latest hub.uupt-docker.com/local-test/apollo-adminservice-fat:latest</span><br><span class="line">docker push hub.uupt-docker.com/local-test/apollo-adminservice-fat:latest</span><br></pre></td></tr></table></figure>
+
+<h4 id="4-重新部署portal"><a href="#4-重新部署portal" class="headerlink" title="4.重新部署portal"></a>4.重新部署portal</h4><p>修改config文件夹中的apollo-env.properties，设置fat.meta。app.properties，application-github.properties不需做任何修改。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">local.meta=http://localhost:8080</span><br><span class="line">dev.meta=http://192.168.6.32:18080</span><br><span class="line">fat.meta=http://192.168.6.32:28080</span><br><span class="line">uat.meta=http://anotherIp:8080</span><br><span class="line">lpt.meta=$&#123;lpt_meta&#125;</span><br><span class="line">pro.meta=http://yetAnotherIp:8080</span><br></pre></td></tr></table></figure>
+
+<p>修改ApolloPortalDB数据库中的serverconfig表，apollo.portal.envs=dev,fat</p>
+<p>然后生成镜像文件，推送到portainer.io上，然后启动</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">docker build -t apollo-portal .</span><br><span class="line">docker tag apollo-portal:latest hub.uupt-docker.com/local-test/apollo-portal:latest</span><br><span class="line">docker push hub.uupt-docker.com/local-test/apollo-portal:latest</span><br></pre></td></tr></table></figure>
+
+<h4 id="5-环境补全"><a href="#5-环境补全" class="headerlink" title="5.环境补全"></a>5.环境补全</h4><p>再次进入portal，查看系统信息，可以查看FAT环境的相关信息，如图<br><img src="https://uufe-web.oss-cn-beijing.aliyuncs.com/PicLib/uunote/images/QQ%E6%88%AA%E5%9B%BE20190816171731_1565947261962.png" alt="20190816171731.png"></p>
+<p>切换到应用中，根据提示点击左侧的“环境补全”即可补全DEV环境的Namespace。</p>
+<h4 id="6-注意事项"><a href="#6-注意事项" class="headerlink" title="6.注意事项"></a>6.注意事项</h4><p>我们在用一个apollo-portal来管理DEV和FAT环境，极大的方便了不同环境下配置文件的管理。特别需要注意的是在同一台机器部署DEV和FAT，各个服务端口避免冲突；其次，需要注意个服务的启动顺序configservice-&gt;adminservice-&gt;portal，否者项目启动的会报错。</p>
+
+            </div>
+          
+
+    
+      <footer class="post-footer">
+		
+		<div class="post-tags">
+		  
+			<a href="/tags/apollo/">apollo</a>
+		  
+		</div>
+		
+
+        
+        
+  <nav class="post-nav">
+    
+      <a class="prev" href="/2019/08/16/Logback配置迁移到Apollo/">
+        <i class="iconfont icon-left"></i>
+        <span class="prev-text nav-default">Logback配置迁移到Apollo</span>
+        <span class="prev-text nav-mobile">Prev</span>
+      </a>
+    
+    
+      <a class="next" href="/2019/08/16/编译Apollo源代码编译docker部署/">
+        <span class="next-text nav-default">编译Apollo源代码编译docker部署</span>
+        <span class="prev-text nav-mobile">Next</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    
+  </nav>
+
+        
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+      </footer>
+    
+  </article>
+
+    </div>
+
+      </div>
+
+      <footer id="colophon"><span class="copyright-year">
+    
+        &copy;
+    
+        2014 -
+    
+    2019
+    <span class="footer-author">yaoper.</span>
+    <span class="power-by">
+        Powered by <a class="hexo-link" href="https://hexo.io/">Hexo</a> and <a class="theme-link" href="https://github.com/frostfan/hexo-theme-polarbear">Polar Bear</a>
+    </span>
+</span>
+
+      </footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div>
+    
+
+
+    
+
+
+
+
+  
+    <script type="text/javascript" src="/lib/jquery/jquery-3.1.1.min.js"></script>
+  
+
+  
+
+    <script type="text/javascript" src="/js/src/theme.js?v=1.1"></script>
+<script type="text/javascript" src="/js/src/bootstrap.js?v=1.1"></script>
+
+  </body>
+</html>

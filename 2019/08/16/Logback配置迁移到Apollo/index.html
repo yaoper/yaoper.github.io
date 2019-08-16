@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang>
+  <head><meta name="generator" content="Hexo 3.9.0">
+    
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1,minimum-scale=1,maximum-scale=1">
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+  <meta name="description" content="Logback配置迁移到Apollo">
+
+
+
+
+  <meta name="keywords" content="apollo,">
+
+
+
+
+
+  <link rel="alternate" href="/default" title="Illusory">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=1.1">
+
+
+
+<link rel="canonical" href="http://yaoper.github.io/2019/08/16/Logback配置迁移到Apollo/">
+
+
+<meta name="description" content="日志框架配置信息在系统初始化之初就会被加载，如果把配置信息迁移到Apollo，就需要让Apollo里面的配置先加载；另外考虑通过Apollo来调整日志的等级，做到项目不重启的情况下能调整日志等级。 1.项目结构创建springboot项目，/src/main下的项目结构如下：├── java│   └── com│       └── uu│           └── apollo│">
+<meta name="keywords" content="apollo">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Logback配置迁移到Apollo">
+<meta property="og:url" content="http://yaoper.github.io/2019/08/16/Logback配置迁移到Apollo/index.html">
+<meta property="og:site_name" content="Illusory">
+<meta property="og:description" content="日志框架配置信息在系统初始化之初就会被加载，如果把配置信息迁移到Apollo，就需要让Apollo里面的配置先加载；另外考虑通过Apollo来调整日志的等级，做到项目不重启的情况下能调整日志等级。 1.项目结构创建springboot项目，/src/main下的项目结构如下：├── java│   └── com│       └── uu│           └── apollo│">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2019-08-16T10:10:41.461Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Logback配置迁移到Apollo">
+<meta name="twitter:description" content="日志框架配置信息在系统初始化之初就会被加载，如果把配置信息迁移到Apollo，就需要让Apollo里面的配置先加载；另外考虑通过Apollo来调整日志的等级，做到项目不重启的情况下能调整日志等级。 1.项目结构创建springboot项目，/src/main下的项目结构如下：├── java│   └── com│       └── uu│           └── apollo│">
+
+
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=1.1">
+<link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+
+
+
+
+
+<script type="text/javascript">
+  var themeConfig = {
+    fancybox: {
+      enable: false
+    },
+  };
+</script>
+
+
+
+
+  
+
+
+
+    <title> Logback配置迁移到Apollo - Illusory </title>
+  </head>
+
+  <body>
+    <div id="page">
+      <header id="masthead"><div class="site-header-inner">
+    <h1 class="site-title">
+        <a href="/." class="logo">Illusory</a>
+    </h1>
+
+    <nav id="nav-top">
+        
+            <ul id="menu-top" class="nav-top-items">
+                
+                    <li class="menu-item">
+                        <a href="/archives">
+                            
+                            
+                                Archives
+                            
+                        </a>
+                    </li>
+                
+                    <li class="menu-item">
+                        <a href="/about">
+                            
+                            
+                                About
+                            
+                        </a>
+                    </li>
+                
+            </ul>
+        
+  </nav>
+</div>
+
+      </header>
+      <div id="content">
+        
+    <div id="primary">
+        
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          Logback配置迁移到Apollo
+        
+      </h1>
+
+      <time class="post-time">
+          Aug 16 2019
+      </time>
+    </header>
+
+
+
+    
+            <div class="post-content">
+            <p>日志框架配置信息在系统初始化之初就会被加载，如果把配置信息迁移到Apollo，就需要让Apollo里面的配置先加载；另外考虑通过Apollo来调整日志的等级，做到项目不重启的情况下能调整日志等级。</p>
+<h4 id="1-项目结构"><a href="#1-项目结构" class="headerlink" title="1.项目结构"></a>1.项目结构</h4><p>创建springboot项目，/src/main下的项目结构如下：<br>├── java<br>│   └── com<br>│       └── uu<br>│           └── apollo<br>│               ├── ApolloDemoApplication.java<br>│               ├── controller<br>│               │   └── DefaultController.java<br>│               └── listener<br>│                   └── LogbackListener.java<br>└── resources<br>    ├── application.yml<br>    ├── logback-spring.xml<br>    └── META-INF<br>        └── app.properties</p>
+<h4 id="2-app-properties"><a href="#2-app-properties" class="headerlink" title="2.app.properties"></a>2.app.properties</h4><p>文件定于在portal中的app.id及apollo.meta地址</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">app.id=10461001</span><br><span class="line">apollo.meta=http://192.168.6.32:18080</span><br></pre></td></tr></table></figure>
+
+<h4 id="3-logback-spring-xml"><a href="#3-logback-spring-xml" class="headerlink" title="3.logback-spring.xml"></a>3.logback-spring.xml</h4><p>portal的应用下创建logback-spring命名空间，在命名空间下设置logback.app-name、logback.base-log-dir、log.level如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">logback.app-name = apollo-demo</span><br><span class="line">logback.base-log-dir = ./logs</span><br><span class="line">log.level = warn</span><br></pre></td></tr></table></figure>
+
+<p>这三个变量会在logback-spring.xml文件中使用</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">configuration</span>&gt;</span></span><br><span class="line">    <span class="comment">&lt;!-- constant property --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">springProperty</span> <span class="attr">scope</span>=<span class="string">"context"</span> <span class="attr">name</span>=<span class="string">"APP_NAME"</span> <span class="attr">source</span>=<span class="string">"logback.app-name"</span>/&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">springProperty</span> <span class="attr">scope</span>=<span class="string">"context"</span> <span class="attr">name</span>=<span class="string">"BASE_LOG_DIR"</span> <span class="attr">source</span>=<span class="string">"logback.base-log-dir"</span>/&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">springProperty</span> <span class="attr">scope</span>=<span class="string">"context"</span> <span class="attr">name</span>=<span class="string">"LOG_LEVEL"</span> <span class="attr">source</span>=<span class="string">"log.level"</span>/&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">&lt;!-- color converter --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">conversionRule</span> <span class="attr">conversionWord</span>=<span class="string">"clr"</span> <span class="attr">converterClass</span>=<span class="string">"org.springframework.boot.logging.logback.ColorConverter"</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">conversionRule</span> <span class="attr">conversionWord</span>=<span class="string">"wex"</span> <span class="attr">converterClass</span>=<span class="string">"org.springframework.boot.logging.logback.WhitespaceThrowableProxyConverter"</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">conversionRule</span> <span class="attr">conversionWord</span>=<span class="string">"wEx"</span> <span class="attr">converterClass</span>=<span class="string">"org.springframework.boot.logging.logback.ExtendedWhitespaceThrowableProxyConverter"</span> /&gt;</span></span><br><span class="line">    <span class="comment">&lt;!-- color log pattern --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">"CONSOLE_LOG_PATTERN"</span> <span class="attr">value</span>=<span class="string">"[$&#123;APP_NAME&#125;] $&#123;CONSOLE_LOG_PATTERN:-%clr(%d&#123;yyyy-MM-dd HH:mm:ss.SSS&#125;)&#123;faint&#125; %clr($&#123;LOG_LEVEL_PATTERN:-%5p&#125;) %clr($&#123;PID:- &#125;)&#123;magenta&#125; %clr(---)&#123;faint&#125; %clr([%15.15t])&#123;faint&#125; %clr(%-40.40logger&#123;39&#125;)&#123;cyan&#125; %clr(:)&#123;faint&#125; %m%n$&#123;LOG_EXCEPTION_CONVERSION_WORD:-%wEx&#125;&#125;"</span>/&gt;</span></span><br><span class="line">    <span class="comment">&lt;!-- console stdout appender --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">appender</span> <span class="attr">name</span>=<span class="string">"STDOUT"</span> <span class="attr">class</span>=<span class="string">"ch.qos.logback.core.ConsoleAppender"</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">encoder</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">pattern</span>&gt;</span>$&#123;CONSOLE_LOG_PATTERN&#125;<span class="tag">&lt;/<span class="name">pattern</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">charset</span>&gt;</span>UTF-8<span class="tag">&lt;/<span class="name">charset</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">encoder</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">appender</span>&gt;</span></span><br><span class="line">    <span class="comment">&lt;!-- rolling file appender --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">appender</span> <span class="attr">name</span>=<span class="string">"DAY_ROLL_FILE"</span> <span class="attr">class</span>=<span class="string">"ch.qos.logback.core.rolling.RollingFileAppender"</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">File</span>&gt;</span>$&#123;BASE_LOG_DIR&#125;/catalina.log<span class="tag">&lt;/<span class="name">File</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">rollingPolicy</span> <span class="attr">class</span>=<span class="string">"ch.qos.logback.core.rolling.TimeBasedRollingPolicy"</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">fileNamePattern</span>&gt;</span>$&#123;BASE_LOG_DIR&#125;/catalina.%d.%i.log<span class="tag">&lt;/<span class="name">fileNamePattern</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">maxHistory</span>&gt;</span>90<span class="tag">&lt;/<span class="name">maxHistory</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">timeBasedFileNamingAndTriggeringPolicy</span>  <span class="attr">class</span>=<span class="string">"ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP"</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">maxFileSize</span>&gt;</span>200MB<span class="tag">&lt;/<span class="name">maxFileSize</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;/<span class="name">timeBasedFileNamingAndTriggeringPolicy</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">rollingPolicy</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">encoder</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">pattern</span>&gt;</span>$&#123;CONSOLE_LOG_PATTERN&#125;<span class="tag">&lt;/<span class="name">pattern</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">charset</span>&gt;</span>UTF-8<span class="tag">&lt;/<span class="name">charset</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">encoder</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">appender</span>&gt;</span></span><br><span class="line">    <span class="comment">&lt;!-- root log level --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">root</span> <span class="attr">level</span>=<span class="string">"$&#123;LOG_LEVEL&#125;"</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">appender-ref</span> <span class="attr">ref</span>=<span class="string">"STDOUT"</span> /&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">appender-ref</span> <span class="attr">ref</span>=<span class="string">"DAY_ROLL_FILE"</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">root</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">configuration</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="4-application-yml"><a href="#4-application-yml" class="headerlink" title="4.application.yml"></a>4.application.yml</h4><p>//Bootstrap阶段注入配置开关<br>apollo.bootstrap.enabled=true<br>//Apollo配置加载提到初始化日志系统之前<br>apollo.bootstrap.eagerLoad.enabled=true<br>//Bootstrap阶段注入配置application.yml,logback-spring配置<br>apollo.bootstrap.namespaces=application.yml,logback-spring</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">apollo:</span></span><br><span class="line"><span class="attr">  bootstrap:</span></span><br><span class="line"><span class="attr">    enabled:</span> <span class="literal">true</span></span><br><span class="line"><span class="attr">    eagerLoad:</span></span><br><span class="line"><span class="attr">      enabled:</span> <span class="literal">true</span></span><br><span class="line"><span class="attr">    namespaces:</span> <span class="string">application.yml,logback-spring</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="5-LogbackListener-java"><a href="#5-LogbackListener-java" class="headerlink" title="5.LogbackListener.java"></a>5.LogbackListener.java</h4><p>portal上对日志的等级修改以后，应用要监听变化并作出对应的逻辑处理，我们可以利用Apollo提供的ApolloConfigChangeListener这个监听器来实现该功能。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="meta">@EnableApolloConfig</span>(value=<span class="string">"logback-spring"</span>)</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">LogbackListener</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> Logger logger = LoggerFactory.getLogger(LogbackListener.class);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> String LOGGER_TAG = <span class="string">"log.level"</span>;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@ApolloConfig</span>(<span class="string">"logback-spring"</span>)</span><br><span class="line">    <span class="keyword">private</span> Config config;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@ApolloConfigChangeListener</span>(<span class="string">"logback-spring"</span>)</span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">onChange</span><span class="params">(ConfigChangeEvent changeEvent)</span> </span>&#123;</span><br><span class="line">        Set&lt;String&gt; keyNames = config.getPropertyNames();</span><br><span class="line">        <span class="keyword">for</span> (String key : keyNames) &#123;</span><br><span class="line">            ConfigChange change = changeEvent.getChange(key);</span><br><span class="line">            <span class="keyword">if</span>(change != <span class="keyword">null</span>)&#123;</span><br><span class="line">                logger.info(String.format(<span class="string">"Found change - key: %s, oldValue: %s, newValue: %s, changeType: %s"</span>, change.getPropertyName(), change.getOldValue(), change.getNewValue(), change.getChangeType()));</span><br><span class="line">                <span class="keyword">if</span> (key.equalsIgnoreCase(LOGGER_TAG)) &#123;</span><br><span class="line">                    LoggerContext loggerContext = (LoggerContext) LoggerFactory.getILoggerFactory();</span><br><span class="line">                    <span class="comment">// change log level for global</span></span><br><span class="line">                    loggerContext.getLogger(<span class="string">"root"</span>).setLevel(Level.valueOf(change.getNewValue()));</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+            </div>
+          
+
+    
+      <footer class="post-footer">
+		
+		<div class="post-tags">
+		  
+			<a href="/tags/apollo/">apollo</a>
+		  
+		</div>
+		
+
+        
+        
+  <nav class="post-nav">
+    
+    
+      <a class="next" href="/2019/08/16/apollo部署支持多环境/">
+        <span class="next-text nav-default">apollo部署支持多环境</span>
+        <span class="prev-text nav-mobile">Next</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    
+  </nav>
+
+        
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+      </footer>
+    
+  </article>
+
+    </div>
+
+      </div>
+
+      <footer id="colophon"><span class="copyright-year">
+    
+        &copy;
+    
+        2014 -
+    
+    2019
+    <span class="footer-author">yaoper.</span>
+    <span class="power-by">
+        Powered by <a class="hexo-link" href="https://hexo.io/">Hexo</a> and <a class="theme-link" href="https://github.com/frostfan/hexo-theme-polarbear">Polar Bear</a>
+    </span>
+</span>
+
+      </footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div>
+    
+
+
+    
+
+
+
+
+  
+    <script type="text/javascript" src="/lib/jquery/jquery-3.1.1.min.js"></script>
+  
+
+  
+
+    <script type="text/javascript" src="/js/src/theme.js?v=1.1"></script>
+<script type="text/javascript" src="/js/src/bootstrap.js?v=1.1"></script>
+
+  </body>
+</html>
