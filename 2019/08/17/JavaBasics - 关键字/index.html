@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang>
+  <head><meta name="generator" content="Hexo 3.9.0">
+    
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1,minimum-scale=1,maximum-scale=1">
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+  <meta name="description" content="JavaBasics - 关键字">
+
+
+
+
+  <meta name="keywords" content="JavaBasics,">
+
+
+
+
+
+  <link rel="alternate" href="/default" title="Illusory">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=1.1">
+
+
+
+<link rel="canonical" href="http://yaoper.github.io/2019/08/17/JavaBasics - 关键字/">
+
+
+<meta name="description" content="final1. 数据声明数据为常量，可以是编译时常量，也可以是在运行时被初始化后不能被改变的常量。 对于基本类型，final 使数值不变；对于引用类型，final 使引用不变，也就不能引用其它对象，但是被引用的对象本身是可以修改的。 1234final int x = 1;// x = 2;  // cannot assign value to final variable &apos;x&apos;final A">
+<meta name="keywords" content="JavaBasics">
+<meta property="og:type" content="article">
+<meta property="og:title" content="JavaBasics - 关键字">
+<meta property="og:url" content="http://yaoper.github.io/2019/08/17/JavaBasics - 关键字/index.html">
+<meta property="og:site_name" content="Illusory">
+<meta property="og:description" content="final1. 数据声明数据为常量，可以是编译时常量，也可以是在运行时被初始化后不能被改变的常量。 对于基本类型，final 使数值不变；对于引用类型，final 使引用不变，也就不能引用其它对象，但是被引用的对象本身是可以修改的。 1234final int x = 1;// x = 2;  // cannot assign value to final variable &apos;x&apos;final A">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2019-08-17T06:33:23.391Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="JavaBasics - 关键字">
+<meta name="twitter:description" content="final1. 数据声明数据为常量，可以是编译时常量，也可以是在运行时被初始化后不能被改变的常量。 对于基本类型，final 使数值不变；对于引用类型，final 使引用不变，也就不能引用其它对象，但是被引用的对象本身是可以修改的。 1234final int x = 1;// x = 2;  // cannot assign value to final variable &apos;x&apos;final A">
+
+
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=1.1">
+<link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+
+
+
+
+
+<script type="text/javascript">
+  var themeConfig = {
+    fancybox: {
+      enable: false
+    },
+  };
+</script>
+
+
+
+
+  
+
+
+
+    <title> JavaBasics - 关键字 - Illusory </title>
+  </head>
+
+  <body>
+    <div id="page">
+      <header id="masthead"><div class="site-header-inner">
+    <h1 class="site-title">
+        <a href="/." class="logo">Illusory</a>
+    </h1>
+
+    <nav id="nav-top">
+        
+            <ul id="menu-top" class="nav-top-items">
+                
+                    <li class="menu-item">
+                        <a href="/archives">
+                            
+                            
+                                Archives
+                            
+                        </a>
+                    </li>
+                
+                    <li class="menu-item">
+                        <a href="/about">
+                            
+                            
+                                About
+                            
+                        </a>
+                    </li>
+                
+            </ul>
+        
+  </nav>
+</div>
+
+      </header>
+      <div id="content">
+        
+    <div id="primary">
+        
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          JavaBasics - 关键字
+        
+      </h1>
+
+      <time class="post-time">
+          Aug 17 2019
+      </time>
+    </header>
+
+
+
+    
+            <div class="post-content">
+            <h4 id="final"><a href="#final" class="headerlink" title="final"></a>final</h4><h5 id="1-数据"><a href="#1-数据" class="headerlink" title="1. 数据"></a>1. 数据</h5><p>声明数据为常量，可以是编译时常量，也可以是在运行时被初始化后不能被改变的常量。</p>
+<p>对于基本类型，final 使数值不变；<br>对于引用类型，final 使引用不变，也就不能引用其它对象，但是被引用的对象本身是可以修改的。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">final</span> <span class="keyword">int</span> x = <span class="number">1</span>;</span><br><span class="line"><span class="comment">// x = 2;  // cannot assign value to final variable 'x'</span></span><br><span class="line"><span class="keyword">final</span> A y = <span class="keyword">new</span> A();</span><br><span class="line">y.a = <span class="number">1</span>;</span><br></pre></td></tr></table></figure>
+
+<h5 id="2-方法"><a href="#2-方法" class="headerlink" title="2. 方法"></a>2. 方法</h5><p>声明方法不能被子类重写。<br>private 方法隐式地被指定为 final，如果在子类中定义的方法和基类中的一个 private 方法签名相同，此时子类的方法不是重写基类方法，而是在子类中定义了一个新的方法。</p>
+<h5 id="3-类"><a href="#3-类" class="headerlink" title="3. 类"></a>3. 类</h5><p>声明类不允许被继承。</p>
+<h4 id="static"><a href="#static" class="headerlink" title="static"></a>static</h4><h5 id="1-静态变量"><a href="#1-静态变量" class="headerlink" title="1. 静态变量"></a>1. 静态变量</h5><p>静态变量：又称为类变量，也就是说这个变量属于类的，类所有的实例都共享静态变量，可以直接通过类名来访问它。静态变量在内存中只存在一份。<br>实例变量：每创建一个实例就会产生一个实例变量，它与该实例同生共死。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">A</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> x;         <span class="comment">// 实例变量</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">int</span> y;  <span class="comment">// 静态变量</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        <span class="comment">// int x = A.x;  </span></span><br><span class="line">        <span class="comment">// Non-static field 'x' cannot be referenced from a static context</span></span><br><span class="line">        </span><br><span class="line">        A a = <span class="keyword">new</span> A();</span><br><span class="line">        <span class="keyword">int</span> x = a.x;</span><br><span class="line">        <span class="keyword">int</span> y = A.y;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h5 id="2-静态方法"><a href="#2-静态方法" class="headerlink" title="2. 静态方法"></a>2. 静态方法</h5><p>静态方法在类加载的时候就存在了，它不依赖于任何实例。所以静态方法必须有实现，也就是说它不能是抽象方法。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="class"><span class="keyword">class</span> <span class="title">A</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">func1</span><span class="params">()</span></span>&#123;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// public abstract static void func2();  </span></span><br><span class="line">    <span class="comment">// Illegal combination of modifiers: 'abstract' and 'static'</span></span><br><span class="line">    <span class="comment">// 静态方法必须有实现，也就是说它不能是抽象方法。</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>只能访问所属类的静态字段和静态方法，方法中不能有 this 和 super 关键字。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">A</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">int</span> x;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> y;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">func1</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="keyword">int</span> a = x;</span><br><span class="line">        <span class="comment">// int b = y;  </span></span><br><span class="line">        <span class="comment">// Non-static field 'y' cannot be referenced from a static context</span></span><br><span class="line">        <span class="comment">// int b = this.y;     // 'A.this' cannot be referenced from a static context</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h5 id="3-静态语句块"><a href="#3-静态语句块" class="headerlink" title="3. 静态语句块"></a>3. 静态语句块</h5><p>静态语句块在类初始化时运行一次。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">public class A &#123;</span><br><span class="line">    static &#123;</span><br><span class="line">        System.out.println(&quot;123&quot;);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        A a1 = new A();</span><br><span class="line">        A a2 = new A();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">123</span><br></pre></td></tr></table></figure>
+
+<h5 id="4-静态内部类"><a href="#4-静态内部类" class="headerlink" title="4. 静态内部类"></a>4. 静态内部类</h5><p>非静态内部类依赖于外部类的实例，而静态内部类不需要。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">OuterClass</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="class"><span class="keyword">class</span> <span class="title">InnerClass</span> </span>&#123; <span class="comment">// 非静态内部类</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">StaticInnerClass</span> </span>&#123; <span class="comment">// 静态内部类</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        <span class="comment">// InnerClass innerClass = new InnerClass(); </span></span><br><span class="line">        <span class="comment">// 'OuterClass.this' cannot be referenced from a static context</span></span><br><span class="line">        OuterClass outerClass = <span class="keyword">new</span> OuterClass();</span><br><span class="line">        InnerClass innerClass = outerClass.new InnerClass();</span><br><span class="line">        StaticInnerClass staticInnerClass = <span class="keyword">new</span> StaticInnerClass();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>静态内部类不能访问外部类的非静态的变量和方法。</p>
+<h5 id="5-静态导包"><a href="#5-静态导包" class="headerlink" title="5. 静态导包"></a>5. 静态导包</h5><p>在使用静态变量和方法时不用再指明 ClassName，从而简化代码，但可读性大大降低。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> <span class="keyword">static</span> com.xxx.ClassName.*</span><br></pre></td></tr></table></figure>
+
+<h5 id="6-初始化顺序"><a href="#6-初始化顺序" class="headerlink" title="6. 初始化顺序"></a>6. 初始化顺序</h5><p><u>静态变量和静态语句块优先于实例变量和普通语句块，静态变量和静态语句块的初始化顺序取决于它们在代码中的顺序。</u></p>
+<p>// 静态变量和静态语句块的初始化顺序取决于它们在代码中的顺序</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> String staticField = <span class="string">"静态变量"</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">static</span> &#123;</span><br><span class="line">    System.out.println(<span class="string">"静态语句块"</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">public</span> String field = <span class="string">"实例变量"</span>;</span><br><span class="line">&#123;</span><br><span class="line">    System.out.println(<span class="string">"普通语句块"</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>最后才是构造函数的初始化。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">InitialOrderTest</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    System.out.println(<span class="string">"构造函数"</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>存在继承的情况下，初始化顺序为：<br>1.父类（静态变量、静态语句块）<br>2.子类（静态变量、静态语句块）<br>3.父类（实例变量、普通语句块）<br>4.父类（构造函数）<br>5.子类（实例变量、普通语句块）<br>6.子类（构造函数）</p>
+<p><strong>静态优先于非静态，父类优先于子类，普通语句优先于构造函数</strong></p>
+
+            </div>
+          
+
+    
+      <footer class="post-footer">
+		
+		<div class="post-tags">
+		  
+			<a href="/tags/JavaBasics/">JavaBasics</a>
+		  
+		</div>
+		
+
+        
+        
+  <nav class="post-nav">
+    
+      <a class="prev" href="/2019/08/17/JavaBasics-反射/">
+        <i class="iconfont icon-left"></i>
+        <span class="prev-text nav-default">JavaBasics - 反射</span>
+        <span class="prev-text nav-mobile">Prev</span>
+      </a>
+    
+    
+      <a class="next" href="/2019/08/17/JavaBasics - Object-通用方法/">
+        <span class="next-text nav-default">JavaBasics - Object 通用方法</span>
+        <span class="prev-text nav-mobile">Next</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    
+  </nav>
+
+        
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+      </footer>
+    
+  </article>
+
+    </div>
+
+      </div>
+
+      <footer id="colophon"><span class="copyright-year">
+    
+        &copy;
+    
+        2014 -
+    
+    2019
+    <span class="footer-author">yaoper.</span>
+    <span class="power-by">
+        Powered by <a class="hexo-link" href="https://hexo.io/">Hexo</a> and <a class="theme-link" href="https://github.com/frostfan/hexo-theme-polarbear">Polar Bear</a>
+    </span>
+</span>
+
+      </footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div>
+    
+
+
+    
+
+
+
+
+  
+    <script type="text/javascript" src="/lib/jquery/jquery-3.1.1.min.js"></script>
+  
+
+  
+
+    <script type="text/javascript" src="/js/src/theme.js?v=1.1"></script>
+<script type="text/javascript" src="/js/src/bootstrap.js?v=1.1"></script>
+
+  </body>
+</html>

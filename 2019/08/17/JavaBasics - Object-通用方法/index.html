@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang>
+  <head><meta name="generator" content="Hexo 3.9.0">
+    
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1,minimum-scale=1,maximum-scale=1">
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+  <meta name="description" content="JavaBasics - Object 通用方法">
+
+
+
+
+  <meta name="keywords" content="JavaBasics,">
+
+
+
+
+
+  <link rel="alternate" href="/default" title="Illusory">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=1.1">
+
+
+
+<link rel="canonical" href="http://yaoper.github.io/2019/08/17/JavaBasics - Object-通用方法/">
+
+
+<meta name="description" content="Object 类中的方法一览：123456789101112131415161718192021public native int hashCode()public boolean equals(Object obj)protected native Object clone() throws CloneNotSupportedExceptionpublic String toString()pu">
+<meta name="keywords" content="JavaBasics">
+<meta property="og:type" content="article">
+<meta property="og:title" content="JavaBasics - Object 通用方法">
+<meta property="og:url" content="http://yaoper.github.io/2019/08/17/JavaBasics - Object-通用方法/index.html">
+<meta property="og:site_name" content="Illusory">
+<meta property="og:description" content="Object 类中的方法一览：123456789101112131415161718192021public native int hashCode()public boolean equals(Object obj)protected native Object clone() throws CloneNotSupportedExceptionpublic String toString()pu">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2019-08-17T06:19:30.561Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="JavaBasics - Object 通用方法">
+<meta name="twitter:description" content="Object 类中的方法一览：123456789101112131415161718192021public native int hashCode()public boolean equals(Object obj)protected native Object clone() throws CloneNotSupportedExceptionpublic String toString()pu">
+
+
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=1.1">
+<link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+
+
+
+
+
+<script type="text/javascript">
+  var themeConfig = {
+    fancybox: {
+      enable: false
+    },
+  };
+</script>
+
+
+
+
+  
+
+
+
+    <title> JavaBasics - Object 通用方法 - Illusory </title>
+  </head>
+
+  <body>
+    <div id="page">
+      <header id="masthead"><div class="site-header-inner">
+    <h1 class="site-title">
+        <a href="/." class="logo">Illusory</a>
+    </h1>
+
+    <nav id="nav-top">
+        
+            <ul id="menu-top" class="nav-top-items">
+                
+                    <li class="menu-item">
+                        <a href="/archives">
+                            
+                            
+                                Archives
+                            
+                        </a>
+                    </li>
+                
+                    <li class="menu-item">
+                        <a href="/about">
+                            
+                            
+                                About
+                            
+                        </a>
+                    </li>
+                
+            </ul>
+        
+  </nav>
+</div>
+
+      </header>
+      <div id="content">
+        
+    <div id="primary">
+        
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          JavaBasics - Object 通用方法
+        
+      </h1>
+
+      <time class="post-time">
+          Aug 17 2019
+      </time>
+    </header>
+
+
+
+    
+            <div class="post-content">
+            <h4 id="Object-类中的方法一览："><a href="#Object-类中的方法一览：" class="headerlink" title="Object 类中的方法一览："></a>Object 类中的方法一览：</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">native</span> <span class="keyword">int</span> <span class="title">hashCode</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">equals</span><span class="params">(Object obj)</span></span></span><br><span class="line"><span class="function"></span></span><br><span class="line"><span class="function"><span class="keyword">protected</span> <span class="keyword">native</span> Object <span class="title">clone</span><span class="params">()</span> <span class="keyword">throws</span> CloneNotSupportedException</span></span><br><span class="line"><span class="function"></span></span><br><span class="line"><span class="function"><span class="keyword">public</span> String <span class="title">toString</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">native</span> Class&lt;?&gt; <span class="title">getClass</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span></span><br><span class="line"><span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">finalize</span><span class="params">()</span> <span class="keyword">throws</span> Throwable </span>&#123;&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">native</span> <span class="keyword">void</span> <span class="title">notify</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">native</span> <span class="keyword">void</span> <span class="title">notifyAll</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">native</span> <span class="keyword">void</span> <span class="title">wait</span><span class="params">(<span class="keyword">long</span> timeout)</span> <span class="keyword">throws</span> InterruptedException</span></span><br><span class="line"><span class="function"></span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">void</span> <span class="title">wait</span><span class="params">(<span class="keyword">long</span> timeout, <span class="keyword">int</span> nanos)</span> <span class="keyword">throws</span> InterruptedException</span></span><br><span class="line"><span class="function"></span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">void</span> <span class="title">wait</span><span class="params">()</span> <span class="keyword">throws</span> InterruptedException</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="equals"><a href="#equals" class="headerlink" title="equals()"></a>equals()</h4><ul>
+<li>对于基本类型，== 判断两个值是否相等，基本类型没有 equals() 方法。</li>
+<li>对于引用类型，== 判断两个变量是否引用同一个对象，而 equals() 判断引用的对象是否等价。</li>
+</ul>
+<h4 id="hashCode"><a href="#hashCode" class="headerlink" title="hashCode()"></a>hashCode()</h4><p>hashCode() 返回散列值，而 equals() 是用来判断两个对象是否等价。 等价的两个对象散列值一定相同，但是散列值相同的两个对象不一定等价。</p>
+<p>在覆盖 equals() 方法时应当总是覆盖 hashCode() 方法，保证等价的两个对象散列值也相等。</p>
+<h4 id="toString-NaN"><a href="#toString-NaN" class="headerlink" title="toString()"></a>toString()</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> String <span class="title">toString</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> getClass().getName() + <span class="string">"@"</span> + Integer.toHexString(hashCode());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>其中 @ 后面的数值为散列码的无符号十六进制表示。</p>
+<h4 id="clone"><a href="#clone" class="headerlink" title="clone()"></a>clone()</h4><p>clone() 是 Object 的 protected 方法，它不是 public，一个类不显式去重写 clone()，其它类就不能直接去调用该类实例的 clone() 方法。<br>Cloneable 接口只是规定，如果一个类没有实现 Cloneable 接口又调用了 clone() 方法，就会抛出 CloneNotSupportedException。</p>
+
+            </div>
+          
+
+    
+      <footer class="post-footer">
+		
+		<div class="post-tags">
+		  
+			<a href="/tags/JavaBasics/">JavaBasics</a>
+		  
+		</div>
+		
+
+        
+        
+  <nav class="post-nav">
+    
+      <a class="prev" href="/2019/08/17/JavaBasics - 关键字/">
+        <i class="iconfont icon-left"></i>
+        <span class="prev-text nav-default">JavaBasics - 关键字</span>
+        <span class="prev-text nav-mobile">Prev</span>
+      </a>
+    
+    
+      <a class="next" href="/2019/08/16/Logback配置迁移到Apollo/">
+        <span class="next-text nav-default">Logback配置迁移到Apollo</span>
+        <span class="prev-text nav-mobile">Next</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    
+  </nav>
+
+        
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+      </footer>
+    
+  </article>
+
+    </div>
+
+      </div>
+
+      <footer id="colophon"><span class="copyright-year">
+    
+        &copy;
+    
+        2014 -
+    
+    2019
+    <span class="footer-author">yaoper.</span>
+    <span class="power-by">
+        Powered by <a class="hexo-link" href="https://hexo.io/">Hexo</a> and <a class="theme-link" href="https://github.com/frostfan/hexo-theme-polarbear">Polar Bear</a>
+    </span>
+</span>
+
+      </footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div>
+    
+
+
+    
+
+
+
+
+  
+    <script type="text/javascript" src="/lib/jquery/jquery-3.1.1.min.js"></script>
+  
+
+  
+
+    <script type="text/javascript" src="/js/src/theme.js?v=1.1"></script>
+<script type="text/javascript" src="/js/src/bootstrap.js?v=1.1"></script>
+
+  </body>
+</html>
