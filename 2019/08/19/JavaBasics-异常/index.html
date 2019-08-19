@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang>
+  <head><meta name="generator" content="Hexo 3.9.0">
+    
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1,minimum-scale=1,maximum-scale=1">
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+  <meta name="description" content="JavaBasics - 异常">
+
+
+
+
+  <meta name="keywords" content="JavaBasics,">
+
+
+
+
+
+  <link rel="alternate" href="/default" title="Illusory">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=1.1">
+
+
+
+<link rel="canonical" href="http://yaoper.github.io/2019/08/19/JavaBasics-异常/">
+
+
+<meta name="description" content="1.异常的概念Java异常是一个描述在代码段中发生异常的对象，当发生异常情况时，一个代表该异常的对象被创建并且在导致该异常的方法中被抛出，而该方法可以选择自己处理异常或者传递该异常。 2.异常继承体系Throwable可以用来表示任何可以作为异常抛出的类，分为两种：Error和Exception。  Error：通常是灾难性的致命的错误，是程序无法控制和处理的，当出现这些错误时，建议终止程序； E">
+<meta name="keywords" content="JavaBasics">
+<meta property="og:type" content="article">
+<meta property="og:title" content="JavaBasics - 异常">
+<meta property="og:url" content="http://yaoper.github.io/2019/08/19/JavaBasics-异常/index.html">
+<meta property="og:site_name" content="Illusory">
+<meta property="og:description" content="1.异常的概念Java异常是一个描述在代码段中发生异常的对象，当发生异常情况时，一个代表该异常的对象被创建并且在导致该异常的方法中被抛出，而该方法可以选择自己处理异常或者传递该异常。 2.异常继承体系Throwable可以用来表示任何可以作为异常抛出的类，分为两种：Error和Exception。  Error：通常是灾难性的致命的错误，是程序无法控制和处理的，当出现这些错误时，建议终止程序； E">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2019-08-19T09:37:05.431Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="JavaBasics - 异常">
+<meta name="twitter:description" content="1.异常的概念Java异常是一个描述在代码段中发生异常的对象，当发生异常情况时，一个代表该异常的对象被创建并且在导致该异常的方法中被抛出，而该方法可以选择自己处理异常或者传递该异常。 2.异常继承体系Throwable可以用来表示任何可以作为异常抛出的类，分为两种：Error和Exception。  Error：通常是灾难性的致命的错误，是程序无法控制和处理的，当出现这些错误时，建议终止程序； E">
+
+
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=1.1">
+<link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+
+
+
+
+
+<script type="text/javascript">
+  var themeConfig = {
+    fancybox: {
+      enable: false
+    },
+  };
+</script>
+
+
+
+
+  
+
+
+
+    <title> JavaBasics - 异常 - Illusory </title>
+  </head>
+
+  <body>
+    <div id="page">
+      <header id="masthead"><div class="site-header-inner">
+    <h1 class="site-title">
+        <a href="/." class="logo">Illusory</a>
+    </h1>
+
+    <nav id="nav-top">
+        
+            <ul id="menu-top" class="nav-top-items">
+                
+                    <li class="menu-item">
+                        <a href="/archives">
+                            
+                            
+                                Archives
+                            
+                        </a>
+                    </li>
+                
+                    <li class="menu-item">
+                        <a href="/about">
+                            
+                            
+                                About
+                            
+                        </a>
+                    </li>
+                
+            </ul>
+        
+  </nav>
+</div>
+
+      </header>
+      <div id="content">
+        
+    <div id="primary">
+        
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          JavaBasics - 异常
+        
+      </h1>
+
+      <time class="post-time">
+          Aug 19 2019
+      </time>
+    </header>
+
+
+
+    
+            <div class="post-content">
+            <h4 id="1-异常的概念"><a href="#1-异常的概念" class="headerlink" title="1.异常的概念"></a>1.异常的概念</h4><p>Java异常是一个描述在代码段中<strong>发生异常的对象</strong>，当发生异常情况时，一个代表该异常的对象被创建并且在导致该异常的方法中被抛出，而该方法可以选择自己处理异常或者传递该异常。</p>
+<h4 id="2-异常继承体系"><a href="#2-异常继承体系" class="headerlink" title="2.异常继承体系"></a>2.异常继承体系</h4><p>Throwable可以用来表示任何可以作为异常抛出的类，分为两种：Error和Exception。</p>
+<ul>
+<li>Error：通常是灾难性的致命的错误，是<strong>程序无法控制和处理</strong>的，当出现这些错误时，建议终止程序；</li>
+<li>Exception：通常情况下是可以被程序处理的，捕获后可能恢复，并且在程序中应该<strong>尽可能地去处理</strong>这些异常。</li>
+</ul>
+<p>Exception 分为两种：</p>
+<ul>
+<li><strong>受检异常</strong>：在正确的程序运行过程中，很容易出现的、情理可容的异常状况，在一定程度上这种异常的发生是可以预测的，并且一旦发生该种异常，就必须采取某种方式进行处理。（注意：除了RuntimeException及其子类以外，其他的 Exception 类及其子类都属于这种异常，当程序中可能出现这类异常，要么使用 try-catch 语句进行捕获，要么用 throws 子句抛出，否则编译无法通过。)</li>
+<li><strong>非受检异常</strong>：包括RuntimeException及其子类和Error。 (注意:非受检查异常为编译器不要求强制处理的异常，受检异常则是编译器要求必须处置的异常。)</li>
+</ul>
+<p>从责任角度看：<br>1.Error 属于JVM 需要负担的责任；<br>2.RuntimException是程序应该负担的责任；<br>3.Checked Exception（受检异常）是 Java 编译器应该负担的责任。</p>
+<h4 id="3-Java-异常的处理机制"><a href="#3-Java-异常的处理机制" class="headerlink" title="3.Java 异常的处理机制"></a>3.Java 异常的处理机制</h4><p>Java 异常处理机制本质上就是抛<strong>出异常和捕捉异常</strong>。</p>
+<p><u>抛出异常</u><br>i.普通问题:指在当前环境下能得到足够的信息，总能处理这个错误。<br>ii.异常情形:是指阻止当前方法或作用域继续执行的问题。对于异常情形，已经程序无法执行继续下去了， 因为在当前环境下无法获得必要的信息来解决问题，我们所能做的就是从当前环境中跳出，并把问题提交给上一级环境， 这就是抛出异常时所发生的事情。<br>iii.抛出异常后，会有几件事随之发生： ​<br>第一：像创建普通的java对象一样将使用new在堆上创建一个异常对象<br>第二：当前的执行路径（已经无法继续下去了）被终止，并且从当前环境中弹出对异常对象的引用。 ​<br>此时，异常处理机制接管程序，并开始寻找一个恰当的地方继续执行程序， 这个恰当的地方就是异常处理程序或者异常处理器， 它的任务是将程序从错误状态中恢复，以使程序要么换一种方式运行，要么继续运行下去。 ​</p>
+<p><u>捕捉异常</u><br>在方法抛出异常之后，运行时系统将转为寻找合适的异常处理器（exception handler）。 潜在的异常处理器是异常发生时依次存留在调用栈中的方法的集合。 当异常处理器所能处理的异常类型与方法抛出的异常类型相符时，即为合适的异常处理器。 运行时系统从发生异常的方法开始，依次回查调用栈中的方法，直至找到含有合适异常处理器的方法并执行。 当运行时系统遍历调用栈而未找到合适的异常处理器，则运行时系统终止。同时，意味着Java程序的终止。<br>注意：<br>对于运行时异常、错误和受检异常，Java技术所要求的异常处理方式有所不同。<br>（1）由于运行时异常及其子类的不可查性，为了更合理、更容易地实现应用程序， Java规定，运行时异常将由Java运行时系统自动抛出，允许应用程序忽略运行时异常。<br>（2）对于方法运行中可能出现的Error，当运行方法不欲捕捉时，Java允许该方法不做任何抛出声明。 因为，大多数Error异常属于永远不能被允许发生的状况，也属于合理的应用程序不该捕捉的异常。<br>（3）对于所有的受检异常， Java规定：一个方法必须捕捉，或者声明抛出方法之外。 也就是说，当一个方法选择不捕捉受检异常时，它必须声明将抛出异常。</p>
+<h4 id="4-Java-异常的处理原则"><a href="#4-Java-异常的处理原则" class="headerlink" title="4.Java 异常的处理原则"></a>4.Java 异常的处理原则</h4><ul>
+<li><strong>具体明确</strong>：抛出的异常应能通过异常类名和message准确说明异常的类型和产生异常的原因；</li>
+<li><strong>提早抛出</strong>：应尽可能早地发现并抛出异常，便于精确定位问题；</li>
+<li><strong>延迟捕获</strong>：异常的捕获和处理应尽可能延迟，让掌握更多信息的作用域来处理异常</li>
+</ul>
+<h4 id="5-常见问题"><a href="#5-常见问题" class="headerlink" title="5.常见问题"></a>5.常见问题</h4><p>a. try-catch-finally语句块的执行<br>(1)try 块：用于捕获异常。其后可接零个或多个catch块，如果没有catch块，则必须跟一个finally块。<br>(2)catch 块：用于处理try捕获到的异常。<br>(3)finally 块：无论是否捕获或处理异常，finally块里的语句都会被执行。 当在try块或catch块中遇到return语句时，finally语句块将在方法返回之前被执行。<br>在以下4种特殊情况下，finally块不会被执行：<br>1)在finally语句块中发生了异常。 ​<br>2)在前面的代码中用了System.exit()退出程序。<br>3)程序所在的线程死亡。<br>4)关闭CPU。</p>
+<p>b. try catch代码块的性能如何？<br>会影响JVM的重排序优化；<br>异常对象实例需要保存栈快照等信息，开销比较大。<br>final和finally和finalize的区别？<br>(1)final：最终的意思，可以修饰类，修饰成员变量，修饰成员方法<br>修饰类：类不能被继承 ​<br>修饰变量：变量是常量 ​<br>修饰方法：方法不能被重写（Override）<br>(2)finally:是异常处理的关键字，用于释放资源。一般来说，代码必须执行（特殊情况：在执行到finally JVM就退出了）<br>(3)finalize:是Object的一个方法，用于垃圾回收。</p>
+
+            </div>
+          
+
+    
+      <footer class="post-footer">
+		
+		<div class="post-tags">
+		  
+			<a href="/tags/JavaBasics/">JavaBasics</a>
+		  
+		</div>
+		
+
+        
+        
+  <nav class="post-nav">
+    
+      <a class="prev" href="/2019/08/19/JavaBasics-泛型/">
+        <i class="iconfont icon-left"></i>
+        <span class="prev-text nav-default">JavaBasics-泛型</span>
+        <span class="prev-text nav-mobile">Prev</span>
+      </a>
+    
+    
+      <a class="next" href="/2019/08/17/JavaBasics-反射/">
+        <span class="next-text nav-default">JavaBasics - 反射</span>
+        <span class="prev-text nav-mobile">Next</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    
+  </nav>
+
+        
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+      </footer>
+    
+  </article>
+
+    </div>
+
+      </div>
+
+      <footer id="colophon"><span class="copyright-year">
+    
+        &copy;
+    
+        2014 -
+    
+    2019
+    <span class="footer-author">yaoper.</span>
+    <span class="power-by">
+        Powered by <a class="hexo-link" href="https://hexo.io/">Hexo</a> and <a class="theme-link" href="https://github.com/frostfan/hexo-theme-polarbear">Polar Bear</a>
+    </span>
+</span>
+
+      </footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div>
+    
+
+
+    
+
+
+
+
+  
+    <script type="text/javascript" src="/lib/jquery/jquery-3.1.1.min.js"></script>
+  
+
+  
+
+    <script type="text/javascript" src="/js/src/theme.js?v=1.1"></script>
+<script type="text/javascript" src="/js/src/bootstrap.js?v=1.1"></script>
+
+  </body>
+</html>
