@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang>
+  <head><meta name="generator" content="Hexo 3.9.0">
+    
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1,minimum-scale=1,maximum-scale=1">
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+  <meta name="description" content="pandas学习笔记">
+
+
+
+
+  <meta name="keywords" content="Python,">
+
+
+
+
+
+  <link rel="alternate" href="/default" title="Illusory">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=1.1">
+
+
+
+<link rel="canonical" href="http://yaoper.github.io/2019/08/27/pandas学习笔记/">
+
+
+<meta name="description" content="Pandas处理以下三个数据结构  系列(Series) 数据帧(DataFrame) 面板(Panel)这些数据结构构建在Numpy数组之上，这意味着它们很快。  系列(Series)是能够保存任何类型的数据(整数，字符串，浮点数，Python对象等)的一维标记数组。轴标签统称为索引。Pandas系列可以使用以下构造函数创建 1pandas.Series( data, index, dtype,">
+<meta name="keywords" content="Python">
+<meta property="og:type" content="article">
+<meta property="og:title" content="pandas学习笔记">
+<meta property="og:url" content="http://yaoper.github.io/2019/08/27/pandas学习笔记/index.html">
+<meta property="og:site_name" content="Illusory">
+<meta property="og:description" content="Pandas处理以下三个数据结构  系列(Series) 数据帧(DataFrame) 面板(Panel)这些数据结构构建在Numpy数组之上，这意味着它们很快。  系列(Series)是能够保存任何类型的数据(整数，字符串，浮点数，Python对象等)的一维标记数组。轴标签统称为索引。Pandas系列可以使用以下构造函数创建 1pandas.Series( data, index, dtype,">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2019-08-27T08:41:30.835Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="pandas学习笔记">
+<meta name="twitter:description" content="Pandas处理以下三个数据结构  系列(Series) 数据帧(DataFrame) 面板(Panel)这些数据结构构建在Numpy数组之上，这意味着它们很快。  系列(Series)是能够保存任何类型的数据(整数，字符串，浮点数，Python对象等)的一维标记数组。轴标签统称为索引。Pandas系列可以使用以下构造函数创建 1pandas.Series( data, index, dtype,">
+
+
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=1.1">
+<link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+
+
+
+
+
+<script type="text/javascript">
+  var themeConfig = {
+    fancybox: {
+      enable: false
+    },
+  };
+</script>
+
+
+
+
+  
+
+
+
+    <title> pandas学习笔记 - Illusory </title>
+  </head>
+
+  <body>
+    <div id="page">
+      <header id="masthead"><div class="site-header-inner">
+    <h1 class="site-title">
+        <a href="/." class="logo">Illusory</a>
+    </h1>
+
+    <nav id="nav-top">
+        
+            <ul id="menu-top" class="nav-top-items">
+                
+                    <li class="menu-item">
+                        <a href="/archives">
+                            
+                            
+                                Archives
+                            
+                        </a>
+                    </li>
+                
+                    <li class="menu-item">
+                        <a href="/about">
+                            
+                            
+                                About
+                            
+                        </a>
+                    </li>
+                
+            </ul>
+        
+  </nav>
+</div>
+
+      </header>
+      <div id="content">
+        
+    <div id="primary">
+        
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          pandas学习笔记
+        
+      </h1>
+
+      <time class="post-time">
+          Aug 27 2019
+      </time>
+    </header>
+
+
+
+    
+            <div class="post-content">
+            <p><em>Pandas</em>处理以下三个数据结构</p>
+<ul>
+<li>系列(Series)</li>
+<li>数据帧(DataFrame)</li>
+<li>面板(Panel)<br>这些数据结构构建在Numpy数组之上，这意味着它们很快。</li>
+</ul>
+<p>系列(Series)是能够保存任何类型的数据(整数，字符串，浮点数，Python对象等)的一维标记数组。轴标签统称为索引。<br>Pandas系列可以使用以下构造函数创建</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pandas.Series( data, index, dtype, copy)</span><br></pre></td></tr></table></figure>
+
+<p>可以使用各种输入创建一个系列，如</p>
+<ul>
+<li>数组</li>
+<li>字典</li>
+<li>标量值或常数</li>
+</ul>
+<p>数据帧(DataFrame)是二维数据结构，即数据以行和列的表格方式排列。<br>数据帧(DataFrame)的功能特点：</p>
+<ul>
+<li>潜在的列是不同的类型</li>
+<li>大小可变</li>
+<li>标记轴(行和列)</li>
+<li>可以对行和列执行算术运算</li>
+</ul>
+<p>pandas中的DataFrame可以使用以下构造函数创建</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pandas.DataFrame( data, index, columns, dtype, copy)</span><br></pre></td></tr></table></figure>
+
+<p>面板(Panel)是3D容器的数据。面板数据一词来源于计量经济学，部分源于名称：Pandas - pan(el)-da(ta)-s。<br>3轴(axis)这个名称旨在给出描述涉及面板数据的操作的一些语义。它们是</p>
+<ul>
+<li>items - axis 0，每个项目对应于内部包含的数据帧(DataFrame)。</li>
+<li>major_axis - axis 1，它是每个数据帧(DataFrame)的索引(行)。</li>
+<li>minor_axis - axis 2，它是每个数据帧(DataFrame)的列。</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pandas.Panel(data, items, major_axis, minor_axis, dtype, copy)</span><br></pre></td></tr></table></figure>
+
+
+            </div>
+          
+
+    
+      <footer class="post-footer">
+		
+		<div class="post-tags">
+		  
+			<a href="/tags/Python/">Python</a>
+		  
+		</div>
+		
+
+        
+        
+  <nav class="post-nav">
+    
+    
+      <a class="next" href="/2019/08/19/JavaBasics-泛型/">
+        <span class="next-text nav-default">JavaBasics-泛型</span>
+        <span class="prev-text nav-mobile">Next</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    
+  </nav>
+
+        
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+      </footer>
+    
+  </article>
+
+    </div>
+
+      </div>
+
+      <footer id="colophon"><span class="copyright-year">
+    
+        &copy;
+    
+        2014 -
+    
+    2019
+    <span class="footer-author">yaoper.</span>
+    <span class="power-by">
+        Powered by <a class="hexo-link" href="https://hexo.io/">Hexo</a> and <a class="theme-link" href="https://github.com/frostfan/hexo-theme-polarbear">Polar Bear</a>
+    </span>
+</span>
+
+      </footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div>
+    
+
+
+    
+
+
+
+
+  
+    <script type="text/javascript" src="/lib/jquery/jquery-3.1.1.min.js"></script>
+  
+
+  
+
+    <script type="text/javascript" src="/js/src/theme.js?v=1.1"></script>
+<script type="text/javascript" src="/js/src/bootstrap.js?v=1.1"></script>
+
+  </body>
+</html>
