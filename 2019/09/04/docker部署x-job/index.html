@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang>
+  <head><meta name="generator" content="Hexo 3.9.0">
+    
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1,minimum-scale=1,maximum-scale=1">
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+  <meta name="description" content="docker部署x-job-admin">
+
+
+
+
+  <meta name="keywords" content="X-Job,">
+
+
+
+
+
+  <link rel="alternate" href="/default" title="Illusory">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=1.1">
+
+
+
+<link rel="canonical" href="http://yaoper.github.io/2019/09/04/docker部署x-job/">
+
+
+<meta name="description" content="1.官方镜像下载x-job-admin的官方镜像已经被推送到公共镜像仓库https://hub.docker.com/r/xuxueli/xxl-job-admin,  获取时注意官方提供的tags。 1docker pull xuxueli/xxl-job-admin:2.1.0  2.推送镜像到仓库镜像打个本地标签 1docker tag xuxueli/xxl-job-admin:2.1.0">
+<meta name="keywords" content="X-Job">
+<meta property="og:type" content="article">
+<meta property="og:title" content="docker部署x-job-admin">
+<meta property="og:url" content="http://yaoper.github.io/2019/09/04/docker部署x-job/index.html">
+<meta property="og:site_name" content="Illusory">
+<meta property="og:description" content="1.官方镜像下载x-job-admin的官方镜像已经被推送到公共镜像仓库https://hub.docker.com/r/xuxueli/xxl-job-admin,  获取时注意官方提供的tags。 1docker pull xuxueli/xxl-job-admin:2.1.0  2.推送镜像到仓库镜像打个本地标签 1docker tag xuxueli/xxl-job-admin:2.1.0">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2019-09-04T02:25:34.370Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="docker部署x-job-admin">
+<meta name="twitter:description" content="1.官方镜像下载x-job-admin的官方镜像已经被推送到公共镜像仓库https://hub.docker.com/r/xuxueli/xxl-job-admin,  获取时注意官方提供的tags。 1docker pull xuxueli/xxl-job-admin:2.1.0  2.推送镜像到仓库镜像打个本地标签 1docker tag xuxueli/xxl-job-admin:2.1.0">
+
+
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=1.1">
+<link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+
+
+
+
+
+<script type="text/javascript">
+  var themeConfig = {
+    fancybox: {
+      enable: false
+    },
+  };
+</script>
+
+
+
+
+  
+
+
+
+    <title> docker部署x-job-admin - Illusory </title>
+  </head>
+
+  <body>
+    <div id="page">
+      <header id="masthead"><div class="site-header-inner">
+    <h1 class="site-title">
+        <a href="/." class="logo">Illusory</a>
+    </h1>
+
+    <nav id="nav-top">
+        
+            <ul id="menu-top" class="nav-top-items">
+                
+                    <li class="menu-item">
+                        <a href="/archives">
+                            
+                            
+                                Archives
+                            
+                        </a>
+                    </li>
+                
+                    <li class="menu-item">
+                        <a href="/about">
+                            
+                            
+                                About
+                            
+                        </a>
+                    </li>
+                
+            </ul>
+        
+  </nav>
+</div>
+
+      </header>
+      <div id="content">
+        
+    <div id="primary">
+        
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          docker部署x-job-admin
+        
+      </h1>
+
+      <time class="post-time">
+          Sep 04 2019
+      </time>
+    </header>
+
+
+
+    
+            <div class="post-content">
+            <h4 id="1-官方镜像下载"><a href="#1-官方镜像下载" class="headerlink" title="1.官方镜像下载"></a>1.官方镜像下载</h4><p>x-job-admin的官方镜像已经被推送到公共镜像仓库<a href="https://hub.docker.com/r/xuxueli/xxl-job-admin" target="_blank" rel="noopener">https://hub.docker.com/r/xuxueli/xxl-job-admin</a>,  获取时注意官方提供的tags。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker pull xuxueli/xxl-job-admin:2.1.0</span><br></pre></td></tr></table></figure>
+
+<h4 id="2-推送镜像到仓库"><a href="#2-推送镜像到仓库" class="headerlink" title="2.推送镜像到仓库"></a>2.推送镜像到仓库</h4><p>镜像打个本地标签</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker tag xuxueli/xxl-job-admin:2.1.0 hub.uupt-docker.com/local-test/xxl-job-admin:2.1.0</span><br></pre></td></tr></table></figure>
+
+<p>推送到私有镜像仓库</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">dokcer push hub.uupt-docker.com/local-test/xxl-job-admin:2.1.0</span><br></pre></td></tr></table></figure>
+
+<h4 id="3-配置启动参数"><a href="#3-配置启动参数" class="headerlink" title="3.配置启动参数"></a>3.配置启动参数</h4><p>编写docker compose文件，配置数据库连接</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">version:</span> <span class="string">'2'</span></span><br><span class="line"><span class="attr">services:</span></span><br><span class="line"><span class="attr">  admin:</span></span><br><span class="line"><span class="attr">    image:</span> <span class="string">hub.uupt-docker.com/local-test/xxl-job-admin:2.1.0</span></span><br><span class="line"><span class="attr">    ports:</span></span><br><span class="line"><span class="bullet">      -</span> <span class="string">"9180:8080"</span></span><br><span class="line"><span class="attr">    network_mode:</span> <span class="string">"bridge"</span></span><br><span class="line"><span class="attr">    restart:</span> <span class="string">always</span> </span><br><span class="line"><span class="attr">    environment:</span></span><br><span class="line"><span class="bullet">      -</span> <span class="string">spring.datasource.url=jdbc:mysql://192.168.6.36:3306/xxl_job?Unicode=true&amp;characterEncoding=UTF-8</span></span><br><span class="line"><span class="bullet">      -</span> <span class="string">spring.datasource.username=root</span></span><br><span class="line"><span class="bullet">      -</span> <span class="string">spring.datasource.password=123456</span></span><br><span class="line"><span class="attr">    volumes:</span></span><br><span class="line"><span class="bullet">      -</span> <span class="string">/tmp:/data/applogs</span></span><br><span class="line"><span class="attr">networks:</span></span><br><span class="line"><span class="attr">  default:</span></span><br><span class="line"><span class="attr">    external:</span></span><br><span class="line"><span class="attr">      name:</span> <span class="string">bridge</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="4-部署验证"><a href="#4-部署验证" class="headerlink" title="4.部署验证"></a>4.部署验证</h4><p>访问<a href="http://192.168.6.32:9180/xxl-job-admin/" target="_blank" rel="noopener">http://192.168.6.32:9180/xxl-job-admin/</a> ，输入用户名密码（admin/123456）进入管理后台，即可进行任务管理</p>
+
+            </div>
+          
+
+    
+      <footer class="post-footer">
+		
+		<div class="post-tags">
+		  
+			<a href="/tags/X-Job/">X-Job</a>
+		  
+		</div>
+		
+
+        
+        
+  <nav class="post-nav">
+    
+    
+      <a class="next" href="/2019/08/30/X-Job快速入门/">
+        <span class="next-text nav-default">X-Job快速入门</span>
+        <span class="prev-text nav-mobile">Next</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    
+  </nav>
+
+        
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+      </footer>
+    
+  </article>
+
+    </div>
+
+      </div>
+
+      <footer id="colophon"><span class="copyright-year">
+    
+        &copy;
+    
+        2014 -
+    
+    2019
+    <span class="footer-author">yaoper.</span>
+    <span class="power-by">
+        Powered by <a class="hexo-link" href="https://hexo.io/">Hexo</a> and <a class="theme-link" href="https://github.com/frostfan/hexo-theme-polarbear">Polar Bear</a>
+    </span>
+</span>
+
+      </footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div>
+    
+
+
+    
+
+
+
+
+  
+    <script type="text/javascript" src="/lib/jquery/jquery-3.1.1.min.js"></script>
+  
+
+  
+
+    <script type="text/javascript" src="/js/src/theme.js?v=1.1"></script>
+<script type="text/javascript" src="/js/src/bootstrap.js?v=1.1"></script>
+
+  </body>
+</html>
