@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang>
+  <head><meta name="generator" content="Hexo 3.9.0">
+    
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1,minimum-scale=1,maximum-scale=1">
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+  <meta name="description" content="JUC (二)">
+
+
+
+
+  <meta name="keywords" content="JUC,">
+
+
+
+
+
+  <link rel="alternate" href="/default" title="Illusory">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=1.1">
+
+
+
+<link rel="canonical" href="http://yaoper.github.io/2019/09/21/JUC-二/">
+
+
+<meta name="description" content="10.并发 Map(映射) ConcurrentMapjava.util.concurrent.ConcurrentMap 接口表示了一个能够对别人的访问(插入和提取)进行并发处理的 java.util.Map。ConcurrentMap 除了从其父接口 java.util.Map 继承来的方法之外还有一些额外的原子性方法。java.util.concurrent 包具备 ConcurrentMa">
+<meta name="keywords" content="JUC">
+<meta property="og:type" content="article">
+<meta property="og:title" content="JUC (二)">
+<meta property="og:url" content="http://yaoper.github.io/2019/09/21/JUC-二/index.html">
+<meta property="og:site_name" content="Illusory">
+<meta property="og:description" content="10.并发 Map(映射) ConcurrentMapjava.util.concurrent.ConcurrentMap 接口表示了一个能够对别人的访问(插入和提取)进行并发处理的 java.util.Map。ConcurrentMap 除了从其父接口 java.util.Map 继承来的方法之外还有一些额外的原子性方法。java.util.concurrent 包具备 ConcurrentMa">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://img-blog.csdn.net/20150303091044331?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvZGVmb25kcw==">
+<meta property="og:updated_time" content="2019-09-21T11:19:09.514Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="JUC (二)">
+<meta name="twitter:description" content="10.并发 Map(映射) ConcurrentMapjava.util.concurrent.ConcurrentMap 接口表示了一个能够对别人的访问(插入和提取)进行并发处理的 java.util.Map。ConcurrentMap 除了从其父接口 java.util.Map 继承来的方法之外还有一些额外的原子性方法。java.util.concurrent 包具备 ConcurrentMa">
+<meta name="twitter:image" content="https://img-blog.csdn.net/20150303091044331?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvZGVmb25kcw==">
+
+
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=1.1">
+<link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+
+
+
+
+
+<script type="text/javascript">
+  var themeConfig = {
+    fancybox: {
+      enable: false
+    },
+  };
+</script>
+
+
+
+
+  
+
+
+
+    <title> JUC (二) - Illusory </title>
+  </head>
+
+  <body>
+    <div id="page">
+      <header id="masthead"><div class="site-header-inner">
+    <h1 class="site-title">
+        <a href="/." class="logo">Illusory</a>
+    </h1>
+
+    <nav id="nav-top">
+        
+            <ul id="menu-top" class="nav-top-items">
+                
+                    <li class="menu-item">
+                        <a href="/archives">
+                            
+                            
+                                Archives
+                            
+                        </a>
+                    </li>
+                
+                    <li class="menu-item">
+                        <a href="/about">
+                            
+                            
+                                About
+                            
+                        </a>
+                    </li>
+                
+            </ul>
+        
+  </nav>
+</div>
+
+      </header>
+      <div id="content">
+        
+    <div id="primary">
+        
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          JUC (二)
+        
+      </h1>
+
+      <time class="post-time">
+          Sep 21 2019
+      </time>
+    </header>
+
+
+
+    
+            <div class="post-content">
+            <h4 id="10-并发-Map-映射-ConcurrentMap"><a href="#10-并发-Map-映射-ConcurrentMap" class="headerlink" title="10.并发 Map(映射) ConcurrentMap"></a>10.并发 Map(映射) ConcurrentMap</h4><p>java.util.concurrent.ConcurrentMap 接口表示了一个能够对别人的访问(插入和提取)进行并发处理的 java.util.Map。<br>ConcurrentMap 除了从其父接口 java.util.Map 继承来的方法之外还有一些额外的原子性方法。<br>java.util.concurrent 包具备 ConcurrentMap 接口的实现类：<br><strong>ConcurrentHashMap</strong></p>
+<p>ConcurrentHashMap 和 java.util.HashTable 类很相似，但 ConcurrentHashMap 能够提供比 HashTable 更好的并发性能。在你从中读取对象的时候 ConcurrentHashMap 并不会把整个 Map 锁住。此外，在你向其中写入对象的时候，ConcurrentHashMap 也不会锁住整个 Map。它的内部只是把 Map 中正在被写入的部分进行锁定。<br>另外一个不同点是，在被遍历的时候，即使是 ConcurrentHashMap 被改动，它也不会抛 ConcurrentModificationException。尽管 Iterator 的设计不是为多个线程的同时使用。<br>以下是如何使用 ConcurrentMap 接口的一个例子。本示例使用了 ConcurrentHashMap 实现类：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">ConcurrentMap concurrentMap = <span class="keyword">new</span> ConcurrentHashMap();</span><br><span class="line">concurrentMap.put(<span class="string">"key"</span>, <span class="string">"value"</span>);</span><br><span class="line">Object value = concurrentMap.get(<span class="string">"key"</span>);</span><br></pre></td></tr></table></figure>
+
+<h4 id="11-并发导航映射-ConcurrentNavigableMap"><a href="#11-并发导航映射-ConcurrentNavigableMap" class="headerlink" title="11.并发导航映射 ConcurrentNavigableMap"></a>11.并发导航映射 ConcurrentNavigableMap</h4><p>java.util.concurrent.ConcurrentNavigableMap 是一个支持并发访问的 java.util.NavigableMap，它还能让它的子 map 具备并发访问的能力。所谓的 “子 map” 指的是诸如 headMap()，subMap()，tailMap() 之类的方法返回的 map。<br>NavigableMap 中的方法不再赘述，我们来看一下 ConcurrentNavigableMap 添加的方法。</p>
+<p><strong>headMap()</strong><br>headMap(T toKey) 方法返回一个包含了<strong>小于</strong>给定 toKey 的 key 的子 map。<br>如果你对原始 map 里的元素做了改动，这些改动将影响到子 map 中的元素<br>以下示例演示了对 headMap() 方法的使用：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">ConcurrentNavigableMap map = <span class="keyword">new</span> ConcurrentSkipListMap();</span><br><span class="line"> </span><br><span class="line">map.put(<span class="string">"1"</span>, <span class="string">"one"</span>);</span><br><span class="line">map.put(<span class="string">"2"</span>, <span class="string">"two"</span>);</span><br><span class="line">map.put(<span class="string">"3"</span>, <span class="string">"three"</span>);</span><br><span class="line"> </span><br><span class="line">ConcurrentNavigableMap headMap = map.headMap(<span class="string">"2"</span>);</span><br></pre></td></tr></table></figure>
+
+<p>headMap 将指向一个只含有键 “1” 的 ConcurrentNavigableMap，因为只有这一个键小于 “2”。</p>
+<p><strong>tailMap()</strong><br>tailMap(T fromKey) 方法返回一个包含了<strong>不小于</strong>给定 fromKey 的 key 的子 map。<br>如果你对原始 map 里的元素做了改动，这些改动将影响到子 map 中的元素(译者注：map 集合持有的其实只是对象的引用)。<br>以下示例演示了对 tailMap() 方法的使用：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">ConcurrentNavigableMap map = <span class="keyword">new</span> ConcurrentSkipListMap();</span><br><span class="line"> </span><br><span class="line">map.put(<span class="string">"1"</span>, <span class="string">"one"</span>);</span><br><span class="line">map.put(<span class="string">"2"</span>, <span class="string">"two"</span>);</span><br><span class="line">map.put(<span class="string">"3"</span>, <span class="string">"three"</span>);</span><br><span class="line"> </span><br><span class="line">ConcurrentNavigableMap tailMap = map.tailMap(<span class="string">"2"</span>);</span><br></pre></td></tr></table></figure>
+
+<p>tailMap 将拥有键 “2” 和 “3”，因为它们不小于给定键 “2”。</p>
+<p><strong>subMap()</strong><br>subMap() 方法返回原始 map 中，键介于 from(包含) 和 to (不包含) 之间的子 map。示例如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">ConcurrentNavigableMap map = <span class="keyword">new</span> ConcurrentSkipListMap();</span><br><span class="line"> </span><br><span class="line">map.put(<span class="string">"1"</span>, <span class="string">"one"</span>);</span><br><span class="line">map.put(<span class="string">"2"</span>, <span class="string">"two"</span>);</span><br><span class="line">map.put(<span class="string">"3"</span>, <span class="string">"three"</span>);</span><br><span class="line"> </span><br><span class="line">ConcurrentNavigableMap subMap = map.subMap(<span class="string">"2"</span>, <span class="string">"3"</span>);</span><br></pre></td></tr></table></figure>
+
+<p>返回的 submap 只包含键 “2”，因为只有它满足不小于 “2”，比 “3” 小。</p>
+<p><strong>更多方法</strong><br>ConcurrentNavigableMap 接口还有其他一些方法可供使用，比如：<br>descendingKeySet()<br>descendingMap()<br>navigableKeySet()</p>
+<h4 id="12-闭锁-CountDownLatch"><a href="#12-闭锁-CountDownLatch" class="headerlink" title="12.闭锁 CountDownLatch"></a>12.闭锁 CountDownLatch</h4><p>java.util.concurrent.CountDownLatch 是一个并发构造，它允许一个或多个线程等待一系列指定操作的完成。<br>CountDownLatch 以一个给定的数量初始化。countDown() 每被调用一次，这一数量就减一。通过调用 await() 方法之一，线程可以阻塞等待这一数量到达零。<br>以下是一个简单示例。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br></pre></td><td class="code"><pre><span class="line">CountDownLatch latch = <span class="keyword">new</span> CountDownLatch(<span class="number">3</span>);</span><br><span class="line"> </span><br><span class="line">Waiter waiter = <span class="keyword">new</span> Waiter(latch);</span><br><span class="line">Decrementer decrementer = <span class="keyword">new</span> Decrementer(latch);</span><br><span class="line"> </span><br><span class="line"><span class="keyword">new</span> Thread(waiter).start();</span><br><span class="line"><span class="keyword">new</span> Thread(decrementer).start();</span><br><span class="line"> </span><br><span class="line">Thread.sleep(<span class="number">4000</span>);</span><br><span class="line"> </span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Waiter</span> <span class="keyword">implements</span> <span class="title">Runnable</span></span>&#123;</span><br><span class="line"> </span><br><span class="line">    CountDownLatch latch = <span class="keyword">null</span>;</span><br><span class="line"> </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Waiter</span><span class="params">(CountDownLatch latch)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.latch = latch;</span><br><span class="line">    &#125;</span><br><span class="line"> </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            latch.await();</span><br><span class="line">        &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line"> </span><br><span class="line">        System.out.println(<span class="string">"Waiter Released"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Decrementer</span> <span class="keyword">implements</span> <span class="title">Runnable</span> </span>&#123;</span><br><span class="line"> </span><br><span class="line">    CountDownLatch latch = <span class="keyword">null</span>;</span><br><span class="line"> </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Decrementer</span><span class="params">(CountDownLatch latch)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.latch = latch;</span><br><span class="line">    &#125;</span><br><span class="line"> </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line"> </span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            Thread.sleep(<span class="number">1000</span>);</span><br><span class="line">            <span class="keyword">this</span>.latch.countDown();</span><br><span class="line"> </span><br><span class="line">            Thread.sleep(<span class="number">1000</span>);</span><br><span class="line">            <span class="keyword">this</span>.latch.countDown();</span><br><span class="line"> </span><br><span class="line">            Thread.sleep(<span class="number">1000</span>);</span><br><span class="line">            <span class="keyword">this</span>.latch.countDown();</span><br><span class="line">        &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>运行结果：Decrementer 三次调用 countDown() 之后，等待中的 Waiter 才会从 await() 调用中释放出来。</p>
+<h4 id="13-栅栏-CyclicBarrier"><a href="#13-栅栏-CyclicBarrier" class="headerlink" title="13.栅栏 CyclicBarrier"></a>13.栅栏 CyclicBarrier</h4><p>java.util.concurrent.CyclicBarrier 类是一种同步机制，它能够对处理一些算法的线程实现同步。换句话讲，它就是一个所有线程必须等待的一个栅栏，直到所有线程都到达这里，然后所有线程才可以继续做其他事情。图示如下：<br><img src="https://img-blog.csdn.net/20150303091044331?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvZGVmb25kcw==" alt="CyclicBarrier"></p>
+<p><strong>两个线程在栅栏旁等待对方。</strong><br>通过调用 CyclicBarrier 对象的 await() 方法，两个线程可以实现互相等待。一旦 N 个线程在等待 CyclicBarrier 达成，所有线程将被释放掉去继续运行。</p>
+<p>在创建一个 CyclicBarrier 的时候你需要定义有多少线程在被释放之前等待栅栏。创建 CyclicBarrier 示例：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">CyclicBarrier barrier = <span class="keyword">new</span> CyclicBarrier(<span class="number">2</span>);</span><br></pre></td></tr></table></figure>
+
+<p>等待一个 CyclicBarrier</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">barrier.await();</span><br></pre></td></tr></table></figure>
+
+<p>当然，你也可以为等待线程设定一个超时时间。等待超过了超时时间之后，即便还没有达成 N 个线程等待 CyclicBarrier 的条件，该线程也会被释放出来。以下是定义超时时间示例：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">barrier.await(<span class="number">10</span>, TimeUnit.SECONDS);</span><br></pre></td></tr></table></figure>
+
+<p>满足以下任何条件都可以让等待 CyclicBarrier 的线程释放：</p>
+<ul>
+<li>最后一个线程也到达 CyclicBarrier(调用 await())</li>
+<li>当前线程被其他线程打断(其他线程调用了这个线程的 interrupt() 方法)</li>
+<li>其他等待栅栏的线程被打断</li>
+<li>其他等待栅栏的线程因超时而被释放</li>
+<li>外部线程调用了栅栏的 CyclicBarrier.reset() 方法</li>
+</ul>
+<p>CyclicBarrier 支持一个栅栏行动，栅栏行动是一个 Runnable 实例，一旦最后等待栅栏的线程抵达，该实例将被执行。你可以在 CyclicBarrier 的构造方法中将 Runnable 栅栏行动传给它：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Runnable barrierAction = ... ;</span><br><span class="line">CyclicBarrier barrier = <span class="keyword">new</span> CyclicBarrier(<span class="number">2</span>, barrierAction);</span><br></pre></td></tr></table></figure>
+
+<p>以下代码演示了如何使用 CyclicBarrier：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br></pre></td><td class="code"><pre><span class="line">Runnable barrier1Action = <span class="keyword">new</span> Runnable() &#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"BarrierAction 1 executed "</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">Runnable barrier2Action = <span class="keyword">new</span> Runnable() &#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"BarrierAction 2 executed "</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"> </span><br><span class="line">CyclicBarrier barrier1 = <span class="keyword">new</span> CyclicBarrier(<span class="number">2</span>, barrier1Action);</span><br><span class="line">CyclicBarrier barrier2 = <span class="keyword">new</span> CyclicBarrier(<span class="number">2</span>, barrier2Action);</span><br><span class="line"> </span><br><span class="line">CyclicBarrierRunnable barrierRunnable1 = <span class="keyword">new</span> CyclicBarrierRunnable(barrier1, barrier2);</span><br><span class="line"> </span><br><span class="line">CyclicBarrierRunnable barrierRunnable2 = <span class="keyword">new</span> CyclicBarrierRunnable(barrier1, barrier2);</span><br><span class="line"> </span><br><span class="line"><span class="keyword">new</span> Thread(barrierRunnable1).start();</span><br><span class="line"><span class="keyword">new</span> Thread(barrierRunnable2).start();</span><br><span class="line"></span><br><span class="line">CyclicBarrierRunnable 类：</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">CyclicBarrierRunnable</span> <span class="keyword">implements</span> <span class="title">Runnable</span></span>&#123;</span><br><span class="line"> </span><br><span class="line">    CyclicBarrier barrier1 = <span class="keyword">null</span>;</span><br><span class="line">    CyclicBarrier barrier2 = <span class="keyword">null</span>;</span><br><span class="line"> </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">CyclicBarrierRunnable</span><span class="params">(CyclicBarrier barrier1, CyclicBarrier barrier2)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.barrier1 = barrier1;</span><br><span class="line">        <span class="keyword">this</span>.barrier2 = barrier2;</span><br><span class="line">    &#125;</span><br><span class="line"> </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            Thread.sleep(<span class="number">1000</span>);</span><br><span class="line">            System.out.println(Thread.currentThread().getName() + <span class="string">" waiting at barrier 1"</span>);</span><br><span class="line">            <span class="keyword">this</span>.barrier1.await();</span><br><span class="line"> </span><br><span class="line">            Thread.sleep(<span class="number">1000</span>);</span><br><span class="line">            System.out.println(Thread.currentThread().getName() +</span><br><span class="line">                                <span class="string">" waiting at barrier 2"</span>);</span><br><span class="line">            <span class="keyword">this</span>.barrier2.await();</span><br><span class="line"> </span><br><span class="line">            System.out.println(Thread.currentThread().getName() +</span><br><span class="line">                                <span class="string">" done!"</span>);</span><br><span class="line"> </span><br><span class="line">        &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125; <span class="keyword">catch</span> (BrokenBarrierException e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><a href="https://blog.csdn.net/defonds/article/details/44021605/" target="_blank" rel="noopener">https://blog.csdn.net/defonds/article/details/44021605/</a></p>
+
+            </div>
+          
+
+    
+      <footer class="post-footer">
+		
+		<div class="post-tags">
+		  
+			<a href="/tags/JUC/">JUC</a>
+		  
+		</div>
+		
+
+        
+        
+  <nav class="post-nav">
+    
+      <a class="prev" href="/2019/09/25/查找CPU占用比较高的线程/">
+        <i class="iconfont icon-left"></i>
+        <span class="prev-text nav-default">查找CPU占用比较高的线程</span>
+        <span class="prev-text nav-mobile">Prev</span>
+      </a>
+    
+    
+      <a class="next" href="/2019/09/20/深入理解项目中的各种O/">
+        <span class="next-text nav-default">深入理解项目中的各种O</span>
+        <span class="prev-text nav-mobile">Next</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    
+  </nav>
+
+        
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+      </footer>
+    
+  </article>
+
+    </div>
+
+      </div>
+
+      <footer id="colophon"><span class="copyright-year">
+    
+        &copy;
+    
+        2014 -
+    
+    2019
+    <span class="footer-author">yaoper.</span>
+    <span class="power-by">
+        Powered by <a class="hexo-link" href="https://hexo.io/">Hexo</a> and <a class="theme-link" href="https://github.com/frostfan/hexo-theme-polarbear">Polar Bear</a>
+    </span>
+</span>
+
+      </footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div>
+    
+
+
+    
+
+
+
+
+  
+    <script type="text/javascript" src="/lib/jquery/jquery-3.1.1.min.js"></script>
+  
+
+  
+
+    <script type="text/javascript" src="/js/src/theme.js?v=1.1"></script>
+<script type="text/javascript" src="/js/src/bootstrap.js?v=1.1"></script>
+
+  </body>
+</html>

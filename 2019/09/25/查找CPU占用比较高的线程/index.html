@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang>
+  <head><meta name="generator" content="Hexo 3.9.0">
+    
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1,minimum-scale=1,maximum-scale=1">
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+  <meta name="description" content="查找CPU占用比较高的线程">
+
+
+
+
+  <meta name="keywords" content="linux,">
+
+
+
+
+
+  <link rel="alternate" href="/default" title="Illusory">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=1.1">
+
+
+
+<link rel="canonical" href="http://yaoper.github.io/2019/09/25/查找CPU占用比较高的线程/">
+
+
+<meta name="description" content="CPU长时间使用率比较大，系统的负载会飙升。下面的步骤可以查找CPU使用率比较高的线程。 1.top查找使用率较高的进程 1234 PID USER      PR  NI    VIRT    RES    SHR S  %CPU %MEM     TIME+ COMMAND">
+<meta name="keywords" content="linux">
+<meta property="og:type" content="article">
+<meta property="og:title" content="查找CPU占用比较高的线程">
+<meta property="og:url" content="http://yaoper.github.io/2019/09/25/查找CPU占用比较高的线程/index.html">
+<meta property="og:site_name" content="Illusory">
+<meta property="og:description" content="CPU长时间使用率比较大，系统的负载会飙升。下面的步骤可以查找CPU使用率比较高的线程。 1.top查找使用率较高的进程 1234 PID USER      PR  NI    VIRT    RES    SHR S  %CPU %MEM     TIME+ COMMAND">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2019-09-25T06:57:54.661Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="查找CPU占用比较高的线程">
+<meta name="twitter:description" content="CPU长时间使用率比较大，系统的负载会飙升。下面的步骤可以查找CPU使用率比较高的线程。 1.top查找使用率较高的进程 1234 PID USER      PR  NI    VIRT    RES    SHR S  %CPU %MEM     TIME+ COMMAND">
+
+
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=1.1">
+<link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+
+
+
+
+
+<script type="text/javascript">
+  var themeConfig = {
+    fancybox: {
+      enable: false
+    },
+  };
+</script>
+
+
+
+
+  
+
+
+
+    <title> 查找CPU占用比较高的线程 - Illusory </title>
+  </head>
+
+  <body>
+    <div id="page">
+      <header id="masthead"><div class="site-header-inner">
+    <h1 class="site-title">
+        <a href="/." class="logo">Illusory</a>
+    </h1>
+
+    <nav id="nav-top">
+        
+            <ul id="menu-top" class="nav-top-items">
+                
+                    <li class="menu-item">
+                        <a href="/archives">
+                            
+                            
+                                Archives
+                            
+                        </a>
+                    </li>
+                
+                    <li class="menu-item">
+                        <a href="/about">
+                            
+                            
+                                About
+                            
+                        </a>
+                    </li>
+                
+            </ul>
+        
+  </nav>
+</div>
+
+      </header>
+      <div id="content">
+        
+    <div id="primary">
+        
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          查找CPU占用比较高的线程
+        
+      </h1>
+
+      <time class="post-time">
+          Sep 25 2019
+      </time>
+    </header>
+
+
+
+    
+            <div class="post-content">
+            <p>CPU长时间使用率比较大，系统的负载会飙升。下面的步骤可以查找CPU使用率比较高的线程。</p>
+<p>1.top查找使用率较高的进程</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"> PID USER      PR  NI    VIRT    RES    SHR S  %CPU %MEM     TIME+ COMMAND                                                                                                                                                                  </span><br><span class="line">10310 root      20   0 3826652 358736   3464 S   1.7  4.4 470:25.90 java                                                                                                                                                                     </span><br><span class="line">10311 root      20   0 3793592 245128   3244 S   1.7  3.0 460:04.22 java                                                                                                                                                                     </span><br><span class="line">22048 root      20   0 7920236 214212   1220 S   1.0  2.7 367:55.57 java</span><br></pre></td></tr></table></figure>
+
+<p>2.查看进程（10310）下CPU使用率比较高的线程</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ps -mp 10310 -o THREAD,tid,time</span><br></pre></td></tr></table></figure>
+
+<p>3.线程ID转换为16进制格式</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">printf &quot;%x\n&quot; tid</span><br></pre></td></tr></table></figure>
+
+<p>4.打印线程堆栈信息</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">jstack pid |grep tid -A 60</span><br></pre></td></tr></table></figure>
+            </div>
+          
+
+    
+      <footer class="post-footer">
+		
+		<div class="post-tags">
+		  
+			<a href="/tags/linux/">linux</a>
+		  
+		</div>
+		
+
+        
+        
+  <nav class="post-nav">
+    
+      <a class="prev" href="/2019/09/26/Kubernetes简介/">
+        <i class="iconfont icon-left"></i>
+        <span class="prev-text nav-default">Kubernetes简介</span>
+        <span class="prev-text nav-mobile">Prev</span>
+      </a>
+    
+    
+      <a class="next" href="/2019/09/21/JUC-二/">
+        <span class="next-text nav-default">JUC (二)</span>
+        <span class="prev-text nav-mobile">Next</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    
+  </nav>
+
+        
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+      </footer>
+    
+  </article>
+
+    </div>
+
+      </div>
+
+      <footer id="colophon"><span class="copyright-year">
+    
+        &copy;
+    
+        2014 -
+    
+    2019
+    <span class="footer-author">yaoper.</span>
+    <span class="power-by">
+        Powered by <a class="hexo-link" href="https://hexo.io/">Hexo</a> and <a class="theme-link" href="https://github.com/frostfan/hexo-theme-polarbear">Polar Bear</a>
+    </span>
+</span>
+
+      </footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div>
+    
+
+
+    
+
+
+
+
+  
+    <script type="text/javascript" src="/lib/jquery/jquery-3.1.1.min.js"></script>
+  
+
+  
+
+    <script type="text/javascript" src="/js/src/theme.js?v=1.1"></script>
+<script type="text/javascript" src="/js/src/bootstrap.js?v=1.1"></script>
+
+  </body>
+</html>

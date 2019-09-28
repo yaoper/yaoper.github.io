@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang>
+  <head><meta name="generator" content="Hexo 3.9.0">
+    
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1,minimum-scale=1,maximum-scale=1">
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+  <meta name="description" content="深入理解项目中的各种O">
+
+
+
+
+  <meta name="keywords" content="架构,">
+
+
+
+
+
+  <link rel="alternate" href="/default" title="Illusory">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=1.1">
+
+
+
+<link rel="canonical" href="http://yaoper.github.io/2019/09/20/深入理解项目中的各种O/">
+
+
+<meta name="description" content="1.概念 VO（View Object）：视图对象，用于展示层，它的作用是把某个指定页面（或组件）的所有数据封装起来。  DTO（Data Transfer Object）：数据传输对象，这个概念来源于J2EE的设计模式，原来的目的是为了EJB的分布式应用提供粗粒度的数据实体，以减少分布式调用的次数，从而提高分布式调用的性能和降低网络负载，但在这里，我泛指用于展示层与服务层之间的数据传输对象。">
+<meta name="keywords" content="架构">
+<meta property="og:type" content="article">
+<meta property="og:title" content="深入理解项目中的各种O">
+<meta property="og:url" content="http://yaoper.github.io/2019/09/20/深入理解项目中的各种O/index.html">
+<meta property="og:site_name" content="Illusory">
+<meta property="og:description" content="1.概念 VO（View Object）：视图对象，用于展示层，它的作用是把某个指定页面（或组件）的所有数据封装起来。  DTO（Data Transfer Object）：数据传输对象，这个概念来源于J2EE的设计模式，原来的目的是为了EJB的分布式应用提供粗粒度的数据实体，以减少分布式调用的次数，从而提高分布式调用的性能和降低网络负载，但在这里，我泛指用于展示层与服务层之间的数据传输对象。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://uufe-web.oss-cn-beijing.aliyuncs.com/PicLib/uunote/images/QQ%E6%88%AA%E5%9B%BE20190920173049_1568971852701.png">
+<meta property="og:updated_time" content="2019-09-20T09:45:06.924Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="深入理解项目中的各种O">
+<meta name="twitter:description" content="1.概念 VO（View Object）：视图对象，用于展示层，它的作用是把某个指定页面（或组件）的所有数据封装起来。  DTO（Data Transfer Object）：数据传输对象，这个概念来源于J2EE的设计模式，原来的目的是为了EJB的分布式应用提供粗粒度的数据实体，以减少分布式调用的次数，从而提高分布式调用的性能和降低网络负载，但在这里，我泛指用于展示层与服务层之间的数据传输对象。">
+<meta name="twitter:image" content="https://uufe-web.oss-cn-beijing.aliyuncs.com/PicLib/uunote/images/QQ%E6%88%AA%E5%9B%BE20190920173049_1568971852701.png">
+
+
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=1.1">
+<link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+
+
+
+
+
+<script type="text/javascript">
+  var themeConfig = {
+    fancybox: {
+      enable: false
+    },
+  };
+</script>
+
+
+
+
+  
+
+
+
+    <title> 深入理解项目中的各种O - Illusory </title>
+  </head>
+
+  <body>
+    <div id="page">
+      <header id="masthead"><div class="site-header-inner">
+    <h1 class="site-title">
+        <a href="/." class="logo">Illusory</a>
+    </h1>
+
+    <nav id="nav-top">
+        
+            <ul id="menu-top" class="nav-top-items">
+                
+                    <li class="menu-item">
+                        <a href="/archives">
+                            
+                            
+                                Archives
+                            
+                        </a>
+                    </li>
+                
+                    <li class="menu-item">
+                        <a href="/about">
+                            
+                            
+                                About
+                            
+                        </a>
+                    </li>
+                
+            </ul>
+        
+  </nav>
+</div>
+
+      </header>
+      <div id="content">
+        
+    <div id="primary">
+        
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          深入理解项目中的各种O
+        
+      </h1>
+
+      <time class="post-time">
+          Sep 20 2019
+      </time>
+    </header>
+
+
+
+    
+            <div class="post-content">
+            <h4 id="1-概念"><a href="#1-概念" class="headerlink" title="1.概念"></a>1.概念</h4><ul>
+<li><p><strong>VO（View Object）</strong>：视图对象，用于展示层，它的作用是把某个指定页面（或组件）的所有数据封装起来。</p>
+</li>
+<li><p><strong>DTO（Data Transfer Object）</strong>：数据传输对象，这个概念来源于J2EE的设计模式，原来的目的是为了EJB的分布式应用提供粗粒度的数据实体，以减少分布式调用的次数，从而提高分布式调用的性能和降低网络负载，但在这里，我泛指用于展示层与服务层之间的数据传输对象。</p>
+</li>
+<li><p><strong>DO（Domain Object）</strong>：领域对象，就是从现实世界中抽象出来的有形或无形的业务实体。</p>
+</li>
+<li><p><strong>PO（Persistent Object）</strong>：持久化对象，它跟持久层（通常是关系型数据库）的数据结构形成一一对应的映射关系，如果持久层是关系型数据库，那么，数据表中的每个字段（或若干个）就对应PO的一个（或若干个）属性。</p>
+</li>
+</ul>
+<h4 id="2-模型"><a href="#2-模型" class="headerlink" title="2.模型"></a>2.模型</h4><p>下面以一个时序图建立简单模型来描述上述对象在三层架构应用中的位置<br><img src="https://uufe-web.oss-cn-beijing.aliyuncs.com/PicLib/uunote/images/QQ%E6%88%AA%E5%9B%BE20190920173049_1568971852701.png" alt="20190920173049.png"></p>
+<ul>
+<li>用户发出请求（可能是填写表单），表单的数据在展示层被匹配为VO。</li>
+<li>展示层把VO转换为服务层对应方法所要求的DTO，传送给服务层</li>
+<li>服务层首先根据DTO的数据构造（或重建）一个DO，调用DO的业务方法完成具体业务。</li>
+<li>服务层把DO转换为持久层对应的PO（可以使用ORM工具，也可以不用），调用持久层的持久化方法，把PO传递给它，完成持久化操作。</li>
+<li>对于一个逆向操作，如读取数据，也是用类似的方式转换和传递，略。</li>
+</ul>
+<h4 id="3-区别"><a href="#3-区别" class="headerlink" title="3.区别"></a>3.区别</h4><ul>
+<li><p>VO与DTO的区别：DTO代表服务层需要接收的数据和返回的数据，而VO代表展示层需要显示的数据。<br>对于服务层来说，它只从语义上定义：1-男性，2-女性，0-未指定，而对于展示层来说，它可能需要用“帅哥”代表男性，用“美女”代表女性，用“秘密”代表未指定。</p>
+</li>
+<li><p>DTO与DO的区别：DTO是展示层和服务层之间的数据传输对象（可以认为是两者之间的协议），而DO是对现实世界各种业务角色的抽象<br>例如UserInfo和User，对于一个getUser方法来说，本质上它永远不应该返回用户的密码，因此UserInfo至少比User少一个password的数据。</p>
+</li>
+<li><p>DO与PO的区别：DO在某些场景下不需要进行显式的持久化<br>例如利用策略模式设计的商品折扣策略，会衍生出折扣策略的接口和不同折扣策略实现类，这些折扣策略实现类可以算是DO，但它们只驻留在静态内存，不需要持久化到持久层，因此，这类DO是不存在对应的PO的。</p>
+</li>
+</ul>
+<p>以上关于VO、DTO、DO、PO的概念及区别只是概念层面上的，我们在项目设计的时候要区分出这些概念。实际落地的过程中，分析设计层面和实现层面完全是两个独立的层面，实现层面通过某种技术手段可以把两个完全独立的概念合二为一。在分析设计层面，我们仍然（至少在头脑中）需要把概念上独立的东西清晰的区分开来，这个原则对于做好分析设计非常重要。</p>
+
+            </div>
+          
+
+    
+      <footer class="post-footer">
+		
+		<div class="post-tags">
+		  
+			<a href="/tags/架构/">架构</a>
+		  
+		</div>
+		
+
+        
+        
+  <nav class="post-nav">
+    
+      <a class="prev" href="/2019/09/21/JUC-二/">
+        <i class="iconfont icon-left"></i>
+        <span class="prev-text nav-default">JUC (二)</span>
+        <span class="prev-text nav-mobile">Prev</span>
+      </a>
+    
+    
+      <a class="next" href="/2019/09/20/JUC/">
+        <span class="next-text nav-default">JUC (一)</span>
+        <span class="prev-text nav-mobile">Next</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    
+  </nav>
+
+        
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+      </footer>
+    
+  </article>
+
+    </div>
+
+      </div>
+
+      <footer id="colophon"><span class="copyright-year">
+    
+        &copy;
+    
+        2014 -
+    
+    2019
+    <span class="footer-author">yaoper.</span>
+    <span class="power-by">
+        Powered by <a class="hexo-link" href="https://hexo.io/">Hexo</a> and <a class="theme-link" href="https://github.com/frostfan/hexo-theme-polarbear">Polar Bear</a>
+    </span>
+</span>
+
+      </footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div>
+    
+
+
+    
+
+
+
+
+  
+    <script type="text/javascript" src="/lib/jquery/jquery-3.1.1.min.js"></script>
+  
+
+  
+
+    <script type="text/javascript" src="/js/src/theme.js?v=1.1"></script>
+<script type="text/javascript" src="/js/src/bootstrap.js?v=1.1"></script>
+
+  </body>
+</html>

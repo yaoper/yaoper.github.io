@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang>
+  <head><meta name="generator" content="Hexo 3.9.0">
+    
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1,minimum-scale=1,maximum-scale=1">
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+  <meta name="description" content="Kubernetes简介">
+
+
+
+
+  <meta name="keywords" content="Kubernetes,">
+
+
+
+
+
+  <link rel="alternate" href="/default" title="Illusory">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=1.1">
+
+
+
+<link rel="canonical" href="http://yaoper.github.io/2019/09/26/Kubernetes简介/">
+
+
+<meta name="description" content="Kubernetes是一个全新的基于容器技术的分布式架构领先方案。Kubernetes(k8s)是Google开源的容器集群管理系统（谷歌内部:Borg）。在Docker技术的基础上，为容器化的应用提供部署运行、资源调度、服务发现和动态伸缩等一系列完整功能，提高了大规模容器集群管理的便捷性。Kubernetes的主要职责是容器编排(Container Orchestration)，即在一组服务器上">
+<meta name="keywords" content="Kubernetes">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Kubernetes简介">
+<meta property="og:url" content="http://yaoper.github.io/2019/09/26/Kubernetes简介/index.html">
+<meta property="og:site_name" content="Illusory">
+<meta property="og:description" content="Kubernetes是一个全新的基于容器技术的分布式架构领先方案。Kubernetes(k8s)是Google开源的容器集群管理系统（谷歌内部:Borg）。在Docker技术的基础上，为容器化的应用提供部署运行、资源调度、服务发现和动态伸缩等一系列完整功能，提高了大规模容器集群管理的便捷性。Kubernetes的主要职责是容器编排(Container Orchestration)，即在一组服务器上">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://uufe-web.oss-cn-beijing.aliyuncs.com/PicLib/uunote/images/QQ%E6%88%AA%E5%9B%BE20190928172740_1569663088786.png">
+<meta property="og:image" content="https://uufe-web.oss-cn-beijing.aliyuncs.com/PicLib/uunote/images/14720190928170516_1569663088866.png">
+<meta property="og:image" content="https://uufe-web.oss-cn-beijing.aliyuncs.com/PicLib/uunote/images/K8S_1569663088739.png">
+<meta property="og:updated_time" content="2019-09-28T09:32:11.857Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Kubernetes简介">
+<meta name="twitter:description" content="Kubernetes是一个全新的基于容器技术的分布式架构领先方案。Kubernetes(k8s)是Google开源的容器集群管理系统（谷歌内部:Borg）。在Docker技术的基础上，为容器化的应用提供部署运行、资源调度、服务发现和动态伸缩等一系列完整功能，提高了大规模容器集群管理的便捷性。Kubernetes的主要职责是容器编排(Container Orchestration)，即在一组服务器上">
+<meta name="twitter:image" content="https://uufe-web.oss-cn-beijing.aliyuncs.com/PicLib/uunote/images/QQ%E6%88%AA%E5%9B%BE20190928172740_1569663088786.png">
+
+
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=1.1">
+<link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+
+
+
+
+
+<script type="text/javascript">
+  var themeConfig = {
+    fancybox: {
+      enable: false
+    },
+  };
+</script>
+
+
+
+
+  
+
+
+
+    <title> Kubernetes简介 - Illusory </title>
+  </head>
+
+  <body>
+    <div id="page">
+      <header id="masthead"><div class="site-header-inner">
+    <h1 class="site-title">
+        <a href="/." class="logo">Illusory</a>
+    </h1>
+
+    <nav id="nav-top">
+        
+            <ul id="menu-top" class="nav-top-items">
+                
+                    <li class="menu-item">
+                        <a href="/archives">
+                            
+                            
+                                Archives
+                            
+                        </a>
+                    </li>
+                
+                    <li class="menu-item">
+                        <a href="/about">
+                            
+                            
+                                About
+                            
+                        </a>
+                    </li>
+                
+            </ul>
+        
+  </nav>
+</div>
+
+      </header>
+      <div id="content">
+        
+    <div id="primary">
+        
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          Kubernetes简介
+        
+      </h1>
+
+      <time class="post-time">
+          Sep 26 2019
+      </time>
+    </header>
+
+
+
+    
+            <div class="post-content">
+            <p>Kubernetes是一个全新的<strong>基于容器技术的分布式架构</strong>领先方案。Kubernetes(k8s)是Google开源的容器集群管理系统（谷歌内部:Borg）。在Docker技术的基础上，为容器化的应用提供<strong>部署运行、资源调度、服务发现和动态伸缩</strong>等一系列完整功能，提高了大规模容器集群管理的便捷性。<br>Kubernetes的主要职责是容器编排(Container Orchestration)，即在一组服务器上启动、监控、回收容器，在满足排程的同时，保证容器可以健康的运行。<br>Kubernetes是一个完备的分布式系统支撑平台，具有完备的集群管理能力，多扩多层次的安全防护和准入机制、多租户应用支撑能力、透明的服务注册和发现机制、內建智能负载均衡器、强大的故障发现和自我修复能力、服务滚动升级和在线扩容能力、可扩展的资源自动调度机制以及多粒度的资源配额管理能力。同时Kubernetes提供完善的管理工具，涵盖了包括开发、部署测试、运维监控在内的各个环节。</p>
+<p><strong>K8s架构概览</strong></p>
+<p><img src="https://uufe-web.oss-cn-beijing.aliyuncs.com/PicLib/uunote/images/QQ%E6%88%AA%E5%9B%BE20190928172740_1569663088786.png" alt="QQ截图20190928172740.png"></p>
+<ul>
+<li><strong>etcd</strong> 一款开源软件。提供可靠的分布式数据存储服务，用于持久化存储K8s集群的配置和状态。</li>
+<li><strong>K8s API server</strong> 用户程序（如kubectl）、K8s其它组件之间通信的接口。K8s其它组件之间不直接通信，而是通过API server通信的。这一点在上图的连接中可以体现，例如，只有API server连接了etcd，即其它组件更新K8s集群的状态时，只能通过API server读写etcd中的数据。</li>
+<li><strong>Scheduler</strong> 排程组件，为用户应用的每一可部署组件分配工作结点。</li>
+<li><strong>Controller Manager</strong> 执行集群级别的功能，如复制组件、追踪工作结点状态、处理结点失败等。Controller Manager组件是由多个控制器组成的，其中很多控制器是按K8s的资源类型划分的，如Replication Manager（管理ReplicationController 资源），ReplicaSet Controller，PersistentVolume controller。</li>
+<li><strong>kube-proxy</strong> 在应用组件间负载均衡网络流量。</li>
+<li><strong>Kubelet</strong> 管理工作结点上的容器。</li>
+<li><strong>Container runtime Docker</strong>, rkt等实际运行容器的组件。</li>
+</ul>
+<p><strong>K8s组件协同</strong><br>开发者开发一个应用后，打包Docker镜像，上传到Docker registry；然后编写一个yaml部署描述文件，以描述应用的结构和资源需求。开发者通过kubectl（或其它应用），将部署描述文件提交到API server，API server将部署需求更新到etcd。etcd在K8s管理结点中的作用相当于数据库，其它组件提交到API server的数据都存储于etcd。API server非常轻量，并不会直接去创建或管理Pod等资源，在多数场景下甚至不会去主动调用其它的K8s组件发出指令。其它组件通过建立和API server的长连接，监视关心的对象，监视到变化后，执行所负责的操作。</p>
+<p><img src="https://uufe-web.oss-cn-beijing.aliyuncs.com/PicLib/uunote/images/14720190928170516_1569663088866.png" alt="14720190928170516.png"><br><strong>Controller Manager</strong>中的控制器监视到新的部署描述后，根据部署描述，创建<strong>ReplicaSet、Pod</strong>等资源。<strong>Scheduler</strong>监视到新的<strong>Pod</strong>资源后，结合集群的资源情况，选定一或多个工作结点运行Pod。工作结点上的<strong>Kubelet</strong>监视到有Pod被计划在自己的结点后，向<strong>Docker</strong>等Container runtime发出启动容器的指令，Docker engineer将按照指令从<strong>Docker registy</strong>拉取镜像，然后启动并运行容器。</p>
+<p><strong>K8s网络结构</strong><br><img src="https://uufe-web.oss-cn-beijing.aliyuncs.com/PicLib/uunote/images/K8S_1569663088739.png" alt="K8S.png"></p>
+
+            </div>
+          
+
+    
+      <footer class="post-footer">
+		
+		<div class="post-tags">
+		  
+			<a href="/tags/Kubernetes/">Kubernetes</a>
+		  
+		</div>
+		
+
+        
+        
+  <nav class="post-nav">
+    
+      <a class="prev" href="/2019/09/28/使用kubeadm安装k8s1-16-0/">
+        <i class="iconfont icon-left"></i>
+        <span class="prev-text nav-default">使用kubeadm安装k8s1.16.0</span>
+        <span class="prev-text nav-mobile">Prev</span>
+      </a>
+    
+    
+      <a class="next" href="/2019/09/25/查找CPU占用比较高的线程/">
+        <span class="next-text nav-default">查找CPU占用比较高的线程</span>
+        <span class="prev-text nav-mobile">Next</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    
+  </nav>
+
+        
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+      </footer>
+    
+  </article>
+
+    </div>
+
+      </div>
+
+      <footer id="colophon"><span class="copyright-year">
+    
+        &copy;
+    
+        2014 -
+    
+    2019
+    <span class="footer-author">yaoper.</span>
+    <span class="power-by">
+        Powered by <a class="hexo-link" href="https://hexo.io/">Hexo</a> and <a class="theme-link" href="https://github.com/frostfan/hexo-theme-polarbear">Polar Bear</a>
+    </span>
+</span>
+
+      </footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div>
+    
+
+
+    
+
+
+
+
+  
+    <script type="text/javascript" src="/lib/jquery/jquery-3.1.1.min.js"></script>
+  
+
+  
+
+    <script type="text/javascript" src="/js/src/theme.js?v=1.1"></script>
+<script type="text/javascript" src="/js/src/bootstrap.js?v=1.1"></script>
+
+  </body>
+</html>
