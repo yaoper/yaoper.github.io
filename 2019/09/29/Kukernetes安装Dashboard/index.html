@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang>
+  <head><meta name="generator" content="Hexo 3.9.0">
+    
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1,minimum-scale=1,maximum-scale=1">
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+  <meta name="description" content="Kubernetes安装Dashboard">
+
+
+
+
+  <meta name="keywords" content="Kubernetes,">
+
+
+
+
+
+  <link rel="alternate" href="/default" title="Illusory">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=1.1">
+
+
+
+<link rel="canonical" href="http://yaoper.github.io/2019/09/29/Kukernetes安装Dashboard/">
+
+
+<meta name="description" content="1.下载yaml 文件1wget https://raw.githubusercontent.com/kubernetes/dashboard/v1.10.1/src/deploy/recommended/kubernetes-dashboard.yaml  2.修改 yaml 文件中的镜像由于GFW的原因，无法从k8s.gcr.io仓库中拉取镜像，因此需要修改镜像源。k8s.gcr.io —&amp;g">
+<meta name="keywords" content="Kubernetes">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Kubernetes安装Dashboard">
+<meta property="og:url" content="http://yaoper.github.io/2019/09/29/Kukernetes安装Dashboard/index.html">
+<meta property="og:site_name" content="Illusory">
+<meta property="og:description" content="1.下载yaml 文件1wget https://raw.githubusercontent.com/kubernetes/dashboard/v1.10.1/src/deploy/recommended/kubernetes-dashboard.yaml  2.修改 yaml 文件中的镜像由于GFW的原因，无法从k8s.gcr.io仓库中拉取镜像，因此需要修改镜像源。k8s.gcr.io —&amp;g">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2019-09-29T07:44:23.253Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Kubernetes安装Dashboard">
+<meta name="twitter:description" content="1.下载yaml 文件1wget https://raw.githubusercontent.com/kubernetes/dashboard/v1.10.1/src/deploy/recommended/kubernetes-dashboard.yaml  2.修改 yaml 文件中的镜像由于GFW的原因，无法从k8s.gcr.io仓库中拉取镜像，因此需要修改镜像源。k8s.gcr.io —&amp;g">
+
+
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=1.1">
+<link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+
+
+
+
+
+<script type="text/javascript">
+  var themeConfig = {
+    fancybox: {
+      enable: false
+    },
+  };
+</script>
+
+
+
+
+  
+
+
+
+    <title> Kubernetes安装Dashboard - Illusory </title>
+  </head>
+
+  <body>
+    <div id="page">
+      <header id="masthead"><div class="site-header-inner">
+    <h1 class="site-title">
+        <a href="/." class="logo">Illusory</a>
+    </h1>
+
+    <nav id="nav-top">
+        
+            <ul id="menu-top" class="nav-top-items">
+                
+                    <li class="menu-item">
+                        <a href="/archives">
+                            
+                            
+                                Archives
+                            
+                        </a>
+                    </li>
+                
+                    <li class="menu-item">
+                        <a href="/about">
+                            
+                            
+                                About
+                            
+                        </a>
+                    </li>
+                
+            </ul>
+        
+  </nav>
+</div>
+
+      </header>
+      <div id="content">
+        
+    <div id="primary">
+        
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          Kubernetes安装Dashboard
+        
+      </h1>
+
+      <time class="post-time">
+          Sep 29 2019
+      </time>
+    </header>
+
+
+
+    
+            <div class="post-content">
+            <h4 id="1-下载yaml-文件"><a href="#1-下载yaml-文件" class="headerlink" title="1.下载yaml 文件"></a>1.下载yaml 文件</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wget https://raw.githubusercontent.com/kubernetes/dashboard/v1.10.1/src/deploy/recommended/kubernetes-dashboard.yaml</span><br></pre></td></tr></table></figure>
+
+<h4 id="2-修改-yaml-文件中的镜像"><a href="#2-修改-yaml-文件中的镜像" class="headerlink" title="2.修改 yaml 文件中的镜像"></a>2.修改 yaml 文件中的镜像</h4><p>由于GFW的原因，无法从k8s.gcr.io仓库中拉取镜像，因此需要修改镜像源。<br>k8s.gcr.io —&gt;&gt; registry.cn-hangzhou.aliyuncs.com/google_containers</p>
+<h4 id="3-修改配置文件"><a href="#3-修改配置文件" class="headerlink" title="3.修改配置文件"></a>3.修改配置文件</h4><p>Dashboard有多种方式可以访问：</p>
+<ul>
+<li>kubectl proxy方式：只支持127.0.0.1和localhost为来源地址的方式访问，需要配置SSH隧道，比较麻烦，不建议。</li>
+<li>Node Port方式：该方式容易配置，只建议在开发环境的环境中使用。本文采用这种方式实现。</li>
+<li>Ingress方式：通过Ingress Controller来暴露应用，比较灵活，是最推荐的方式，但较复杂。</li>
+<li>API Server方式：由于API服务器是公开的，可以从外部访问，是比较推荐的方式。</li>
+</ul>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># ------------------- Dashboard Service ------------------- #</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">Service</span></span><br><span class="line"><span class="attr">apiVersion:</span> <span class="string">v1</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line"><span class="attr">  labels:</span></span><br><span class="line"><span class="attr">    k8s-app:</span> <span class="string">kubernetes-dashboard</span></span><br><span class="line"><span class="attr">  name:</span> <span class="string">kubernetes-dashboard</span></span><br><span class="line"><span class="attr">  namespace:</span> <span class="string">kube-system</span></span><br><span class="line"><span class="attr">spec:</span></span><br><span class="line"><span class="attr">  type:</span> <span class="string">NodePort</span></span><br><span class="line"><span class="attr">  ports:</span></span><br><span class="line"><span class="attr">    - port:</span> <span class="number">443</span></span><br><span class="line"><span class="attr">      targetPort:</span> <span class="number">8443</span></span><br><span class="line"><span class="attr">      nodePort:</span> <span class="number">32012</span></span><br><span class="line"><span class="attr">  selector:</span></span><br><span class="line"><span class="attr">    k8s-app:</span> <span class="string">kubernetes-dashboard</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>type: NodePort, nodePort: 32012(注意port的范围，30000-32767)</strong></p>
+<h4 id="4-修改yaml文件中的授权"><a href="#4-修改yaml文件中的授权" class="headerlink" title="4.修改yaml文件中的授权"></a>4.修改yaml文件中的授权</h4><p>默认的RoleBinding定义了Dashboard的角色绑定，其名称为kubernetes-dashboard-minimal，roleRef中为被绑定的角色，也叫kubernetes-dashboard-minimal，subjects中为绑定的用户：kubernetes-dashboard。<br>这样我们在启Dashboard后看到很多权限错误提示，主要是system:serviceaccount:kube-system:kubernetes-dashboard的权限不足引起的。<br>我们可以更改RoleBinding修改为<strong>ClusterRoleBinding</strong>，并且修改roleRef中的kind和name，使用<strong>cluster-admin</strong>，<strong>ClusterRole</strong>（超级用户权限，其拥有访问kube-apiserver的所有权限）</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">apiVersion:</span> <span class="string">rbac.authorization.k8s.io/v1</span></span><br><span class="line"><span class="attr">kind:</span> <span class="string">ClusterRoleBinding</span></span><br><span class="line"><span class="attr">metadata:</span></span><br><span class="line"><span class="attr">  name:</span> <span class="string">kubernetes-dashboard-minimal</span></span><br><span class="line"><span class="attr">  namespace:</span> <span class="string">kube-system</span></span><br><span class="line"><span class="attr">roleRef:</span></span><br><span class="line"><span class="attr">  apiGroup:</span> <span class="string">rbac.authorization.k8s.io</span></span><br><span class="line"><span class="attr">  kind:</span> <span class="string">ClusterRole</span></span><br><span class="line"><span class="attr">  name:</span> <span class="string">cluster-admin</span></span><br><span class="line"><span class="attr">subjects:</span></span><br><span class="line"><span class="attr">- kind:</span> <span class="string">ServiceAccount</span></span><br><span class="line"><span class="attr">  name:</span> <span class="string">kubernetes-dashboard</span></span><br><span class="line"><span class="attr">  namespace:</span> <span class="string">kube-system</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="5-启动Dashboard"><a href="#5-启动Dashboard" class="headerlink" title="5.启动Dashboard"></a>5.启动Dashboard</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl apply -f kubernetes-dashboard.yaml</span><br></pre></td></tr></table></figure>
+
+<h4 id="7-访问Dashboard"><a href="#7-访问Dashboard" class="headerlink" title="7.访问Dashboard"></a>7.访问Dashboard</h4><p>浏览器输入 <a href="https://nodeip:nodeport" target="_blank" rel="noopener">https://nodeip:nodeport</a> 注意一定是https，否者会报错。Google浏览器因为证书问题，无法访问。</p>
+<h4 id="8-获取登录-Dashboard-的令牌"><a href="#8-获取登录-Dashboard-的令牌" class="headerlink" title="8.获取登录 Dashboard 的令牌"></a>8.获取登录 Dashboard 的令牌</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kubectl -n kube-system describe secret $(kubectl -n kube-system get secret |grep &apos;dashboard-token&apos; |awk &apos;&#123;print $1&#125;&apos;)</span><br></pre></td></tr></table></figure>
+            </div>
+          
+
+    
+      <footer class="post-footer">
+		
+		<div class="post-tags">
+		  
+			<a href="/tags/Kubernetes/">Kubernetes</a>
+		  
+		</div>
+		
+
+        
+        
+  <nav class="post-nav">
+    
+    
+      <a class="next" href="/2019/09/28/使用kubeadm安装k8s1-16-0/">
+        <span class="next-text nav-default">使用kubeadm安装k8s1.16.0</span>
+        <span class="prev-text nav-mobile">Next</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    
+  </nav>
+
+        
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+      </footer>
+    
+  </article>
+
+    </div>
+
+      </div>
+
+      <footer id="colophon"><span class="copyright-year">
+    
+        &copy;
+    
+        2014 -
+    
+    2019
+    <span class="footer-author">yaoper.</span>
+    <span class="power-by">
+        Powered by <a class="hexo-link" href="https://hexo.io/">Hexo</a> and <a class="theme-link" href="https://github.com/frostfan/hexo-theme-polarbear">Polar Bear</a>
+    </span>
+</span>
+
+      </footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div>
+    
+
+
+    
+
+
+
+
+  
+    <script type="text/javascript" src="/lib/jquery/jquery-3.1.1.min.js"></script>
+  
+
+  
+
+    <script type="text/javascript" src="/js/src/theme.js?v=1.1"></script>
+<script type="text/javascript" src="/js/src/bootstrap.js?v=1.1"></script>
+
+  </body>
+</html>
