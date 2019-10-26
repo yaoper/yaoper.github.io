@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang>
+  <head><meta name="generator" content="Hexo 3.9.0">
+    
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1,minimum-scale=1,maximum-scale=1">
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+  <meta name="description" content="InnoDB到底支不支持哈希索引?">
+
+
+
+
+  <meta name="keywords" content="MySQL,">
+
+
+
+
+
+  <link rel="alternate" href="/default" title="Illusory">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=1.1">
+
+
+
+<link rel="canonical" href="http://yaoper.github.io/2019/10/11/InnoDB到底支不支持哈希索引/">
+
+
+<meta name="description" content="对于InnoDB的哈希索引，确切的应该这么说：（1）InnoDB用户无法手动创建哈希索引，这一层上说，InnoDB确实不支持哈希索引；（2）InnoDB会自调优(self-tuning)，如果判定建立自适应哈希索引(Adaptive Hash Index, AHI)，能够提升查询效率，InnoDB自己会建立相关哈希索引，这一层上说，InnoDB又是支持哈希索引的； 那什么是自适应哈希索引(Adap">
+<meta name="keywords" content="MySQL">
+<meta property="og:type" content="article">
+<meta property="og:title" content="InnoDB到底支不支持哈希索引?">
+<meta property="og:url" content="http://yaoper.github.io/2019/10/11/InnoDB到底支不支持哈希索引/index.html">
+<meta property="og:site_name" content="Illusory">
+<meta property="og:description" content="对于InnoDB的哈希索引，确切的应该这么说：（1）InnoDB用户无法手动创建哈希索引，这一层上说，InnoDB确实不支持哈希索引；（2）InnoDB会自调优(self-tuning)，如果判定建立自适应哈希索引(Adaptive Hash Index, AHI)，能够提升查询效率，InnoDB自己会建立相关哈希索引，这一层上说，InnoDB又是支持哈希索引的； 那什么是自适应哈希索引(Adap">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://uufe-web.oss-cn-beijing.aliyuncs.com/PicLib/uunote/images/20191011102309_1570760844470.png">
+<meta property="og:image" content="https://uufe-web.oss-cn-beijing.aliyuncs.com/PicLib/uunote/images/20191011102339_1570760844587.png">
+<meta property="og:image" content="https://uufe-web.oss-cn-beijing.aliyuncs.com/PicLib/uunote/images/20191011102401_1570760844618.png">
+<meta property="og:updated_time" content="2019-10-11T02:34:31.502Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="InnoDB到底支不支持哈希索引?">
+<meta name="twitter:description" content="对于InnoDB的哈希索引，确切的应该这么说：（1）InnoDB用户无法手动创建哈希索引，这一层上说，InnoDB确实不支持哈希索引；（2）InnoDB会自调优(self-tuning)，如果判定建立自适应哈希索引(Adaptive Hash Index, AHI)，能够提升查询效率，InnoDB自己会建立相关哈希索引，这一层上说，InnoDB又是支持哈希索引的； 那什么是自适应哈希索引(Adap">
+<meta name="twitter:image" content="https://uufe-web.oss-cn-beijing.aliyuncs.com/PicLib/uunote/images/20191011102309_1570760844470.png">
+
+
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=1.1">
+<link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+
+
+
+
+
+<script type="text/javascript">
+  var themeConfig = {
+    fancybox: {
+      enable: false
+    },
+  };
+</script>
+
+
+
+
+  
+
+
+
+    <title> InnoDB到底支不支持哈希索引? - Illusory </title>
+  </head>
+
+  <body>
+    <div id="page">
+      <header id="masthead"><div class="site-header-inner">
+    <h1 class="site-title">
+        <a href="/." class="logo">Illusory</a>
+    </h1>
+
+    <nav id="nav-top">
+        
+            <ul id="menu-top" class="nav-top-items">
+                
+                    <li class="menu-item">
+                        <a href="/archives">
+                            
+                            
+                                Archives
+                            
+                        </a>
+                    </li>
+                
+                    <li class="menu-item">
+                        <a href="/about">
+                            
+                            
+                                About
+                            
+                        </a>
+                    </li>
+                
+            </ul>
+        
+  </nav>
+</div>
+
+      </header>
+      <div id="content">
+        
+    <div id="primary">
+        
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          InnoDB到底支不支持哈希索引?
+        
+      </h1>
+
+      <time class="post-time">
+          Oct 11 2019
+      </time>
+    </header>
+
+
+
+    
+            <div class="post-content">
+            <p>对于InnoDB的哈希索引，确切的应该这么说：<br>（1）<strong>InnoDB用户无法手动创建哈希索引</strong>，这一层上说，InnoDB确实不支持哈希索引；<br>（2）InnoDB会自调优(self-tuning)，如果判定建立自适应哈希索引(Adaptive Hash Index, AHI)，能够提升查询效率，<strong>InnoDB自己会建立相关哈希索引</strong>，这一层上说，InnoDB又是支持哈希索引的；</p>
+<p>那什么是自适应哈希索引(Adaptive Hash Index, AHI)呢？原理又是怎样的呢？咱们先从一个例子开始。<br>假设我们有InnoDB数据表：t(id PK, name KEY, sex, flag)，有这么几条数据</p>
+<table>
+<thead>
+<tr>
+<th>ID(PK)</th>
+<th>Name(KEY)</th>
+<th>Sex</th>
+<th>Flag</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td>shenjian</td>
+<td>m</td>
+<td>A</td>
+</tr>
+<tr>
+<td>3</td>
+<td>zhangshan</td>
+<td>m</td>
+<td>A</td>
+</tr>
+<tr>
+<td>5</td>
+<td>lisi</td>
+<td>m</td>
+<td>A</td>
+</tr>
+<tr>
+<td>9</td>
+<td>wangwu</td>
+<td>f</td>
+<td>B</td>
+</tr>
+</tbody></table>
+<p><img src="https://uufe-web.oss-cn-beijing.aliyuncs.com/PicLib/uunote/images/20191011102309_1570760844470.png" alt="20191011102309.png"></p>
+<p>如图所示，InnoDB在主键id上会建立聚集索引(Clustered Index)，叶子存储记录本身，在name上会建立普通索引(Secondary Index)，叶子存储主键值。<br>当发起主键id查询时，能够通过聚集索引，直接定位到行记录。</p>
+<p><img src="https://uufe-web.oss-cn-beijing.aliyuncs.com/PicLib/uunote/images/20191011102339_1570760844587.png" alt="20191011102339.png"></p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> * <span class="keyword">from</span> t <span class="keyword">where</span> <span class="keyword">name</span>=<span class="string">'ls'</span>;</span><br></pre></td></tr></table></figure>
+
+<p>发起普通索引查询时：<br>（1）会先从普通索引查询出主键（上图右边）；<br>（2）再由主键，从聚集索引上二次遍历定位到记录（上图左边）。<br>不管聚集索引还是普通索引，记录定位的寻路路径(Search Path)都很长。</p>
+<p>在MySQL运行的过程中，如果InnoDB发现，有很多SQL存在这类很长的寻路，并且有很多SQL会命中相同的页面(page)，InnoDB会在自己的内存缓冲区(Buffer)里，开辟一块区域，建立自适应哈希所有AHI，以加速查询。</p>
+<p><img src="https://uufe-web.oss-cn-beijing.aliyuncs.com/PicLib/uunote/images/20191011102401_1570760844618.png" alt="20191011102401.png"></p>
+<p>从这个层面上来说，InnoDB的自使用哈希索引，更像“索引的索引”，毕竟其目的是为了加速索引寻路。</p>
+<p>既然是哈希，key是什么，value是什么？<br>key是索引键值（或者键值前缀）。<br>value是索引记录页面位置。</p>
+<p>为啥叫“自适应(adaptive)”哈希索引？<br>系统自己判断“应该可以加速查询”而建立的，不需要用户手动建立，故称“自适应”。</p>
+<p>系统会不会判断失误，是不是一定能加速？<br>不是一定能加速，有时候会误判。</p>
+<p>当业务场景为下面几种情况时：</p>
+<ul>
+<li>很多单行记录查询（例如passport，用户中心等业务）</li>
+<li>索引范围查询（此时AHI可以快速定位首行记录）</li>
+<li>所有记录内存能放得下</li>
+</ul>
+<p><strong>AHI往往是有效的。</strong></p>
+<p>当业务有大量like或者join，AHI的维护反而可能成为负担，降低系统效率，此时可以手动关闭AHI功能。</p>
+
+            </div>
+          
+
+    
+      <footer class="post-footer">
+		
+		<div class="post-tags">
+		  
+			<a href="/tags/MySQL/">MySQL</a>
+		  
+		</div>
+		
+
+        
+        
+  <nav class="post-nav">
+    
+      <a class="prev" href="/2019/10/12/高并发场景下缓存处理的思路/">
+        <i class="iconfont icon-left"></i>
+        <span class="prev-text nav-default">高并发场景下缓存处理的思路</span>
+        <span class="prev-text nav-mobile">Prev</span>
+      </a>
+    
+    
+      <a class="next" href="/2019/09/29/Kukernetes安装Dashboard/">
+        <span class="next-text nav-default">Kubernetes安装Dashboard</span>
+        <span class="prev-text nav-mobile">Next</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    
+  </nav>
+
+        
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+      </footer>
+    
+  </article>
+
+    </div>
+
+      </div>
+
+      <footer id="colophon"><span class="copyright-year">
+    
+        &copy;
+    
+        2014 -
+    
+    2019
+    <span class="footer-author">yaoper.</span>
+    <span class="power-by">
+        Powered by <a class="hexo-link" href="https://hexo.io/">Hexo</a> and <a class="theme-link" href="https://github.com/frostfan/hexo-theme-polarbear">Polar Bear</a>
+    </span>
+</span>
+
+      </footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div>
+    
+
+
+    
+
+
+
+
+  
+    <script type="text/javascript" src="/lib/jquery/jquery-3.1.1.min.js"></script>
+  
+
+  
+
+    <script type="text/javascript" src="/js/src/theme.js?v=1.1"></script>
+<script type="text/javascript" src="/js/src/bootstrap.js?v=1.1"></script>
+
+  </body>
+</html>

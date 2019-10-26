@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang>
+  <head><meta name="generator" content="Hexo 3.9.0">
+    
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1,minimum-scale=1,maximum-scale=1">
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+  <meta name="description" content="Java-JDK">
+
+
+
+
+  <meta name="keywords" content="JavaBasics,">
+
+
+
+
+
+  <link rel="alternate" href="/default" title="Illusory">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=1.1">
+
+
+
+<link rel="canonical" href="http://yaoper.github.io/2019/10/25/Java-JDK/">
+
+
+<meta name="description" content="jdk底层大量使用位运算，记录一下基本知识  &amp;lt;&amp;lt; : 左移运算符，num &amp;lt;&amp;lt; 1,相当于num乘以2 /&amp;gt;&amp;gt; : 右移运算符，num &amp;gt;&amp;gt; 1,相当于num除以2 /&amp;gt;&amp;gt;&amp;gt; : 无符号右移，忽略符号位，空位都以0补齐 ^ ： 亦或运算，不同取1  集合类在java.util包下的基本集合类需要掌握  ArrayList Link">
+<meta name="keywords" content="JavaBasics">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java-JDK">
+<meta property="og:url" content="http://yaoper.github.io/2019/10/25/Java-JDK/index.html">
+<meta property="og:site_name" content="Illusory">
+<meta property="og:description" content="jdk底层大量使用位运算，记录一下基本知识  &amp;lt;&amp;lt; : 左移运算符，num &amp;lt;&amp;lt; 1,相当于num乘以2 /&amp;gt;&amp;gt; : 右移运算符，num &amp;gt;&amp;gt; 1,相当于num除以2 /&amp;gt;&amp;gt;&amp;gt; : 无符号右移，忽略符号位，空位都以0补齐 ^ ： 亦或运算，不同取1  集合类在java.util包下的基本集合类需要掌握  ArrayList Link">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://s2.ax1x.com/2019/10/26/KBYz59.jpg">
+<meta property="og:image" content="https://s2.ax1x.com/2019/10/26/KBDXbq.jpg">
+<meta property="og:image" content="https://s2.ax1x.com/2019/10/26/KBobzn.png">
+<meta property="og:image" content="https://s2.ax1x.com/2019/10/26/KB7qbV.png">
+<meta property="og:image" content="https://s2.ax1x.com/2019/10/26/KBHfqx.png">
+<meta property="og:image" content="https://s2.ax1x.com/2019/10/26/KBLE5T.png">
+<meta property="og:image" content="https://s2.ax1x.com/2019/10/26/KBXUHI.jpg">
+<meta property="og:updated_time" content="2019-10-26T10:27:36.213Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Java-JDK">
+<meta name="twitter:description" content="jdk底层大量使用位运算，记录一下基本知识  &amp;lt;&amp;lt; : 左移运算符，num &amp;lt;&amp;lt; 1,相当于num乘以2 /&amp;gt;&amp;gt; : 右移运算符，num &amp;gt;&amp;gt; 1,相当于num除以2 /&amp;gt;&amp;gt;&amp;gt; : 无符号右移，忽略符号位，空位都以0补齐 ^ ： 亦或运算，不同取1  集合类在java.util包下的基本集合类需要掌握  ArrayList Link">
+<meta name="twitter:image" content="https://s2.ax1x.com/2019/10/26/KBYz59.jpg">
+
+
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=1.1">
+<link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+
+
+
+
+
+<script type="text/javascript">
+  var themeConfig = {
+    fancybox: {
+      enable: false
+    },
+  };
+</script>
+
+
+
+
+  
+
+
+
+    <title> Java-JDK - Illusory </title>
+  </head>
+
+  <body>
+    <div id="page">
+      <header id="masthead"><div class="site-header-inner">
+    <h1 class="site-title">
+        <a href="/." class="logo">Illusory</a>
+    </h1>
+
+    <nav id="nav-top">
+        
+            <ul id="menu-top" class="nav-top-items">
+                
+                    <li class="menu-item">
+                        <a href="/archives">
+                            
+                            
+                                Archives
+                            
+                        </a>
+                    </li>
+                
+                    <li class="menu-item">
+                        <a href="/about">
+                            
+                            
+                                About
+                            
+                        </a>
+                    </li>
+                
+            </ul>
+        
+  </nav>
+</div>
+
+      </header>
+      <div id="content">
+        
+    <div id="primary">
+        
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          Java-JDK
+        
+      </h1>
+
+      <time class="post-time">
+          Oct 25 2019
+      </time>
+    </header>
+
+
+
+    
+            <div class="post-content">
+            <p>jdk底层大量使用位运算，记录一下基本知识</p>
+<ul>
+<li>&lt;&lt; : 左移运算符，num &lt;&lt; 1,相当于num乘以2</li>
+<li>/&gt;&gt; : 右移运算符，num &gt;&gt; 1,相当于num除以2</li>
+<li>/&gt;&gt;&gt; : 无符号右移，忽略符号位，空位都以0补齐</li>
+<li>^ ： 亦或运算，不同取1</li>
+</ul>
+<h4 id="集合类"><a href="#集合类" class="headerlink" title="集合类"></a>集合类</h4><p>在java.util包下的基本集合类需要掌握</p>
+<ul>
+<li>ArrayList</li>
+<li>LinkedList</li>
+<li>HashMap</li>
+<li>HashSet</li>
+<li>Vector</li>
+</ul>
+<p>一般是需要能够写出容器底层数据结构，<strong>初始化、动态扩容、插入、删除、查找、遍历</strong>这5个方法的源码。要求能使用自己的语言进行解释说明。<br>ConcurrentHashMap也是考察重点，HashMap与ConcurrentHashMap需要了解jdk8与之前版本的区别。List需要分别写出数组与链表的实现。<br>HashSet底层使用HashMap。Vector、Stack优先级较低只需要知道实现原理，不要求默写。</p>
+<p><strong>Vector</strong></p>
+<ul>
+<li>Vector 是矢量队列，它是JDK1.0版本添加的类。</li>
+<li>Vector 继承了AbstractList，实现了List；所以，它是一个队列，支持相关的添加、删除、修改、遍历等功能。</li>
+<li>Vector 实现了RandmoAccess接口，即提供了随机访问功能。RandmoAccess是java中用来被List实现，为List提供快速访问功能的。在Vector中，我们即可以通过元素的序号快速获取元素对象；这就是快速随机访问。</li>
+<li>Vector 实现了Cloneable接口，即实现clone()函数。它能被克隆。<br>和ArrayList不同，Vector中的操作是线程安全的。同步的实现是在许多方法上增加synchronized关键字。<br><u>同步容器（如Vector）并不是所有操作都线程安全！</u><br>问：对于线程安全的集合类（例如Vector）的任何操作是不是都能保证线程安全？<br>答：同步容器中的所有自带方法都是线程安全的，因为方法都使用synchronized关键字标注。但是，对这些集合类的复合操作方法（eg:deletelast()包括size()-1和remove()）无法保证其线程安全性。需要客户端通过主动加锁来保证。</li>
+</ul>
+<p><strong>Stack</strong></p>
+<ul>
+<li>java工具包中的Stack是继承于Vector(矢量队列)，<strong>Stack是通过数组实现的，而非链表</strong>。</li>
+<li>所以stack也是线程安全的，因为底层使用的是vector进行存储。</li>
+</ul>
+<p><strong>ArrayList</strong></p>
+<ul>
+<li>ArrayList 是一个数组队列，相当于动态数组。与Java中的数组相比，它的容量能动态增长。</li>
+<li>和Vector不同，ArrayList中的操作不是线程安全的！所以，建议在单线程中才使用ArrayList，而在多线程中可以选择Vector或者CopyOnWriteArrayList。</li>
+<li>无参构造默认大小为0(JDK1.8之前是10，1.8版本无参数的构造方法默认大小为0, 第一次添加元素的时候会把大小修改成10)。</li>
+<li>扩容的时机 -&gt; 如果是空数组直接扩容，否则就是当大小大过阈值时进行扩容（默认是10）。</li>
+<li>扩容的大小为 int newCapacity = oldCapacity + (oldCapacity &gt;&gt; 1); 扩容大小为原来值的1.5倍。</li>
+</ul>
+<p><u>ArrayList包含了两个重要的对象：elementData 和 size。</u></p>
+<blockquote>
+<p>elementData 是”Object[]类型的数组”，它保存了添加到ArrayList中的元素。实际上，elementData是个动态数组，我们能通过构造函数 ArrayList(int initialCapacity)来执行它的初始容量为initialCapacity；如果通过不含参数的构造函数ArrayList()来创建ArrayList，则elementData的容量默认是10。elementData数组的大小会根据ArrayList容量的增长而动态的增长，具体的增长方式，请参考源码分析中的ensureCapacity()函数。<br>size 则是动态数组的实际大小。</p>
+</blockquote>
+<p><strong>Map</strong></p>
+<ul>
+<li>Map 是映射接口，Map中存储的内容是键值对(key-value)。</li>
+<li>AbstractMap 是继承于Map的抽象类，它实现了Map中的大部分API。其它Map的实现类可以通过继承AbstractMap来减少重复编码。</li>
+<li>SortedMap 是继承于Map的接口。SortedMap中的内容是排序的键值对，排序的方法是通过比较器(Comparator)。</li>
+<li>NavigableMap 是继承于SortedMap的接口。相比于SortedMap，NavigableMap有一系列的导航方法；如”获取大于/等于某对象的键值对”、“获取小于/等于某对象的键值对”等等。</li>
+<li>TreeMap 继承于AbstractMap，且实现了NavigableMap接口；因此，TreeMap中的内容是“有序的键值对”！</li>
+<li>HashMap 继承于AbstractMap，但没实现NavigableMap接口；因此，HashMap的内容是“键值对，但不保证次序”！</li>
+<li>LinkedHashMap是HashMap的一个子类，保存了记录的插入顺序，在用Iterator遍历LinkedHashMap时，先得到的记录肯定是先插入的，也可以在构造时带参数，按照访问次序排序。</li>
+<li>Hashtable 虽然不是继承于AbstractMap，但它继承于Dictionary(Dictionary也是键值对的接口)，而且也实现Map接口；因此，Hashtable的内容也是“键值对，也不保证次序”。但和HashMap相比，Hashtable是线程安全的，而且它支持通过Enumeration去遍历。</li>
+<li>WeakHashMap 继承于AbstractMap。它和HashMap的键类型不同，WeakHashMap的键是“弱键”。</li>
+<li>Map 接口提供三种collection 视图，允许以键集、值集或键-值映射关系集的形式查看某个映射的内容。</li>
+</ul>
+<p><img src="https://s2.ax1x.com/2019/10/26/KBYz59.jpg" alt="Map类图架构"></p>
+<p><strong>Map.Entry</strong><br>Map.Entry是Map中内部的一个接口，Map.Entry是键值对，Map通过 entrySet() 获取Map.Entry的键值对集合，从而通过该集合实现对键值对的操作。</p>
+<p><strong>HashMap</strong></p>
+<ul>
+<li><p>HashMap实现了Map接口，Map接口对键值对进行映射。它根据键的hashCode值存储数据，大多数情况下可以直接定位到它的值，因而具有很快的访问速度。Map中不允许出现重复的键（Key）。</p>
+</li>
+<li><p>HashMap是非线程安全的（非Synchronize），要想实现线程安全，那么需要调用collections类的静态方法<strong>synchronizeMap（）</strong>实现。或者使用<strong>ConcurrentHashMap</strong></p>
+</li>
+<li><p>key、value都可以为null。HashMap中的映射不是有序的。</p>
+</li>
+<li><p>容量是哈希表中桶的数量，<strong>初始容量</strong>只是哈希表在创建时的容量，<strong>默认大小为16</strong>。</p>
+</li>
+<li><p><strong>加载因子</strong>是哈希表在其容量自动增加之前可以达到多满的一种尺度，<strong>默认为 0.75f</strong>。</p>
+</li>
+<li><p>当哈希表中的条目数超出了加载因子与当前容量的乘积时（初始为16 * 0.75 = 12），则要对该哈希表进行 resize()操作（即重建内部数据结构）。</p>
+<blockquote>
+<ol>
+<li><u>新的数组大小 = 旧数组大小 * 2</u>。 新的resize()阈值大小就是原大小两倍。</li>
+<li>如果此节点没有子节点那么直接重新计算在数组中下标位置newTab[e.hash &amp; (newCap - 1)] = e;</li>
+<li>如果有子节点如果是树的按树的方法重排。</li>
+<li>如果是链表的那么原链表按if ((e.hash &amp; oldCap) == 0) 拆成了2个链表。 == 0的链表还是放在原 位置。== 1的链表放在了原位置 + 旧数组长度的位置newTab[j + oldCap] = hiHead;</li>
+</ol>
+</blockquote>
+</li>
+<li><p>当发生 哈希冲突（碰撞）的时候，HashMap 采用<strong>拉链法</strong>进行解决。</p>
+</li>
+<li><p><u>JDK 1.8 以前</u> HashMap 的实现是<strong>数组+链表</strong>。JDK 1.8 中引入了<strong>红黑树</strong>。当链表长度太长<strong>（默认超过8）</strong>时，链表就转换为红黑树，利用红黑树快速增删改查的特点提高HashMap的性能。</p>
+</li>
+<li><p>HashMap类中有一个非常重要的字段，就是 Node[] table，即哈希桶数组。</p>
+</li>
+</ul>
+<p><u><strong>HashMap使用总结</strong></u></p>
+<blockquote>
+<p>(1) 扩容是一个特别耗性能的操作，所以当程序员在使用HashMap的时候，估算map的大小，初始化的时候给一个大致的数值，避免map进行频繁的扩容。<br>(2) 负载因子是可以修改的，也可以大于1，但是建议不要轻易修改，除非情况非常特殊。<br>(3) HashMap是线程不安全的，不要在并发的环境中同时操作HashMap，建议使用ConcurrentHashMap。<br>(4) JDK1.8引入红黑树大程度优化了HashMap的性能。</p>
+</blockquote>
+<p><strong>TreeMap</strong></p>
+<ul>
+<li>TreeMap 是一个有序的key-value集合，它是通过<strong>红黑树</strong>实现的。</li>
+<li>该映射根据其键的自然顺序进行排序，或者根据创建映射时提供的 Comparator 进行排序，具体取决于使用的构造方法。</li>
+<li>TreeMap 实现了NavigableMap接口，意味着它支持一系列的导航方法。比如返回有序的key集合。</li>
+<li>TreeMap的排序是基于对key的排序。</li>
+<li>TreeMap是非同步的</li>
+</ul>
+<p><img src="https://s2.ax1x.com/2019/10/26/KBDXbq.jpg" alt="TreeMap架构"><br>从图中可以看出<br>(01) TreeMap实现继承于AbstractMap，并且实现了NavigableMap接口。<br>(02) TreeMap的本质是R-B Tree(红黑树)，它包含几个重要的成员变量： root, size, comparator。<br>    root 是红黑数的根节点。它是Entry类型，Entry是红黑数的节点，它包含了红黑数的6个基本组成成分：key(键)、value(值)、left(左孩子)、right(右孩子)、parent(父节点)、color(颜色)。Entry节点根据key进行排序，Entry节点包含的内容为value。<br>    红黑数排序时，根据Entry中的key进行排序；Entry中的key比较大小是根据比较器comparator来进行判断的。<br>    size是红黑数中节点的个数。</p>
+<p><strong>HashTable</strong></p>
+<ul>
+<li>Hashtable 也一个散列表，它存储的内容是键值对(key-value)映射。</li>
+<li>Hashtable 继承于Dictionary，实现了Map、Cloneable、java.io.Serializable接口。</li>
+<li>Hashtable 的函数都是同步的，这意味着它是线程安全的。它的key、value都不可以为null</li>
+<li>Hashtable中的映射不是有序的。</li>
+</ul>
+<p><u>与hashMap相比有何不同，为何现在被废弃？</u></p>
+<ol>
+<li>HashMap是继承自AbstractMap类，而HashTable是继承自Dictionary类。不过它们都实现了同时实现了map、Cloneable（可复制）、Serializable（可序列化）这三个接口。Dictionary类是一个已经被废弃的类。</li>
+<li>Hashtable既不支持NULL KEY也不支持NULL VALUE。</li>
+<li>Hashtable是线程安全的，但是效率低，它的每个方法中都加入了Synchronize方法。当需要多线程操作的时候可以使用线程安全的ConcurrentHashMap。ConcurrentHashMap虽然也是线程安全的，但是它的效率比Hashtable要高好多倍。因为ConcurrentHashMap使用了分段锁，并不对整个数据进行锁定。</li>
+<li>如线程1使用put进行添加元素，线程2不但不能使用put方法添加元素，并且也不能使用get方法来获取元素，所以竞争越激烈效率越低。</li>
+<li>Hashtable、HashMap都使用了 Iterator。而由于历史原因，Hashtable还使用了Enumeration的方式 。</li>
+</ol>
+<p><strong>ConcurrentHashMap</strong><br>JDK1.7</p>
+<ol>
+<li>ConcurrentHashMap的数据结构是由一个Segment数组和多个HashEntry组成。ReentrantLock+Segment+HashEntry结构。</li>
+<li>Segment是一种可重入锁ReentrantLock，在ConcurrentHashMap里扮演锁的角色，HashEntry则用于存储键值对数据。</li>
+<li>Segment的结构和HashMap类似，是一种数组和链表结构， 一个Segment里包含一个HashEntry数组，每个HashEntry是一个链表结构的元素， 每个Segment守护者一个HashEntry数组里的元素</li>
+<li>Segment数组的意义就是将一个大的table分割成多个小的table来进行加锁。</li>
+<li>Segment的大小size默认为16，每一个Segment元素下的HashEntry的初始化也是按照位于运算来计算，用cap来表示，cap的初始值为1，所以HashEntry最小的容量为2<br><img src="https://s2.ax1x.com/2019/10/26/KBobzn.png" alt="ConcurrentHashMap1.7"></li>
+</ol>
+<p>put操作 :对于ConcurrentHashMap的数据插入，这里要进行两次Hash去定位数据的存储位置<br>get操作 :ConcurrentHashMap的get操作跟HashMap类似，只是ConcurrentHashMap第一次需要经过一次hash定位到Segment的位置，然后再hash定位到指定的HashEntry，遍历该HashEntry下的链表进行对比，成功就返回，不成功就返回null<br>size操作 :他是并发操作的，就是在你计算size的时候，他还在并发的插入数据，可能会导致你计算出来的size和你实际的size有相差（在你return size的时候，插入了多个数据），要解决这个问题，JDK1.7版本用两种方案。</p>
+<blockquote>
+<p>第一种方案他会使用不加锁的模式去尝试多次计算ConcurrentHashMap的size，最多三次，比较前后两次计算的结果，结果一致就认为当前没有元素加入，计算的结果是准确的<br>第二种方案是如果第一种方案不符合，他就会给每个Segment加上锁，然后计算ConcurrentHashMap的size返回</p>
+</blockquote>
+<p>JDK1.8</p>
+<ol>
+<li>JDK1.8的实现已经摒弃了Segment的概念。</li>
+<li>用Node数组+链表+红黑树的数据结构来实现，并发控制使用Synchronized和CAS来操作。synchronized+CAS+HashEntry+红黑树</li>
+</ol>
+<p><img src="https://s2.ax1x.com/2019/10/26/KB7qbV.png" alt="ConcurrentHashMapJdk1.8.png"></p>
+<p>put操作</p>
+<ol>
+<li>如果没有初始化就先调用initTable（）方法来进行初始化过程</li>
+<li>如果没有hash冲突就直接CAS插入</li>
+<li>如果还在进行扩容操作就先进行扩容</li>
+<li>如果存在hash冲突，就加锁来保证线程安全，这里有两种情况，一种是链表形式就直接遍历到尾端插入，一种是红黑树就按照红黑树结构插入，</li>
+<li>最后一个如果该链表的数量大于阈值8，就要先转换成黑红树的结构，break再一次进入循环</li>
+<li>如果添加成功就调用addCount方法统计size，并且检查是否需要扩容</li>
+</ol>
+<p>get操作</p>
+<ol>
+<li>计算hash值，定位到该table索引位置，如果是首节点符合就返回</li>
+<li>如果遇到扩容的时候，会调用标志正在扩容节点ForwardingNode的find方法，查找该节点，匹配就返回</li>
+<li>以上都不符合的话，就往下遍历节点，匹配就返回，否则最后就返回null</li>
+</ol>
+<p><strong>LinkedHashMap</strong><br><img src="https://s2.ax1x.com/2019/10/26/KBHfqx.png" alt="LinkedHashMap结构图"></p>
+<p>无参的构造方法</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">LinkedHashMap</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 调用HashMap的构造方法，其实就是初始化Entry[] table</span></span><br><span class="line">    <span class="keyword">super</span>();</span><br><span class="line">    <span class="comment">// 这里是指是否基于访问排序，默认为false</span></span><br><span class="line">    accessOrder = <span class="keyword">false</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>然后把accessOrder设置为false，这就跟存储的顺序有关了，LinkedHashMap存储数据是有序的，而且分为两种：插入顺序和访问顺序。<br>这里accessOrder设置为false，表示不是访问顺序而是插入顺序存储的，这也是默认值，表示LinkedHashMap中存储的顺序是按照调用put方法插入的顺序进行排序的。</p>
+<p><strong>Set</strong><br>Set的底层存储都是基于Map。HashSet的实现基于HashMap，TreeSet的实现基于TreeMap。都是只需要Map的key，value使用一个空对象进行填充。</p>
+<p><strong>HashSet</strong></p>
+<ul>
+<li>HashSet实现了Set接口，它不允许集合中出现重复元素。</li>
+<li>它是由HashMap实现的，不保证元素的顺序，而且HashSet允许使用 null 元素。</li>
+<li>只需要使用hashMap的key部分，value部分使用默认的 private static final Object PRESENT = new Object();</li>
+<li>HashSet是非同步的，如果需要同步则应该使用 Collections.synchronizedSet 方法来“包装” set。最好在创建时完成这一操作，以防止对该 set 进行意外的不同步访问;</li>
+<li>HashSet与Map关系如下图：</li>
+</ul>
+<p><img src="https://s2.ax1x.com/2019/10/26/KBLE5T.png" alt="HashSet"></p>
+<p><strong>TreeSet</strong></p>
+<ul>
+<li>它继承于AbstractSet抽象类，实现NavigableSet, Cloneable, java.io.Serializable接口。 1.1 TreeSet 继承于AbstractSet，所以它是一个Set集合，具有Set的属性和方法。 1.2 TreeSet 实现了NavigableSet接口，意味着它支持一系列的导航方法。比如查找与指定目标最匹配项。 1.3 TreeSet 实现了Cloneable接口，意味着它能被克隆。 1.4 TreeSet 实现了java.io.Serializable接口，意味着它支持序列化。</li>
+<li>TreeSet是基于TreeMap实现的。TreeSet中的元素支持2种排序方式：自然排序 或者 根据创建TreeSet 时提供的 Comparator 进行排序。这取决于使用的构造方法。</li>
+<li>TreeSet为基本操作（add、remove 和 contains）提供受保证的 log(n) 时间开销。</li>
+<li>TreeSet是非同步的、非线程安全的。 它的iterator 方法返回的迭代器是fail-fast的。</li>
+</ul>
+<p><img src="https://s2.ax1x.com/2019/10/26/KBXUHI.jpg" alt="TreeSet架构图"></p>
+
+            </div>
+          
+
+    
+      <footer class="post-footer">
+		
+		<div class="post-tags">
+		  
+			<a href="/tags/JavaBasics/">JavaBasics</a>
+		  
+		</div>
+		
+
+        
+        
+  <nav class="post-nav">
+    
+    
+      <a class="next" href="/2019/10/24/Java-IO/">
+        <span class="next-text nav-default">Java IO</span>
+        <span class="prev-text nav-mobile">Next</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    
+  </nav>
+
+        
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+      </footer>
+    
+  </article>
+
+    </div>
+
+      </div>
+
+      <footer id="colophon"><span class="copyright-year">
+    
+        &copy;
+    
+        2014 -
+    
+    2019
+    <span class="footer-author">yaoper.</span>
+    <span class="power-by">
+        Powered by <a class="hexo-link" href="https://hexo.io/">Hexo</a> and <a class="theme-link" href="https://github.com/frostfan/hexo-theme-polarbear">Polar Bear</a>
+    </span>
+</span>
+
+      </footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div>
+    
+
+
+    
+
+
+
+
+  
+    <script type="text/javascript" src="/lib/jquery/jquery-3.1.1.min.js"></script>
+  
+
+  
+
+    <script type="text/javascript" src="/js/src/theme.js?v=1.1"></script>
+<script type="text/javascript" src="/js/src/bootstrap.js?v=1.1"></script>
+
+  </body>
+</html>
