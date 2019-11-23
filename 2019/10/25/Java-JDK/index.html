@@ -50,7 +50,7 @@
 <meta property="og:image" content="https://s2.ax1x.com/2019/10/26/KBHfqx.png">
 <meta property="og:image" content="https://s2.ax1x.com/2019/10/26/KBLE5T.png">
 <meta property="og:image" content="https://s2.ax1x.com/2019/10/26/KBXUHI.jpg">
-<meta property="og:updated_time" content="2019-10-26T10:27:36.213Z">
+<meta property="og:updated_time" content="2019-10-28T01:51:44.055Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Java-JDK">
 <meta name="twitter:description" content="jdk底层大量使用位运算，记录一下基本知识  &amp;lt;&amp;lt; : 左移运算符，num &amp;lt;&amp;lt; 1,相当于num乘以2 /&amp;gt;&amp;gt; : 右移运算符，num &amp;gt;&amp;gt; 1,相当于num除以2 /&amp;gt;&amp;gt;&amp;gt; : 无符号右移，忽略符号位，空位都以0补齐 ^ ： 亦或运算，不同取1  集合类在java.util包下的基本集合类需要掌握  ArrayList Link">
@@ -159,8 +159,9 @@
 <li>Vector 是矢量队列，它是JDK1.0版本添加的类。</li>
 <li>Vector 继承了AbstractList，实现了List；所以，它是一个队列，支持相关的添加、删除、修改、遍历等功能。</li>
 <li>Vector 实现了RandmoAccess接口，即提供了随机访问功能。RandmoAccess是java中用来被List实现，为List提供快速访问功能的。在Vector中，我们即可以通过元素的序号快速获取元素对象；这就是快速随机访问。</li>
-<li>Vector 实现了Cloneable接口，即实现clone()函数。它能被克隆。<br>和ArrayList不同，Vector中的操作是线程安全的。同步的实现是在许多方法上增加synchronized关键字。<br><u>同步容器（如Vector）并不是所有操作都线程安全！</u><br>问：对于线程安全的集合类（例如Vector）的任何操作是不是都能保证线程安全？<br>答：同步容器中的所有自带方法都是线程安全的，因为方法都使用synchronized关键字标注。但是，对这些集合类的复合操作方法（eg:deletelast()包括size()-1和remove()）无法保证其线程安全性。需要客户端通过主动加锁来保证。</li>
+<li>Vector 实现了Cloneable接口，即实现clone()函数。它能被克隆。</li>
 </ul>
+<p>和ArrayList不同，Vector中的操作是线程安全的。同步的实现是在许多方法上增加synchronized关键字。<br><u>同步容器（如Vector）并不是所有操作都线程安全！</u><br>问：线程安全的集合类（例如Vector）的任何操作是不是都能保证线程安全？<br>答：同步容器中的所有自带方法都是线程安全的，因为方法都使用synchronized关键字标注。但是，对这些集合类的复合操作方法（eg:deletelast()包括size()-1和remove()）无法保证其线程安全性。需要客户端通过主动加锁来保证。</p>
 <p><strong>Stack</strong></p>
 <ul>
 <li>java工具包中的Stack是继承于Vector(矢量队列)，<strong>Stack是通过数组实现的，而非链表</strong>。</li>
@@ -323,6 +324,12 @@
         
         
   <nav class="post-nav">
+    
+      <a class="prev" href="/2019/10/31/MySQL常见的8中错误用法/">
+        <i class="iconfont icon-left"></i>
+        <span class="prev-text nav-default">MySQL常见的8中错误用法</span>
+        <span class="prev-text nav-mobile">Prev</span>
+      </a>
     
     
       <a class="next" href="/2019/10/24/Java-IO/">

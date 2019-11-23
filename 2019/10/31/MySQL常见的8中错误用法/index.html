@@ -1,0 +1,702 @@
+<!DOCTYPE html>
+<html lang>
+  <head><meta name="generator" content="Hexo 3.9.0">
+    
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1,minimum-scale=1,maximum-scale=1">
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+  <meta name="description" content="MySQL常见的8中错误用法">
+
+
+
+
+  <meta name="keywords" content="MySQL,">
+
+
+
+
+
+  <link rel="alternate" href="/default" title="Illusory">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=1.1">
+
+
+
+<link rel="canonical" href="http://yaoper.github.io/2019/10/31/MySQL常见的8中错误用法/">
+
+
+<meta name="description" content="1、LIMIT 语句分页查询是最常用的场景之一，但也通常也是最容易出问题的地方。比如对于下面简单的语句，一般 DBA 想到的办法是在 type, name, create_time 字段上加组合索引。这样条件排序都能有效的利用到索引，性能迅速提升。 123456SELECT *FROM operationWHERE type = &apos;SQLStats&apos;	AND name = &apos;SlowLog&apos;ORD">
+<meta name="keywords" content="MySQL">
+<meta property="og:type" content="article">
+<meta property="og:title" content="MySQL常见的8中错误用法">
+<meta property="og:url" content="http://yaoper.github.io/2019/10/31/MySQL常见的8中错误用法/index.html">
+<meta property="og:site_name" content="Illusory">
+<meta property="og:description" content="1、LIMIT 语句分页查询是最常用的场景之一，但也通常也是最容易出问题的地方。比如对于下面简单的语句，一般 DBA 想到的办法是在 type, name, create_time 字段上加组合索引。这样条件排序都能有效的利用到索引，性能迅速提升。 123456SELECT *FROM operationWHERE type = &apos;SQLStats&apos;	AND name = &apos;SlowLog&apos;ORD">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2019-10-31T03:13:33.028Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="MySQL常见的8中错误用法">
+<meta name="twitter:description" content="1、LIMIT 语句分页查询是最常用的场景之一，但也通常也是最容易出问题的地方。比如对于下面简单的语句，一般 DBA 想到的办法是在 type, name, create_time 字段上加组合索引。这样条件排序都能有效的利用到索引，性能迅速提升。 123456SELECT *FROM operationWHERE type = &apos;SQLStats&apos;	AND name = &apos;SlowLog&apos;ORD">
+
+
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=1.1">
+<link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+
+
+
+
+
+<script type="text/javascript">
+  var themeConfig = {
+    fancybox: {
+      enable: false
+    },
+  };
+</script>
+
+
+
+
+  
+
+
+
+    <title> MySQL常见的8中错误用法 - Illusory </title>
+  </head>
+
+  <body>
+    <div id="page">
+      <header id="masthead"><div class="site-header-inner">
+    <h1 class="site-title">
+        <a href="/." class="logo">Illusory</a>
+    </h1>
+
+    <nav id="nav-top">
+        
+            <ul id="menu-top" class="nav-top-items">
+                
+                    <li class="menu-item">
+                        <a href="/archives">
+                            
+                            
+                                Archives
+                            
+                        </a>
+                    </li>
+                
+                    <li class="menu-item">
+                        <a href="/about">
+                            
+                            
+                                About
+                            
+                        </a>
+                    </li>
+                
+            </ul>
+        
+  </nav>
+</div>
+
+      </header>
+      <div id="content">
+        
+    <div id="primary">
+        
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          MySQL常见的8中错误用法
+        
+      </h1>
+
+      <time class="post-time">
+          Oct 31 2019
+      </time>
+    </header>
+
+
+
+    
+            <div class="post-content">
+            <h4 id="1、LIMIT-语句"><a href="#1、LIMIT-语句" class="headerlink" title="1、LIMIT 语句"></a>1、LIMIT 语句</h4><p>分页查询是最常用的场景之一，但也通常也是最容易出问题的地方。比如对于下面简单的语句，一般 DBA 想到的办法是在 type, name, create_time 字段上加组合索引。这样条件排序都能有效的利用到索引，性能迅速提升。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> *</span><br><span class="line"><span class="keyword">FROM</span> operation</span><br><span class="line"><span class="keyword">WHERE</span> <span class="keyword">type</span> = <span class="string">'SQLStats'</span></span><br><span class="line">	<span class="keyword">AND</span> <span class="keyword">name</span> = <span class="string">'SlowLog'</span></span><br><span class="line"><span class="keyword">ORDER</span> <span class="keyword">BY</span> create_time</span><br><span class="line"><span class="keyword">LIMIT</span> <span class="number">1000</span>, <span class="number">10</span>;</span><br></pre></td></tr></table></figure>
+
+<p>但当 LIMIT 子句变成 “LIMIT 1000000,10” 时，程序员仍然会抱怨：我只取10条记录为什么还是慢？<br>要知道数据库也并不知道第1000000条记录从什么地方开始，即使有索引也需要从头计算一次。出现这种性能问题，多数情形下是程序员偷懒了。<br>在前端数据浏览翻页，或者大数据分批导出等场景下，是可以将上一页的最大值当成参数作为查询条件的。SQL 重新设计如下：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> *</span><br><span class="line"><span class="keyword">FROM</span> operation</span><br><span class="line"><span class="keyword">WHERE</span> (<span class="keyword">type</span> = <span class="string">'SQLStats'</span></span><br><span class="line">	<span class="keyword">AND</span> <span class="keyword">name</span> = <span class="string">'SlowLog'</span></span><br><span class="line">	<span class="keyword">AND</span> create_time &gt; <span class="string">'2017-03-16 14:00:00'</span>)</span><br><span class="line"><span class="keyword">ORDER</span> <span class="keyword">BY</span> create_time</span><br><span class="line"><span class="keyword">LIMIT</span> <span class="number">10</span>;</span><br></pre></td></tr></table></figure>
+
+<p>在新设计下查询时间基本固定，不会随着数据量的增长而发生变化。</p>
+<h4 id="2、隐式转换"><a href="#2、隐式转换" class="headerlink" title="2、隐式转换"></a>2、隐式转换</h4><p>SQL语句中查询变量和字段定义类型不匹配是另一个常见的错误。比如下面的语句：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> *</span><br><span class="line"><span class="keyword">FROM</span> my_balance b</span><br><span class="line"><span class="keyword">WHERE</span> b.bpn = <span class="number">14000000123</span></span><br><span class="line">	<span class="keyword">AND</span> b.isverified <span class="keyword">IS</span> <span class="literal">NULL</span>;</span><br></pre></td></tr></table></figure>
+
+<p>其中字段 bpn 的定义为 varchar(20)，MySQL 的策略是将字符串转换为数字之后再比较。函数作用于表字段，索引失效。</p>
+<h4 id="3、关联更新、删除"><a href="#3、关联更新、删除" class="headerlink" title="3、关联更新、删除"></a>3、关联更新、删除</h4><p>虽然 MySQL5.6 引入了物化特性，但需要特别注意它目前仅仅针对查询语句的优化。对于更新或删除需要手工重写成 JOIN。比如下面 UPDATE 语句，MySQL 实际执行的是循环/嵌套子查询（DEPENDENT SUBQUERY)，其执行时间可想而知。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">UPDATE</span> operation o</span><br><span class="line"><span class="keyword">SET</span> <span class="keyword">status</span> = <span class="string">'applying'</span></span><br><span class="line"><span class="keyword">WHERE</span> o.id <span class="keyword">IN</span> (</span><br><span class="line">		<span class="keyword">SELECT</span> <span class="keyword">id</span></span><br><span class="line">		<span class="keyword">FROM</span> (</span><br><span class="line">			<span class="keyword">SELECT</span> o.id, o.status</span><br><span class="line">			<span class="keyword">FROM</span> operation o</span><br><span class="line">			<span class="keyword">WHERE</span> o.group = <span class="number">123</span></span><br><span class="line">				<span class="keyword">AND</span> o.status <span class="keyword">NOT</span> <span class="keyword">IN</span> (<span class="string">'done'</span>)</span><br><span class="line">			<span class="keyword">ORDER</span> <span class="keyword">BY</span> o.parent, o.id</span><br><span class="line">			<span class="keyword">LIMIT</span> <span class="number">1</span></span><br><span class="line">		) t</span><br><span class="line">	);</span><br></pre></td></tr></table></figure>
+
+<p>执行计划如下</p>
+<table>
+<thead>
+<tr>
+<th>id</th>
+<th>select_type(select_type)</th>
+<th>table</th>
+<th>type</th>
+<th>possible_keys</th>
+<th>key</th>
+<th>key_len</th>
+<th>ref</th>
+<th>rows</th>
+<th>Extra(ExtraExtraExtraExtraExtraExtraExtraExtraExtra)</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td>PRIMARY</td>
+<td>o</td>
+<td>index</td>
+<td></td>
+<td>PRIMARY</td>
+<td>8</td>
+<td></td>
+<td>24</td>
+<td>Using where; Using temporary</td>
+</tr>
+<tr>
+<td>2</td>
+<td>DEPENDENT SUBQUERY</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td>Impossible WHERE noticed after reading const tables</td>
+</tr>
+<tr>
+<td>3</td>
+<td>DERIVED</td>
+<td>o</td>
+<td>ref</td>
+<td>idx_2,idx_5</td>
+<td>idx_5</td>
+<td>8</td>
+<td>const</td>
+<td>1</td>
+<td>Using where; Using filesort</td>
+</tr>
+</tbody></table>
+<p>重写为 JOIN 之后，子查询的选择模式从 DEPENDENT SUBQUERY 变成 DERIVED，执行速度大大加快，从7秒降低到2毫秒。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">UPDATE</span> operation o</span><br><span class="line">	<span class="keyword">JOIN</span> (</span><br><span class="line">		<span class="keyword">SELECT</span> o.id, o.status</span><br><span class="line">		<span class="keyword">FROM</span> operation o</span><br><span class="line">		<span class="keyword">WHERE</span> o.group = <span class="number">123</span></span><br><span class="line">			<span class="keyword">AND</span> o.status <span class="keyword">NOT</span> <span class="keyword">IN</span> (<span class="string">'done'</span>)</span><br><span class="line">		<span class="keyword">ORDER</span> <span class="keyword">BY</span> o.parent, o.id</span><br><span class="line">		<span class="keyword">LIMIT</span> <span class="number">1</span></span><br><span class="line">	) t</span><br><span class="line">	<span class="keyword">ON</span> o.id = t.id</span><br><span class="line"><span class="keyword">SET</span> <span class="keyword">status</span> = <span class="string">'applying'</span></span><br></pre></td></tr></table></figure>
+
+<p>执行计划简化为：</p>
+<table>
+<thead>
+<tr>
+<th>id</th>
+<th>select_type</th>
+<th>table</th>
+<th>type</th>
+<th>possible_keys</th>
+<th>key</th>
+<th>key_len</th>
+<th>ref</th>
+<th>rows</th>
+<th>Extra(ExtraExtraExtraExtraExtraExtraExtraExtraExtra)</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td>PRIMARY</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td>Impossible WHERE noticed after reading const tables</td>
+</tr>
+<tr>
+<td>2</td>
+<td>DERIVED</td>
+<td>o</td>
+<td>ref</td>
+<td>idx_2,idx_5</td>
+<td>idx_5</td>
+<td>8</td>
+<td>const</td>
+<td>1</td>
+<td>Using where; Using filesort</td>
+</tr>
+</tbody></table>
+<h4 id="4、混合排序"><a href="#4、混合排序" class="headerlink" title="4、混合排序"></a>4、混合排序</h4><p>MySQL 不能利用索引进行混合排序。但在某些场景，还是有机会使用特殊方法提升性能的</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> *</span><br><span class="line"><span class="keyword">FROM</span> my_order o</span><br><span class="line">	<span class="keyword">INNER</span> <span class="keyword">JOIN</span> my_appraise a <span class="keyword">ON</span> a.orderid = o.id</span><br><span class="line"><span class="keyword">ORDER</span> <span class="keyword">BY</span> a.is_reply <span class="keyword">ASC</span>, a.appraise_time <span class="keyword">DESC</span></span><br><span class="line"><span class="keyword">LIMIT</span> <span class="number">0</span>, <span class="number">20</span></span><br></pre></td></tr></table></figure>
+
+<p>执行计划显示为全表扫描：</p>
+<table>
+<thead>
+<tr>
+<th>id</th>
+<th>select_type</th>
+<th>table</th>
+<th>type</th>
+<th>possible_keys</th>
+<th>key</th>
+<th>key_len</th>
+<th>ref</th>
+<th>rows</th>
+<th>Extra(ExtraExtraExtra)</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td>SIMPLE</td>
+<td>a</td>
+<td>ALL</td>
+<td>idx_orderid</td>
+<td>NULL</td>
+<td>NULL</td>
+<td>NULL</td>
+<td>1967647</td>
+<td>Using filesort</td>
+</tr>
+<tr>
+<td>1</td>
+<td>SIMPLE</td>
+<td>o</td>
+<td>eq_ref</td>
+<td>PRIMARY</td>
+<td>PRIMARY</td>
+<td>122</td>
+<td>a.orderid</td>
+<td>1</td>
+<td>NULL</td>
+</tr>
+</tbody></table>
+<p>由于 is_reply 只有0和1两种状态，我们按照下面的方法重写后，执行时间从1.58秒降低到2毫秒。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> *</span><br><span class="line"><span class="keyword">FROM</span> (</span><br><span class="line">	(<span class="keyword">SELECT</span> *</span><br><span class="line">	<span class="keyword">FROM</span> my_order o</span><br><span class="line">		<span class="keyword">INNER</span> <span class="keyword">JOIN</span> my_appraise a</span><br><span class="line">		<span class="keyword">ON</span> a.orderid = o.id</span><br><span class="line">			<span class="keyword">AND</span> is_reply = <span class="number">0</span></span><br><span class="line">	<span class="keyword">ORDER</span> <span class="keyword">BY</span> appraise_time <span class="keyword">DESC</span></span><br><span class="line">	<span class="keyword">LIMIT</span> <span class="number">0</span>, <span class="number">20</span>)</span><br><span class="line">	<span class="keyword">UNION</span> <span class="keyword">ALL</span></span><br><span class="line">	(<span class="keyword">SELECT</span> *</span><br><span class="line">	<span class="keyword">FROM</span> my_order o</span><br><span class="line">		<span class="keyword">INNER</span> <span class="keyword">JOIN</span> my_appraise a</span><br><span class="line">		<span class="keyword">ON</span> a.orderid = o.id</span><br><span class="line">			<span class="keyword">AND</span> is_reply = <span class="number">1</span></span><br><span class="line">	<span class="keyword">ORDER</span> <span class="keyword">BY</span> appraise_time <span class="keyword">DESC</span></span><br><span class="line">	<span class="keyword">LIMIT</span> <span class="number">0</span>, <span class="number">20</span>)</span><br><span class="line">) t</span><br><span class="line"><span class="keyword">ORDER</span> <span class="keyword">BY</span> is_reply <span class="keyword">ASC</span>, appraisetime <span class="keyword">DESC</span></span><br><span class="line"><span class="keyword">LIMIT</span> <span class="number">20</span>;</span><br></pre></td></tr></table></figure>
+
+<h4 id="5、EXISTS语句"><a href="#5、EXISTS语句" class="headerlink" title="5、EXISTS语句"></a>5、EXISTS语句</h4><p>MySQL 对待 EXISTS 子句时，仍然采用嵌套子查询的执行方式。如下面的 SQL 语句：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> *</span><br><span class="line"><span class="keyword">FROM</span> my_neighbor n</span><br><span class="line">	<span class="keyword">LEFT</span> <span class="keyword">JOIN</span> my_neighbor_apply sra</span><br><span class="line">	<span class="keyword">ON</span> n.id = sra.neighbor_id</span><br><span class="line">		<span class="keyword">AND</span> sra.user_id = <span class="string">'xxx'</span></span><br><span class="line"><span class="keyword">WHERE</span> (n.topic_status &lt; <span class="number">4</span></span><br><span class="line">	<span class="keyword">AND</span> <span class="keyword">EXISTS</span> (</span><br><span class="line">		<span class="keyword">SELECT</span> <span class="number">1</span></span><br><span class="line">		<span class="keyword">FROM</span> message_info m</span><br><span class="line">		<span class="keyword">WHERE</span> n.id = m.neighbor_id</span><br><span class="line">			<span class="keyword">AND</span> m.inuser = <span class="string">'xxx'</span></span><br><span class="line">	)</span><br><span class="line">	<span class="keyword">AND</span> n.topic_type &lt;&gt; <span class="number">5</span>)</span><br></pre></td></tr></table></figure>
+
+<p>执行计划为</p>
+<table>
+<thead>
+<tr>
+<th>id</th>
+<th>select_type(select_type)</th>
+<th>table</th>
+<th>type</th>
+<th>possible_keys</th>
+<th>key</th>
+<th>key_len</th>
+<th>ref</th>
+<th>rows</th>
+<th>Extra(ExtraExtraExtraExtraExtraExtra)</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td>PRIMARY</td>
+<td>n</td>
+<td>ALL</td>
+<td></td>
+<td>NULL</td>
+<td>NULL</td>
+<td>NULL</td>
+<td>1086041</td>
+<td>Using where</td>
+</tr>
+<tr>
+<td>1</td>
+<td>PRIMARY</td>
+<td>sra</td>
+<td>ref</td>
+<td></td>
+<td>idx_user_id</td>
+<td>123</td>
+<td>const</td>
+<td>1</td>
+<td>Using where</td>
+</tr>
+<tr>
+<td>2</td>
+<td>DEPENDENT SUBQUERY</td>
+<td>m</td>
+<td>ref</td>
+<td></td>
+<td>idx_message_info</td>
+<td>122</td>
+<td>const</td>
+<td>1</td>
+<td>Using index condition; Using where</td>
+</tr>
+</tbody></table>
+<p>去掉 exists 更改为 join，能够避免嵌套子查询，将执行时间从1.93秒降低为1毫秒。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> *</span><br><span class="line"><span class="keyword">FROM</span> my_neighbor n</span><br><span class="line">	<span class="keyword">INNER</span> <span class="keyword">JOIN</span> message_info m</span><br><span class="line">	<span class="keyword">ON</span> n.id = m.neighbor_id</span><br><span class="line">		<span class="keyword">AND</span> m.inuser = <span class="string">'xxx'</span></span><br><span class="line">	<span class="keyword">LEFT</span> <span class="keyword">JOIN</span> my_neighbor_apply sra</span><br><span class="line">	<span class="keyword">ON</span> n.id = sra.neighbor_id</span><br><span class="line">		<span class="keyword">AND</span> sra.user_id = <span class="string">'xxx'</span></span><br><span class="line"><span class="keyword">WHERE</span> n.topic_status &lt; <span class="number">4</span></span><br><span class="line">	<span class="keyword">AND</span> n.topic_type &lt;&gt; <span class="number">5</span></span><br></pre></td></tr></table></figure>
+
+<p>新的SQL执行计划为</p>
+<table>
+<thead>
+<tr>
+<th>id</th>
+<th>select_type</th>
+<th>table</th>
+<th>type</th>
+<th>possible_keys</th>
+<th>key</th>
+<th>key_len</th>
+<th>ref</th>
+<th>rows</th>
+<th>Extra(ExtraExtraExtraExtra)</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td>SIMPLE</td>
+<td>m</td>
+<td>ref</td>
+<td></td>
+<td>idx_message_info</td>
+<td>122</td>
+<td>const</td>
+<td>1</td>
+<td>Using index condition</td>
+</tr>
+<tr>
+<td>1</td>
+<td>SIMPLE</td>
+<td>n</td>
+<td>eq_ref</td>
+<td></td>
+<td>PRIMARY</td>
+<td>122</td>
+<td>ighbor_id</td>
+<td>1</td>
+<td>Using where</td>
+</tr>
+<tr>
+<td>1</td>
+<td>SIMPLE</td>
+<td>sra</td>
+<td>ref</td>
+<td></td>
+<td>idx_user_id</td>
+<td>123</td>
+<td>const</td>
+<td>1</td>
+<td>Using where</td>
+</tr>
+</tbody></table>
+<h4 id="6、条件下推"><a href="#6、条件下推" class="headerlink" title="6、条件下推"></a>6、条件下推</h4><p>外部查询条件不能够下推到复杂的视图或子查询的情况有：</p>
+<ul>
+<li>聚合子查询；</li>
+<li>含有 LIMIT 的子查询；</li>
+<li>UNION 或 UNION ALL 子查询；</li>
+<li>输出字段中的子查询；<br>如下面的语句，从执行计划可以看出其条件作用于聚合子查询之后：<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> *</span><br><span class="line"><span class="keyword">FROM</span> (</span><br><span class="line">	<span class="keyword">SELECT</span> target, <span class="keyword">COUNT</span>(*)</span><br><span class="line">	<span class="keyword">FROM</span> operation</span><br><span class="line">	<span class="keyword">GROUP</span> <span class="keyword">BY</span> target</span><br><span class="line">) t</span><br><span class="line"><span class="keyword">WHERE</span> target = <span class="string">'rm-xxxx'</span></span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<p>执行计划如下</p>
+<table>
+<thead>
+<tr>
+<th>id</th>
+<th>select_type</th>
+<th>table</th>
+<th>type</th>
+<th>possible_keys</th>
+<th>key</th>
+<th>key_len</th>
+<th>ref</th>
+<th>rows</th>
+<th>Extra(ExtraExtra)</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td>PRIMARY</td>
+<td><derived2></derived2></td>
+<td>ref</td>
+<td><auto_key0></auto_key0></td>
+<td><auto_key0></auto_key0></td>
+<td>514</td>
+<td>const</td>
+<td>2</td>
+<td>Using where</td>
+</tr>
+<tr>
+<td>2</td>
+<td>DERIVED</td>
+<td>operation</td>
+<td>index</td>
+<td>idx_4</td>
+<td>idx_4</td>
+<td>519</td>
+<td>NULL</td>
+<td>20</td>
+<td>Using index</td>
+</tr>
+</tbody></table>
+<p>确定从语义上查询条件可以直接下推后，重写如下：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> target, <span class="keyword">COUNT</span>(*)</span><br><span class="line"><span class="keyword">FROM</span> operation</span><br><span class="line"><span class="keyword">WHERE</span> target = <span class="string">'rm-xxxx'</span></span><br><span class="line"><span class="keyword">GROUP</span> <span class="keyword">BY</span> target</span><br></pre></td></tr></table></figure>
+
+<p>执行计划变为</p>
+<table>
+<thead>
+<tr>
+<th>id</th>
+<th>select_type</th>
+<th>table</th>
+<th>type</th>
+<th>possible_keys</th>
+<th>key</th>
+<th>key_len</th>
+<th>ref</th>
+<th>rows</th>
+<th>Extra(ExtraExtraExtraExtra)</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td>SIMPLE</td>
+<td>operation</td>
+<td>ref</td>
+<td>idx_4</td>
+<td>idx_4</td>
+<td>514</td>
+<td>const</td>
+<td>1</td>
+<td>Using where; Using index</td>
+</tr>
+</tbody></table>
+<h4 id="7、提前缩小范围"><a href="#7、提前缩小范围" class="headerlink" title="7、提前缩小范围"></a>7、提前缩小范围</h4><p>先上初始 SQL 语句：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> *</span><br><span class="line"><span class="keyword">FROM</span> my_order o</span><br><span class="line">	<span class="keyword">LEFT</span> <span class="keyword">JOIN</span> my_userinfo u <span class="keyword">ON</span> o.uid = u.uid</span><br><span class="line">	<span class="keyword">LEFT</span> <span class="keyword">JOIN</span> my_productinfo p <span class="keyword">ON</span> o.pid = p.pid</span><br><span class="line"><span class="keyword">WHERE</span> o.display = <span class="number">0</span></span><br><span class="line">	<span class="keyword">AND</span> o.ostaus = <span class="number">1</span></span><br><span class="line"><span class="keyword">ORDER</span> <span class="keyword">BY</span> o.selltime <span class="keyword">DESC</span></span><br><span class="line"><span class="keyword">LIMIT</span> <span class="number">0</span>, <span class="number">15</span></span><br></pre></td></tr></table></figure>
+
+<p>该SQL语句原意是：先做一系列的左连接，然后排序取前15条记录。从执行计划也可以看出，最后一步估算排序记录数为90万，时间消耗为12秒。</p>
+<table>
+<thead>
+<tr>
+<th>id</th>
+<th>select_type</th>
+<th>table</th>
+<th>type</th>
+<th>possible_keys</th>
+<th>key</th>
+<th>key_len</th>
+<th>ref</th>
+<th>rows</th>
+<th>Extra(ExtraExtraExtraExtraExtraExtraExtraExtraExtra)</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td>SIMPLE</td>
+<td>o</td>
+<td>ALL</td>
+<td>NULL</td>
+<td>NULL</td>
+<td>NULL</td>
+<td>NULL</td>
+<td>909119</td>
+<td>Using where; Using temporary; Using filesort</td>
+</tr>
+<tr>
+<td>1</td>
+<td>SIMPLE</td>
+<td>u</td>
+<td>eq_ref</td>
+<td>PRIMARY</td>
+<td>PRIMARY</td>
+<td>4</td>
+<td>o.uid</td>
+<td>1</td>
+<td>NULL</td>
+</tr>
+<tr>
+<td>1</td>
+<td>SIMPLE</td>
+<td>p</td>
+<td>ALL</td>
+<td>PRIMARY</td>
+<td>NULL</td>
+<td>NULL</td>
+<td>NULL</td>
+<td>6</td>
+<td>Using where; Using join buffer (Block Nested Loop)</td>
+</tr>
+</tbody></table>
+<p>由于最后 WHERE 条件以及排序均针对最左主表，因此可以先对 my_order 排序提前缩小数据量再做左连接。SQL 重写后如下，执行时间缩小为1毫秒左右。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> *</span><br><span class="line"><span class="keyword">FROM</span> (</span><br><span class="line">	<span class="keyword">SELECT</span> *</span><br><span class="line">	<span class="keyword">FROM</span> my_order o</span><br><span class="line">	<span class="keyword">WHERE</span> o.display = <span class="number">0</span></span><br><span class="line">		<span class="keyword">AND</span> o.ostaus = <span class="number">1</span></span><br><span class="line">	<span class="keyword">ORDER</span> <span class="keyword">BY</span> o.selltime <span class="keyword">DESC</span></span><br><span class="line">	<span class="keyword">LIMIT</span> <span class="number">0</span>, <span class="number">15</span></span><br><span class="line">) o</span><br><span class="line">	<span class="keyword">LEFT</span> <span class="keyword">JOIN</span> my_userinfo u <span class="keyword">ON</span> o.uid = u.uid</span><br><span class="line">	<span class="keyword">LEFT</span> <span class="keyword">JOIN</span> my_productinfo p <span class="keyword">ON</span> o.pid = p.pid</span><br><span class="line"><span class="keyword">ORDER</span> <span class="keyword">BY</span> o.selltime <span class="keyword">DESC</span></span><br><span class="line"><span class="keyword">LIMIT</span> <span class="number">0</span>, <span class="number">15</span></span><br></pre></td></tr></table></figure>
+
+<p>再检查执行计划：子查询物化后（select_type=DERIVED)参与 JOIN。虽然估算行扫描仍然为90万，但是利用了索引以及 LIMIT 子句后，实际执行时间变得很小。</p>
+<table>
+<thead>
+<tr>
+<th>id</th>
+<th>select_type</th>
+<th>table</th>
+<th>type</th>
+<th>possible_keys</th>
+<th>key</th>
+<th>key_len</th>
+<th>ref</th>
+<th>rows</th>
+<th>Extra(ExtraExtraExtraExtraExtraExtraExtraExtraExtra)</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td>PRIMARY</td>
+<td><derived2></derived2></td>
+<td>ALL</td>
+<td>NULL</td>
+<td>NULL</td>
+<td>NULL</td>
+<td>NULL</td>
+<td>15</td>
+<td>Using temporary; Using filesort</td>
+</tr>
+<tr>
+<td>1</td>
+<td>PRIMARY</td>
+<td>u</td>
+<td>eq_ref</td>
+<td>PRIMARY</td>
+<td>PRIMARY</td>
+<td>4</td>
+<td>o.uid</td>
+<td>1</td>
+<td>NULL</td>
+</tr>
+<tr>
+<td>1</td>
+<td>PRIMARY</td>
+<td>p</td>
+<td>ALL</td>
+<td>PRIMARY</td>
+<td>NULL</td>
+<td>NULL</td>
+<td>NULL</td>
+<td>6</td>
+<td>Using where; Using join buffer (Block Nested Loop)</td>
+</tr>
+<tr>
+<td>2</td>
+<td>DERIVED</td>
+<td>o</td>
+<td>index</td>
+<td>NULL</td>
+<td>idx_1</td>
+<td>5</td>
+<td>NULL</td>
+<td>909112</td>
+<td>Using where</td>
+</tr>
+</tbody></table>
+<h4 id="8、中间结果集下推"><a href="#8、中间结果集下推" class="headerlink" title="8、中间结果集下推"></a>8、中间结果集下推</h4><p>再来看下面这个已经初步优化过的例子(左连接中的主表优先作用查询条件)：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> a.*, c.allocated</span><br><span class="line"><span class="keyword">FROM</span> (</span><br><span class="line">	<span class="keyword">SELECT</span> resourceid</span><br><span class="line">	<span class="keyword">FROM</span> my_distribute d</span><br><span class="line">	<span class="keyword">WHERE</span> isdelete = <span class="number">0</span></span><br><span class="line">		<span class="keyword">AND</span> cusmanagercode = <span class="string">'1234567'</span></span><br><span class="line">	<span class="keyword">ORDER</span> <span class="keyword">BY</span> salecode</span><br><span class="line">	<span class="keyword">LIMIT</span> <span class="number">20</span></span><br><span class="line">) a</span><br><span class="line">	<span class="keyword">LEFT</span> <span class="keyword">JOIN</span> (</span><br><span class="line">		<span class="keyword">SELECT</span> resourcesid</span><br><span class="line">			, <span class="keyword">SUM</span>(<span class="keyword">ifnull</span>(allocation, <span class="number">0</span>) * <span class="number">12345</span>) <span class="keyword">AS</span> allocated</span><br><span class="line">		<span class="keyword">FROM</span> my_resources</span><br><span class="line">		<span class="keyword">GROUP</span> <span class="keyword">BY</span> resourcesid</span><br><span class="line">	) c</span><br><span class="line">	<span class="keyword">ON</span> a.resourceid = c.resourcesid</span><br></pre></td></tr></table></figure>
+
+<p>不难看出子查询 c 是全表聚合查询，在表数量特别大的情况下会导致整个语句的性能下降。<br>其实对于子查询 c，左连接最后结果集只关心能和主表 resourceid 能匹配的数据。因此我们可以重写语句如下，执行时间从原来的2秒下降到2毫秒。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> a.*, c.allocated</span><br><span class="line"><span class="keyword">FROM</span> (</span><br><span class="line">	<span class="keyword">SELECT</span> resourceid</span><br><span class="line">	<span class="keyword">FROM</span> my_distribute d</span><br><span class="line">	<span class="keyword">WHERE</span> isdelete = <span class="number">0</span></span><br><span class="line">		<span class="keyword">AND</span> cusmanagercode = <span class="string">'1234567'</span></span><br><span class="line">	<span class="keyword">ORDER</span> <span class="keyword">BY</span> salecode</span><br><span class="line">	<span class="keyword">LIMIT</span> <span class="number">20</span></span><br><span class="line">) a</span><br><span class="line">	<span class="keyword">LEFT</span> <span class="keyword">JOIN</span> (</span><br><span class="line">		<span class="keyword">SELECT</span> resourcesid</span><br><span class="line">			, <span class="keyword">SUM</span>(<span class="keyword">ifnull</span>(allocation, <span class="number">0</span>) * <span class="number">12345</span>) <span class="keyword">AS</span> allocated</span><br><span class="line">		<span class="keyword">FROM</span> my_resources r, (</span><br><span class="line">				<span class="keyword">SELECT</span> resourceid</span><br><span class="line">				<span class="keyword">FROM</span> my_distribute d</span><br><span class="line">				<span class="keyword">WHERE</span> isdelete = <span class="number">0</span></span><br><span class="line">					<span class="keyword">AND</span> cusmanagercode = <span class="string">'1234567'</span></span><br><span class="line">				<span class="keyword">ORDER</span> <span class="keyword">BY</span> salecode</span><br><span class="line">				<span class="keyword">LIMIT</span> <span class="number">20</span></span><br><span class="line">			) a</span><br><span class="line">		<span class="keyword">WHERE</span> r.resourcesid = a.resourcesid</span><br><span class="line">		<span class="keyword">GROUP</span> <span class="keyword">BY</span> resourcesid</span><br><span class="line">	) c</span><br><span class="line">	<span class="keyword">ON</span> a.resourceid = c.resourcesid</span><br></pre></td></tr></table></figure>
+
+<p>但是子查询 a 在我们的SQL语句中出现了多次。这种写法不仅存在额外的开销，还使得整个语句显的繁杂。使用 WITH 语句再次重写：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">WITH</span> a <span class="keyword">AS</span> (</span><br><span class="line">		<span class="keyword">SELECT</span> resourceid</span><br><span class="line">		<span class="keyword">FROM</span> my_distribute d</span><br><span class="line">		<span class="keyword">WHERE</span> isdelete = <span class="number">0</span></span><br><span class="line">			<span class="keyword">AND</span> cusmanagercode = <span class="string">'1234567'</span></span><br><span class="line">		<span class="keyword">ORDER</span> <span class="keyword">BY</span> salecode</span><br><span class="line">		<span class="keyword">LIMIT</span> <span class="number">20</span></span><br><span class="line">	)</span><br><span class="line"><span class="keyword">SELECT</span> a.*, c.allocated</span><br><span class="line"><span class="keyword">FROM</span> a</span><br><span class="line">	<span class="keyword">LEFT</span> <span class="keyword">JOIN</span> (</span><br><span class="line">		<span class="keyword">SELECT</span> resourcesid</span><br><span class="line">			, <span class="keyword">SUM</span>(<span class="keyword">ifnull</span>(allocation, <span class="number">0</span>) * <span class="number">12345</span>) <span class="keyword">AS</span> allocated</span><br><span class="line">		<span class="keyword">FROM</span> my_resources r, a</span><br><span class="line">		<span class="keyword">WHERE</span> r.resourcesid = a.resourcesid</span><br><span class="line">		<span class="keyword">GROUP</span> <span class="keyword">BY</span> resourcesid</span><br><span class="line">	) c</span><br><span class="line">	<span class="keyword">ON</span> a.resourceid = c.resourcesid</span><br></pre></td></tr></table></figure>
+
+
+            </div>
+          
+
+    
+      <footer class="post-footer">
+		
+		<div class="post-tags">
+		  
+			<a href="/tags/MySQL/">MySQL</a>
+		  
+		</div>
+		
+
+        
+        
+  <nav class="post-nav">
+    
+      <a class="prev" href="/2019/11/06/Java线程的状态及转化/">
+        <i class="iconfont icon-left"></i>
+        <span class="prev-text nav-default">Java线程的状态及转化</span>
+        <span class="prev-text nav-mobile">Prev</span>
+      </a>
+    
+    
+      <a class="next" href="/2019/10/25/Java-JDK/">
+        <span class="next-text nav-default">Java-JDK</span>
+        <span class="prev-text nav-mobile">Next</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    
+  </nav>
+
+        
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+      </footer>
+    
+  </article>
+
+    </div>
+
+      </div>
+
+      <footer id="colophon"><span class="copyright-year">
+    
+        &copy;
+    
+        2014 -
+    
+    2019
+    <span class="footer-author">yaoper.</span>
+    <span class="power-by">
+        Powered by <a class="hexo-link" href="https://hexo.io/">Hexo</a> and <a class="theme-link" href="https://github.com/frostfan/hexo-theme-polarbear">Polar Bear</a>
+    </span>
+</span>
+
+      </footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div>
+    
+
+
+    
+
+
+
+
+  
+    <script type="text/javascript" src="/lib/jquery/jquery-3.1.1.min.js"></script>
+  
+
+  
+
+    <script type="text/javascript" src="/js/src/theme.js?v=1.1"></script>
+<script type="text/javascript" src="/js/src/bootstrap.js?v=1.1"></script>
+
+  </body>
+</html>

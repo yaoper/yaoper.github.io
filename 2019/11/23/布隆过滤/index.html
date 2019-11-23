@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang>
+  <head><meta name="generator" content="Hexo 3.9.0">
+    
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1,minimum-scale=1,maximum-scale=1">
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+  <meta name="description" content="布隆过滤">
+
+
+
+
+  <meta name="keywords" content="Bloom,">
+
+
+
+
+
+  <link rel="alternate" href="/default" title="Illusory">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=1.1">
+
+
+
+<link rel="canonical" href="http://yaoper.github.io/2019/11/23/布隆过滤/">
+
+
+<meta name="description" content="1.什么是布隆过滤布隆过滤器（Bloom Filter）是1970年由布隆提出的。它实际上是一个很长的二进制向量和一系列随机映射函数。布隆过滤器可以用于检索一个元素是否在一个集合中。它的优点是空间效率和查询时间都远远超过一般的算法，缺点是有一定的误识别率和删除困难。 2.为什么要用布隆过滤器？布隆过滤器被广泛用于网页黑名单系统、垃圾邮件过滤系统、爬虫的网址判重系统以及解决缓存穿透问题。通过介绍已经">
+<meta name="keywords" content="Bloom">
+<meta property="og:type" content="article">
+<meta property="og:title" content="布隆过滤">
+<meta property="og:url" content="http://yaoper.github.io/2019/11/23/布隆过滤/index.html">
+<meta property="og:site_name" content="Illusory">
+<meta property="og:description" content="1.什么是布隆过滤布隆过滤器（Bloom Filter）是1970年由布隆提出的。它实际上是一个很长的二进制向量和一系列随机映射函数。布隆过滤器可以用于检索一个元素是否在一个集合中。它的优点是空间效率和查询时间都远远超过一般的算法，缺点是有一定的误识别率和删除困难。 2.为什么要用布隆过滤器？布隆过滤器被广泛用于网页黑名单系统、垃圾邮件过滤系统、爬虫的网址判重系统以及解决缓存穿透问题。通过介绍已经">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2019-11-23T03:42:46.316Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="布隆过滤">
+<meta name="twitter:description" content="1.什么是布隆过滤布隆过滤器（Bloom Filter）是1970年由布隆提出的。它实际上是一个很长的二进制向量和一系列随机映射函数。布隆过滤器可以用于检索一个元素是否在一个集合中。它的优点是空间效率和查询时间都远远超过一般的算法，缺点是有一定的误识别率和删除困难。 2.为什么要用布隆过滤器？布隆过滤器被广泛用于网页黑名单系统、垃圾邮件过滤系统、爬虫的网址判重系统以及解决缓存穿透问题。通过介绍已经">
+
+
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=1.1">
+<link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+
+
+
+
+
+<script type="text/javascript">
+  var themeConfig = {
+    fancybox: {
+      enable: false
+    },
+  };
+</script>
+
+
+
+
+  
+
+
+
+    <title> 布隆过滤 - Illusory </title>
+  </head>
+
+  <body>
+    <div id="page">
+      <header id="masthead"><div class="site-header-inner">
+    <h1 class="site-title">
+        <a href="/." class="logo">Illusory</a>
+    </h1>
+
+    <nav id="nav-top">
+        
+            <ul id="menu-top" class="nav-top-items">
+                
+                    <li class="menu-item">
+                        <a href="/archives">
+                            
+                            
+                                Archives
+                            
+                        </a>
+                    </li>
+                
+                    <li class="menu-item">
+                        <a href="/about">
+                            
+                            
+                                About
+                            
+                        </a>
+                    </li>
+                
+            </ul>
+        
+  </nav>
+</div>
+
+      </header>
+      <div id="content">
+        
+    <div id="primary">
+        
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          布隆过滤
+        
+      </h1>
+
+      <time class="post-time">
+          Nov 23 2019
+      </time>
+    </header>
+
+
+
+    
+            <div class="post-content">
+            <h4 id="1-什么是布隆过滤"><a href="#1-什么是布隆过滤" class="headerlink" title="1.什么是布隆过滤"></a>1.什么是布隆过滤</h4><p>布隆过滤器（Bloom Filter）是1970年由布隆提出的。它实际上是一个很长的二进制向量和一系列随机映射函数。布隆过滤器可以用于检索一个元素是否在一个集合中。它的优点是空间效率和查询时间都远远超过一般的算法，缺点是有一定的误识别率和删除困难。</p>
+<h4 id="2-为什么要用布隆过滤器？"><a href="#2-为什么要用布隆过滤器？" class="headerlink" title="2.为什么要用布隆过滤器？"></a>2.为什么要用布隆过滤器？</h4><p>布隆过滤器被广泛用于网页黑名单系统、垃圾邮件过滤系统、爬虫的网址判重系统以及解决缓存穿透问题。通过介绍已经知晓布隆过滤器的作用是检索一个元素是否在集合中。可能有人认为这个功能非常简单，直接放在redis中或者数据库中查询就好了。又或者当数据量较小，内存又足够大时，使用hashMap或者hashSet等结构就好了。但是如果当这些数据量很大，数十亿甚至更多，内存装不下且数据库检索又极慢的情况，我们应该如何去处理？这个时候我们不妨考虑下布隆过滤器，因为它是一个空间效率占用极少和查询时间极快的算法，但是需要业务可以忍受一个判断失误率。</p>
+<h4 id="3-原理简述"><a href="#3-原理简述" class="headerlink" title="3.原理简述"></a>3.原理简述</h4><p>有一个长度为m的bit型数组，如我们所知，每个位置只占一个bit，每个位置只有0和1两种状态。假设一共有k个哈希函数相互独立，输入域都为s且都大于等于m，那么对同一个输入对象（可以想象为缓存中的一个key），经过k个哈希函数计算出来的结果也都是独立的。对算出来的每一个结果都对m取余，然后在bit数组上把相应的位置设置为1(描黑)</p>
+<p>至此一个输入对象对bit array集合的影响过程就结束了，我们可以看到会有多个位置被描黑，也就是设置为1.接下来所有的输入对象都按照这种方式去描黑数组，最终一个布隆过滤器就生成了，它代表了所有输入对象组成的集合。</p>
+<p>那么如何判断一个对象是否在过滤器中呢？假设一个输入对象为hash1,我们需要通过看k个哈希函数算出k个值，然后把k个值取余（%m），就得到了k个[0,m-1]的值。然后我们判断bit array上这k个值是否都为黑，如果有一个不为黑，那么肯定hash1肯定不在这个集合里。如果都为黑，则说明hash1在集合里，但有可能误判。因为当输入对象过多，而集合过小，会导致集合中大多位置都会被描黑，那么在检查hash1时，有可能hash1对应的k个位置正好被描黑了，然后错误的认为hash1存在集合里。</p>
+<h4 id="4-误判率"><a href="#4-误判率" class="headerlink" title="4.误判率"></a>4.误判率</h4><p>与误判率有关的变量 k为哈希函数个数，m为布隆过滤器长度，n为插入的元素个数，p为误报率。</p>
+<h4 id="5-集成BloomFilter"><a href="#5-集成BloomFilter" class="headerlink" title="5.集成BloomFilter"></a>5.集成BloomFilter</h4><p>Google的大神们同情我们，已经帮我们实现好了，直接导入项目就好。</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&lt;dependency&gt;</span><br><span class="line">    &lt;groupId&gt;com.google.guava&lt;/groupId&gt;</span><br><span class="line">    &lt;artifactId&gt;guava&lt;/artifactId&gt;</span><br><span class="line">    &lt;version&gt;25.1-jre&lt;/version&gt;</span><br><span class="line">&lt;/dependency&gt;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">BloomFilter&lt;CharSequence&gt; bloomFilter = BloomFilter.create(Funnels.stringFunnel(Charset.forName(<span class="string">"utf-8"</span>)), <span class="number">100000000</span>, <span class="number">0.01</span>);</span><br><span class="line"><span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>; i&lt;<span class="number">10000000</span>;i++)&#123;</span><br><span class="line">    bloomFilter.put(i+<span class="string">""</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">int</span> j= <span class="number">9999990</span>; j &lt; <span class="number">10000050</span>; j++) &#123;</span><br><span class="line">    System.out.println(bloomFilter.mightContain(j+<span class="string">""</span>));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+            </div>
+          
+
+    
+      <footer class="post-footer">
+		
+		<div class="post-tags">
+		  
+			<a href="/tags/Bloom/">Bloom</a>
+		  
+		</div>
+		
+
+        
+        
+  <nav class="post-nav">
+    
+    
+      <a class="next" href="/2019/11/23/缓存失效的几种形式及解决方案/">
+        <span class="next-text nav-default">缓存失效的几种形式及解决方案</span>
+        <span class="prev-text nav-mobile">Next</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    
+  </nav>
+
+        
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+      </footer>
+    
+  </article>
+
+    </div>
+
+      </div>
+
+      <footer id="colophon"><span class="copyright-year">
+    
+        &copy;
+    
+        2014 -
+    
+    2019
+    <span class="footer-author">yaoper.</span>
+    <span class="power-by">
+        Powered by <a class="hexo-link" href="https://hexo.io/">Hexo</a> and <a class="theme-link" href="https://github.com/frostfan/hexo-theme-polarbear">Polar Bear</a>
+    </span>
+</span>
+
+      </footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div>
+    
+
+
+    
+
+
+
+
+  
+    <script type="text/javascript" src="/lib/jquery/jquery-3.1.1.min.js"></script>
+  
+
+  
+
+    <script type="text/javascript" src="/js/src/theme.js?v=1.1"></script>
+<script type="text/javascript" src="/js/src/bootstrap.js?v=1.1"></script>
+
+  </body>
+</html>

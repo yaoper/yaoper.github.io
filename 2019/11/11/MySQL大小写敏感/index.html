@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang>
+  <head><meta name="generator" content="Hexo 3.9.0">
+    
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1,minimum-scale=1,maximum-scale=1">
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+  <meta name="description" content="MySQL大小写敏感">
+
+
+
+
+  <meta name="keywords" content="MySQL,">
+
+
+
+
+
+  <link rel="alternate" href="/default" title="Illusory">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=1.1">
+
+
+
+<link rel="canonical" href="http://yaoper.github.io/2019/11/11/MySQL大小写敏感/">
+
+
+<meta name="description" content="MySQL(5.7.25)大小写默认设置1）linux下：  数据库名与表名是严格区分大小写的； 表的别名是严格区分大小写的； 变量名也是严格区分大小写的； 列名与列的别名在所有的情况下均是忽略大小写的； 字段内容忽略大小写的  2）windows下：  都不区分大小写  3）Mac OS下（非UFS卷）：  都不区分大小写   MySQL控制大小写的配置项1）lower_case_table_n">
+<meta name="keywords" content="MySQL">
+<meta property="og:type" content="article">
+<meta property="og:title" content="MySQL大小写敏感">
+<meta property="og:url" content="http://yaoper.github.io/2019/11/11/MySQL大小写敏感/index.html">
+<meta property="og:site_name" content="Illusory">
+<meta property="og:description" content="MySQL(5.7.25)大小写默认设置1）linux下：  数据库名与表名是严格区分大小写的； 表的别名是严格区分大小写的； 变量名也是严格区分大小写的； 列名与列的别名在所有的情况下均是忽略大小写的； 字段内容忽略大小写的  2）windows下：  都不区分大小写  3）Mac OS下（非UFS卷）：  都不区分大小写   MySQL控制大小写的配置项1）lower_case_table_n">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2019-11-11T09:59:58.052Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="MySQL大小写敏感">
+<meta name="twitter:description" content="MySQL(5.7.25)大小写默认设置1）linux下：  数据库名与表名是严格区分大小写的； 表的别名是严格区分大小写的； 变量名也是严格区分大小写的； 列名与列的别名在所有的情况下均是忽略大小写的； 字段内容忽略大小写的  2）windows下：  都不区分大小写  3）Mac OS下（非UFS卷）：  都不区分大小写   MySQL控制大小写的配置项1）lower_case_table_n">
+
+
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=1.1">
+<link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+
+
+
+
+
+<script type="text/javascript">
+  var themeConfig = {
+    fancybox: {
+      enable: false
+    },
+  };
+</script>
+
+
+
+
+  
+
+
+
+    <title> MySQL大小写敏感 - Illusory </title>
+  </head>
+
+  <body>
+    <div id="page">
+      <header id="masthead"><div class="site-header-inner">
+    <h1 class="site-title">
+        <a href="/." class="logo">Illusory</a>
+    </h1>
+
+    <nav id="nav-top">
+        
+            <ul id="menu-top" class="nav-top-items">
+                
+                    <li class="menu-item">
+                        <a href="/archives">
+                            
+                            
+                                Archives
+                            
+                        </a>
+                    </li>
+                
+                    <li class="menu-item">
+                        <a href="/about">
+                            
+                            
+                                About
+                            
+                        </a>
+                    </li>
+                
+            </ul>
+        
+  </nav>
+</div>
+
+      </header>
+      <div id="content">
+        
+    <div id="primary">
+        
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          MySQL大小写敏感
+        
+      </h1>
+
+      <time class="post-time">
+          Nov 11 2019
+      </time>
+    </header>
+
+
+
+    
+            <div class="post-content">
+            <h4 id="MySQL-5-7-25-大小写默认设置"><a href="#MySQL-5-7-25-大小写默认设置" class="headerlink" title="MySQL(5.7.25)大小写默认设置"></a>MySQL(5.7.25)大小写默认设置</h4><p>1）linux下：</p>
+<ul>
+<li>数据库名与表名是严格区分大小写的；</li>
+<li>表的别名是严格区分大小写的；</li>
+<li>变量名也是严格区分大小写的；</li>
+<li>列名与列的别名在所有的情况下均是忽略大小写的；</li>
+<li>字段内容忽略大小写的</li>
+</ul>
+<p>2）windows下：</p>
+<ul>
+<li>都不区分大小写</li>
+</ul>
+<p>3）Mac OS下（非UFS卷）：</p>
+<ul>
+<li>都不区分大小写 </li>
+</ul>
+<h4 id="MySQL控制大小写的配置项"><a href="#MySQL控制大小写的配置项" class="headerlink" title="MySQL控制大小写的配置项"></a>MySQL控制大小写的配置项</h4><p>1）lower_case_table_names</p>
+<table>
+<thead>
+<tr>
+<th>参数值</th>
+<th>解释</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>0</td>
+<td>使用CREATE TABLE或CREATE DATABASE语句指定的大小写字母在硬盘上保存表名和数据库名。名称比较对大小写敏感。在大小写不敏感的操作系统如windows或Mac OS x上我们不能将该参数设为0，如果在大小写不敏感的文件系统上将–lower-case-table-names强制设为0，并且使用不同的大小写访问MyISAM表名，可能会导致索引破坏。</td>
+</tr>
+<tr>
+<td>1</td>
+<td>表名在硬盘上以小写保存，名称比较对大小写不敏感。MySQL将所有表名转换为小写在存储和查找表上。该行为也适合数据库名和表的别名。该值为Windows的默认值。</td>
+</tr>
+<tr>
+<td>2</td>
+<td>表名和数据库名在硬盘上使用CREATE TABLE或CREATE DATABASE语句指定的大小写字母进行保存，但MySQL将它们转换为小写在查找表上。名称比较对大小写不敏感，即按照大小写来保存，按照小写来比较。注释：只在对大小写不敏感的文件系统上适用! innodb表名用小写保存。</td>
+</tr>
+</tbody></table>
+<p>2）lower_case_file_system<br>变量lower_case_file_system说明是否数据目录所在的文件系统对文件名的大小写敏感，其中：ON说明对文件名的大小写不敏感，OFF表示敏感。</p>
+<h4 id="MySQL在Linux下使用的注意事项"><a href="#MySQL在Linux下使用的注意事项" class="headerlink" title="MySQL在Linux下使用的注意事项"></a>MySQL在Linux下使用的注意事项</h4><ol>
+<li>为了避免大小写引发的问题，一种推荐的命名规则是：在定义数据库、表、列的时候全部采用小写字母加下划线的方式，不使用任何大写字母。</li>
+<li>在任何系统中都使用lower_case_tables_name=1。使用该选项的不利之处是当使用SHOW TABLES或SHOW DATABASES时，看不出名字原来是用大写还是小写。</li>
+<li>在查询时区分字段值的大小写，则字段值需要设置BINARY属性， 二进制大小写是敏感的。<br>也可以在查询条件的字段前加binary，但是不建议这么做，因为会使字段索引失效。<br>建表时设置校对规则（collate），_bin: 表示的是binary case sensitive collation，也就是说是<strong>区分大小写</strong> 。_ci: case insensitive collation，*<em>不区分大小写 *</em>。</li>
+</ol>
+
+            </div>
+          
+
+    
+      <footer class="post-footer">
+		
+		<div class="post-tags">
+		  
+			<a href="/tags/MySQL/">MySQL</a>
+		  
+		</div>
+		
+
+        
+        
+  <nav class="post-nav">
+    
+      <a class="prev" href="/2019/11/13/幂等性的实现方式/">
+        <i class="iconfont icon-left"></i>
+        <span class="prev-text nav-default">幂等性的实现方式</span>
+        <span class="prev-text nav-mobile">Prev</span>
+      </a>
+    
+    
+      <a class="next" href="/2019/11/06/Java线程的状态及转化/">
+        <span class="next-text nav-default">Java线程的状态及转化</span>
+        <span class="prev-text nav-mobile">Next</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    
+  </nav>
+
+        
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+      </footer>
+    
+  </article>
+
+    </div>
+
+      </div>
+
+      <footer id="colophon"><span class="copyright-year">
+    
+        &copy;
+    
+        2014 -
+    
+    2019
+    <span class="footer-author">yaoper.</span>
+    <span class="power-by">
+        Powered by <a class="hexo-link" href="https://hexo.io/">Hexo</a> and <a class="theme-link" href="https://github.com/frostfan/hexo-theme-polarbear">Polar Bear</a>
+    </span>
+</span>
+
+      </footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div>
+    
+
+
+    
+
+
+
+
+  
+    <script type="text/javascript" src="/lib/jquery/jquery-3.1.1.min.js"></script>
+  
+
+  
+
+    <script type="text/javascript" src="/js/src/theme.js?v=1.1"></script>
+<script type="text/javascript" src="/js/src/bootstrap.js?v=1.1"></script>
+
+  </body>
+</html>
