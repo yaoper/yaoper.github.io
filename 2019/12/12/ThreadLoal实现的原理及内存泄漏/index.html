@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang>
+  <head><meta name="generator" content="Hexo 3.9.0">
+    
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1,minimum-scale=1,maximum-scale=1">
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+  <meta name="description" content="ThreadLocal实现的原理及内存泄漏">
+
+
+
+
+  <meta name="keywords" content="ThreadLocal,">
+
+
+
+
+
+  <link rel="alternate" href="/default" title="Illusory">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=1.1">
+
+
+
+<link rel="canonical" href="http://yaoper.github.io/2019/12/12/ThreadLoal实现的原理及内存泄漏/">
+
+
+<meta name="description" content="1.实现原理 每个Thread维护着一个ThreadLocalMap的引用(Thread里面有个成员变量ThreadLocal.ThreadLocalMap threadLocals = null) ThreadLocalMap是ThreadLocal的内部类，用Entry来进行存储(key是TheadLocal,value是要存储的Object) 调用ThreadLocal的set()方法时，实">
+<meta name="keywords" content="ThreadLocal">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ThreadLocal实现的原理及内存泄漏">
+<meta property="og:url" content="http://yaoper.github.io/2019/12/12/ThreadLoal实现的原理及内存泄漏/index.html">
+<meta property="og:site_name" content="Illusory">
+<meta property="og:description" content="1.实现原理 每个Thread维护着一个ThreadLocalMap的引用(Thread里面有个成员变量ThreadLocal.ThreadLocalMap threadLocals = null) ThreadLocalMap是ThreadLocal的内部类，用Entry来进行存储(key是TheadLocal,value是要存储的Object) 调用ThreadLocal的set()方法时，实">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2019-12-12T10:31:54.807Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="ThreadLocal实现的原理及内存泄漏">
+<meta name="twitter:description" content="1.实现原理 每个Thread维护着一个ThreadLocalMap的引用(Thread里面有个成员变量ThreadLocal.ThreadLocalMap threadLocals = null) ThreadLocalMap是ThreadLocal的内部类，用Entry来进行存储(key是TheadLocal,value是要存储的Object) 调用ThreadLocal的set()方法时，实">
+
+
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=1.1">
+<link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+
+
+
+
+
+<script type="text/javascript">
+  var themeConfig = {
+    fancybox: {
+      enable: false
+    },
+  };
+</script>
+
+
+
+
+  
+
+
+
+    <title> ThreadLocal实现的原理及内存泄漏 - Illusory </title>
+  </head>
+
+  <body>
+    <div id="page">
+      <header id="masthead"><div class="site-header-inner">
+    <h1 class="site-title">
+        <a href="/." class="logo">Illusory</a>
+    </h1>
+
+    <nav id="nav-top">
+        
+            <ul id="menu-top" class="nav-top-items">
+                
+                    <li class="menu-item">
+                        <a href="/archives">
+                            
+                            
+                                Archives
+                            
+                        </a>
+                    </li>
+                
+                    <li class="menu-item">
+                        <a href="/about">
+                            
+                            
+                                About
+                            
+                        </a>
+                    </li>
+                
+            </ul>
+        
+  </nav>
+</div>
+
+      </header>
+      <div id="content">
+        
+    <div id="primary">
+        
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          ThreadLocal实现的原理及内存泄漏
+        
+      </h1>
+
+      <time class="post-time">
+          Dec 12 2019
+      </time>
+    </header>
+
+
+
+    
+            <div class="post-content">
+            <h4 id="1-实现原理"><a href="#1-实现原理" class="headerlink" title="1.实现原理"></a>1.实现原理</h4><ol>
+<li>每个Thread维护着一个ThreadLocalMap的引用(Thread里面有个成员变量ThreadLocal.ThreadLocalMap threadLocals = null)</li>
+<li>ThreadLocalMap是ThreadLocal的内部类，用Entry来进行存储(key是TheadLocal,value是要存储的Object)</li>
+<li>调用ThreadLocal的set()方法时，实际上就是往ThreadLocalMap设置值，key是ThreadLocal对象，值是传递进来的对象</li>
+<li>调用ThreadLocal的get()方法时，实际上就是往ThreadLocalMap获取值，key是ThreadLocal对象</li>
+<li>ThreadLocal本身并不存储值，它只是作为一个key来让线程从ThreadLocalMap获取value。</li>
+</ol>
+<h4 id="2-内存泄漏"><a href="#2-内存泄漏" class="headerlink" title="2.内存泄漏"></a>2.内存泄漏</h4><p>ThreadLocal内存泄漏的根源是：由于ThreadLocalMap的生命周期跟Thread一样长，如果没有手动删除对应key就会导致内存泄漏，而不是因为弱引用造成的。<br>想要避免内存泄露就要<strong>手动remove()</strong>掉！</p>
+<p>原因：ThreadLocalMap使用ThreadLocal的弱引用作为key，如果一个ThreadLocal没有外部强引用来引用它，那么系统 GC 的时候，这个ThreadLocal势必会被回收，这样一来，ThreadLocalMap中就会出现key为null的Entry，就没有办法访问这些key为null的Entry的value，如果当前线程再迟迟不结束的话，这些key为null的Entry的value就会一直存在一条强引用链：Thread Ref -&gt; Thread -&gt; ThreaLocalMap -&gt; Entry -&gt; value永远无法回收，造成内存泄漏。</p>
+<h4 id="3-Key为什么设计成弱引用类型"><a href="#3-Key为什么设计成弱引用类型" class="headerlink" title="3.Key为什么设计成弱引用类型"></a>3.Key为什么设计成弱引用类型</h4><p>不妨反过来想想，如果使用强引用，ThreadLocal对象的引用被回收了，ThreadLocalMap本身依然还持有的强引用，如果没有手动删除这个key，则不会被回收，所以只要当前线程不消亡，ThreadLocalMap引用的那些对象就不会被回收，可以认为这导致Entry内存泄漏。<br>那使用弱引用的好处呢？</p>
+<p>如果使用弱引用，那指向ThreadLocal对象的引用就两个：实例的强引用，和ThreadLocalMap中Entry的弱引用。一旦实例的强引用被回收，则指向Entry的就只有弱引用了，在下次gc的时候，就会被回收。</p>
+<p>那么问题来了，ThreadLocal对象只是作为ThreadLocalMap的一个key而存在的，现在它被回收了，但是它对应的value并没有被回收，内存泄露依然存在！而且key被删了之后，变成了null，value更是无法被访问到了！针对这一问题，ThreadLocalMap类的设计本身已经有了这一问题的解决方案，那就是在每次get()/set()/remove()ThreadLocalMap中的值的时候，会自动清理key为null的value。如此一来，value也能被回收了。</p>
+<p>既然对key使用弱引用，能使key自动回收，那为什么不对value使用弱引用？答案显而易见，假设往ThreadLocalMap里存了一个value，gc过后value便消失了，那就无法使用ThreadLocalMap来达到存储全线程变量的效果了。（但是再次访问该key的时候，依然能取到value，此时取得的value是该value的初始值。即在删除之后，如果再次访问，取到null，会重新调用初始化方法。）</p>
+<h4 id="4-使用场景"><a href="#4-使用场景" class="headerlink" title="4.使用场景"></a>4.使用场景</h4><p>为什么mabatis、hibernate都使用threadlocal来存储session？<br>作用一：因为线程间的数据交互是通过工作内存与主存的频繁读写完成通信，然而存储于线程本地内存，提高访问效率，避免线程阻塞造成cpu吞吐率下降。<br>作用二：在多线程中，每一个线程都需要维护session，轻易完成对线程独享资源的操作。</p>
+
+            </div>
+          
+
+    
+      <footer class="post-footer">
+		
+		<div class="post-tags">
+		  
+			<a href="/tags/ThreadLocal/">ThreadLocal</a>
+		  
+		</div>
+		
+
+        
+        
+  <nav class="post-nav">
+    
+    
+      <a class="next" href="/2019/12/12/高并发场景下如何做限流/">
+        <span class="next-text nav-default">高并发场景下如何做限流</span>
+        <span class="prev-text nav-mobile">Next</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    
+  </nav>
+
+        
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+      </footer>
+    
+  </article>
+
+    </div>
+
+      </div>
+
+      <footer id="colophon"><span class="copyright-year">
+    
+        &copy;
+    
+        2014 -
+    
+    2019
+    <span class="footer-author">yaoper.</span>
+    <span class="power-by">
+        Powered by <a class="hexo-link" href="https://hexo.io/">Hexo</a> and <a class="theme-link" href="https://github.com/frostfan/hexo-theme-polarbear">Polar Bear</a>
+    </span>
+</span>
+
+      </footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div>
+    
+
+
+    
+
+
+
+
+  
+    <script type="text/javascript" src="/lib/jquery/jquery-3.1.1.min.js"></script>
+  
+
+  
+
+    <script type="text/javascript" src="/js/src/theme.js?v=1.1"></script>
+<script type="text/javascript" src="/js/src/bootstrap.js?v=1.1"></script>
+
+  </body>
+</html>
