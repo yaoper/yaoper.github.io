@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang>
+  <head><meta name="generator" content="Hexo 3.9.0">
+    
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1,minimum-scale=1,maximum-scale=1">
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+  <meta name="description" content="jwt的使用场景">
+
+
+
+
+  <meta name="keywords" content="jwt,">
+
+
+
+
+
+  <link rel="alternate" href="/default" title="Illusory">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=1.1">
+
+
+
+<link rel="canonical" href="http://yaoper.github.io/2019/12/13/jwt的使用场景/">
+
+
+<meta name="description" content="JWT（其实还有SAML）最适合的应用场景就是“开票”，或者“签字”。 在有纸化办公时代，多部门、多组织之间的协同工作往往会需要拿着A部门领导的“签字”或者“盖章”去B部门“使用”或者“访问”对应的资源，其实这种“领导签字／盖章”就是JWT，都是一种由具有一定权力的实体“签发”并“授权”的“票据”。一般的，这种票据具有可验证性（领导签名／盖章可以被验证，且难于模仿），不可篡改性（涂改过的文件不被">
+<meta name="keywords" content="jwt">
+<meta property="og:type" content="article">
+<meta property="og:title" content="jwt的使用场景">
+<meta property="og:url" content="http://yaoper.github.io/2019/12/13/jwt的使用场景/index.html">
+<meta property="og:site_name" content="Illusory">
+<meta property="og:description" content="JWT（其实还有SAML）最适合的应用场景就是“开票”，或者“签字”。 在有纸化办公时代，多部门、多组织之间的协同工作往往会需要拿着A部门领导的“签字”或者“盖章”去B部门“使用”或者“访问”对应的资源，其实这种“领导签字／盖章”就是JWT，都是一种由具有一定权力的实体“签发”并“授权”的“票据”。一般的，这种票据具有可验证性（领导签名／盖章可以被验证，且难于模仿），不可篡改性（涂改过的文件不被">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2019-12-13T08:21:28.574Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="jwt的使用场景">
+<meta name="twitter:description" content="JWT（其实还有SAML）最适合的应用场景就是“开票”，或者“签字”。 在有纸化办公时代，多部门、多组织之间的协同工作往往会需要拿着A部门领导的“签字”或者“盖章”去B部门“使用”或者“访问”对应的资源，其实这种“领导签字／盖章”就是JWT，都是一种由具有一定权力的实体“签发”并“授权”的“票据”。一般的，这种票据具有可验证性（领导签名／盖章可以被验证，且难于模仿），不可篡改性（涂改过的文件不被">
+
+
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=1.1">
+<link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+
+
+
+
+
+<script type="text/javascript">
+  var themeConfig = {
+    fancybox: {
+      enable: false
+    },
+  };
+</script>
+
+
+
+
+  
+
+
+
+    <title> jwt的使用场景 - Illusory </title>
+  </head>
+
+  <body>
+    <div id="page">
+      <header id="masthead"><div class="site-header-inner">
+    <h1 class="site-title">
+        <a href="/." class="logo">Illusory</a>
+    </h1>
+
+    <nav id="nav-top">
+        
+            <ul id="menu-top" class="nav-top-items">
+                
+                    <li class="menu-item">
+                        <a href="/archives">
+                            
+                            
+                                Archives
+                            
+                        </a>
+                    </li>
+                
+                    <li class="menu-item">
+                        <a href="/about">
+                            
+                            
+                                About
+                            
+                        </a>
+                    </li>
+                
+            </ul>
+        
+  </nav>
+</div>
+
+      </header>
+      <div id="content">
+        
+    <div id="primary">
+        
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          jwt的使用场景
+        
+      </h1>
+
+      <time class="post-time">
+          Dec 13 2019
+      </time>
+    </header>
+
+
+
+    
+            <div class="post-content">
+            <blockquote>
+<p>JWT（其实还有SAML）最适合的应用场景就是“开票”，或者“签字”。</p>
+<p>在有纸化办公时代，多部门、多组织之间的协同工作往往会需要拿着A部门领导的“签字”或者“盖章”去B部门“使用”或者“访问”对应的资源，其实这种“领导签字／盖章”就是JWT，都是一种由具有一定权力的实体“签发”并“授权”的“票据”。一般的，这种票据具有可验证性（领导签名／盖章可以被验证，且难于模仿），不可篡改性（涂改过的文件不被接受，除非在涂改处再次签字确认）；并且这种票据一般都是“一次性”使用的，在访问到对应的资源后，该票据一般会被资源持有方收回留底，用于后续的审计、追溯等用途。</p>
+<p>举两个例子：</p>
+<ol>
+<li>员工李雷需要请假一天，于是填写请假申请单，李雷在获得其主管部门领导签字后，将请假单交给HR部门韩梅梅，韩梅梅确认领导签字无误后，将请假单收回，并在公司考勤表中做相应记录。</li>
+<li>员工李雷和韩梅梅因工外出需要使用公司汽车一天，于是填写用车申请单，签字后李雷将申请单交给车队司机老王，乘坐老王驾驶的车辆外出办事，同时老王将用车申请单收回并存档。<br>在以上的两个例子中，“请假申请单”和“用车申请单”就是JWT中的payload，领导签字就是base64后的数字签名，领导是issuer，“HR部门的韩梅梅”和“司机老王”即为JWT的audience，audience需要验证领导签名是否合法，验证合法后根据payload中请求的资源给予相应的权限，同时将JWT收回。<br>处。</li>
+</ol>
+</blockquote>
+<p>放到系统集成的场景中，JWT更适合一次性操作的认证:</p>
+<blockquote>
+<p>服务B你好, 服务A告诉我，我可以操作&lt;JWT内容&gt;, 这是我的凭证（即JWT）</p>
+</blockquote>
+<p>在这里，服务A负责认证用户身份（相当于上例中领导批准请假），并颁布一个很短过期时间的JWT给浏览器（相当于上例中的请假单），浏览器（相当于上例中的请假员工）在向服务B的请求中带上该JWT，则服务B（相当于上例中的HR员工）可以通过验证该JWT来判断用户是否有权执行该操作。这样，服务B就成为一个安全的无状态的服务了。</p>
+<h4 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h4><ol>
+<li>在Web应用中，别再把JWT当做session使用，绝大多数情况下，传统的cookie-session机制工作得更好</li>
+<li>JWT适合一次性的命令认证，颁发一个有效期极短的JWT，即使暴露了危险也很小，由于每次操作都会生成新的JWT，因此也没必要保存JWT，真正实现无状态。</li>
+</ol>
+
+            </div>
+          
+
+    
+      <footer class="post-footer">
+		
+		<div class="post-tags">
+		  
+			<a href="/tags/jwt/">jwt</a>
+		  
+		</div>
+		
+
+        
+        
+  <nav class="post-nav">
+    
+      <a class="prev" href="/2019/12/13/SpringBoot异步请求/">
+        <i class="iconfont icon-left"></i>
+        <span class="prev-text nav-default">SpringBoot异步请求</span>
+        <span class="prev-text nav-mobile">Prev</span>
+      </a>
+    
+    
+      <a class="next" href="/2019/12/12/ThreadLoal实现的原理及内存泄漏/">
+        <span class="next-text nav-default">ThreadLocal实现的原理及内存泄漏</span>
+        <span class="prev-text nav-mobile">Next</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    
+  </nav>
+
+        
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+      </footer>
+    
+  </article>
+
+    </div>
+
+      </div>
+
+      <footer id="colophon"><span class="copyright-year">
+    
+        &copy;
+    
+        2014 -
+    
+    2020
+    <span class="footer-author">yaoper.</span>
+    <span class="power-by">
+        Powered by <a class="hexo-link" href="https://hexo.io/">Hexo</a> and <a class="theme-link" href="https://github.com/frostfan/hexo-theme-polarbear">Polar Bear</a>
+    </span>
+</span>
+
+      </footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div>
+    
+
+
+    
+
+
+
+
+  
+    <script type="text/javascript" src="/lib/jquery/jquery-3.1.1.min.js"></script>
+  
+
+  
+
+    <script type="text/javascript" src="/js/src/theme.js?v=1.1"></script>
+<script type="text/javascript" src="/js/src/bootstrap.js?v=1.1"></script>
+
+  </body>
+</html>

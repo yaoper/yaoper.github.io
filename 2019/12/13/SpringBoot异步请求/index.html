@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang>
+  <head><meta name="generator" content="Hexo 3.9.0">
+    
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1,minimum-scale=1,maximum-scale=1">
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+  <meta name="description" content="SpringBoot异步请求">
+
+
+
+
+  <meta name="keywords" content="SpringBoot,">
+
+
+
+
+
+  <link rel="alternate" href="/default" title="Illusory">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=1.1">
+
+
+
+<link rel="canonical" href="http://yaoper.github.io/2019/12/13/SpringBoot异步请求/">
+
+
+<meta name="description" content="1.实现方式 Callable WebAsyncTask DeferredResult  2.使用场景 CallableController返回值是Callable的时候，就会启动一个线程将Callable交给TaskExecutor去处理，然后Controller主线程退出。  WebAsyncTaskWebAsyncTask支持设置超时时间，并且还提供onCompletion和onTimeou">
+<meta name="keywords" content="SpringBoot">
+<meta property="og:type" content="article">
+<meta property="og:title" content="SpringBoot异步请求">
+<meta property="og:url" content="http://yaoper.github.io/2019/12/13/SpringBoot异步请求/index.html">
+<meta property="og:site_name" content="Illusory">
+<meta property="og:description" content="1.实现方式 Callable WebAsyncTask DeferredResult  2.使用场景 CallableController返回值是Callable的时候，就会启动一个线程将Callable交给TaskExecutor去处理，然后Controller主线程退出。  WebAsyncTaskWebAsyncTask支持设置超时时间，并且还提供onCompletion和onTimeou">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2019-12-13T10:51:21.412Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="SpringBoot异步请求">
+<meta name="twitter:description" content="1.实现方式 Callable WebAsyncTask DeferredResult  2.使用场景 CallableController返回值是Callable的时候，就会启动一个线程将Callable交给TaskExecutor去处理，然后Controller主线程退出。  WebAsyncTaskWebAsyncTask支持设置超时时间，并且还提供onCompletion和onTimeou">
+
+
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=1.1">
+<link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+
+
+
+
+
+<script type="text/javascript">
+  var themeConfig = {
+    fancybox: {
+      enable: false
+    },
+  };
+</script>
+
+
+
+
+  
+
+
+
+    <title> SpringBoot异步请求 - Illusory </title>
+  </head>
+
+  <body>
+    <div id="page">
+      <header id="masthead"><div class="site-header-inner">
+    <h1 class="site-title">
+        <a href="/." class="logo">Illusory</a>
+    </h1>
+
+    <nav id="nav-top">
+        
+            <ul id="menu-top" class="nav-top-items">
+                
+                    <li class="menu-item">
+                        <a href="/archives">
+                            
+                            
+                                Archives
+                            
+                        </a>
+                    </li>
+                
+                    <li class="menu-item">
+                        <a href="/about">
+                            
+                            
+                                About
+                            
+                        </a>
+                    </li>
+                
+            </ul>
+        
+  </nav>
+</div>
+
+      </header>
+      <div id="content">
+        
+    <div id="primary">
+        
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          SpringBoot异步请求
+        
+      </h1>
+
+      <time class="post-time">
+          Dec 13 2019
+      </time>
+    </header>
+
+
+
+    
+            <div class="post-content">
+            <h4 id="1-实现方式"><a href="#1-实现方式" class="headerlink" title="1.实现方式"></a>1.实现方式</h4><ol>
+<li>Callable</li>
+<li>WebAsyncTask</li>
+<li>DeferredResult</li>
+</ol>
+<h4 id="2-使用场景"><a href="#2-使用场景" class="headerlink" title="2.使用场景"></a>2.使用场景</h4><ol>
+<li><p>Callable<br>Controller返回值是Callable的时候，就会启动一个线程将Callable交给TaskExecutor去处理，然后Controller主线程退出。</p>
+</li>
+<li><p>WebAsyncTask<br>WebAsyncTask支持设置超时时间，并且还提供onCompletion和onTimeout两个函数，顾名思义，这两个回调函数分别在执行完成和超时的时候回调。</p>
+</li>
+<li><p>DeferredResult<br>当调用中好几个第三方或者异步条用，第三方或者异步调用比较耗时，这个时候可以使用Deferred来实现整个的异步调用。</p>
+</li>
+</ol>
+
+            </div>
+          
+
+    
+      <footer class="post-footer">
+		
+		<div class="post-tags">
+		  
+			<a href="/tags/SpringBoot/">SpringBoot</a>
+		  
+		</div>
+		
+
+        
+        
+  <nav class="post-nav">
+    
+      <a class="prev" href="/2020/01/02/2019复盘与2020计划/">
+        <i class="iconfont icon-left"></i>
+        <span class="prev-text nav-default">2019复盘与2020计划</span>
+        <span class="prev-text nav-mobile">Prev</span>
+      </a>
+    
+    
+      <a class="next" href="/2019/12/13/jwt的使用场景/">
+        <span class="next-text nav-default">jwt的使用场景</span>
+        <span class="prev-text nav-mobile">Next</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    
+  </nav>
+
+        
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+      </footer>
+    
+  </article>
+
+    </div>
+
+      </div>
+
+      <footer id="colophon"><span class="copyright-year">
+    
+        &copy;
+    
+        2014 -
+    
+    2020
+    <span class="footer-author">yaoper.</span>
+    <span class="power-by">
+        Powered by <a class="hexo-link" href="https://hexo.io/">Hexo</a> and <a class="theme-link" href="https://github.com/frostfan/hexo-theme-polarbear">Polar Bear</a>
+    </span>
+</span>
+
+      </footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div>
+    
+
+
+    
+
+
+
+
+  
+    <script type="text/javascript" src="/lib/jquery/jquery-3.1.1.min.js"></script>
+  
+
+  
+
+    <script type="text/javascript" src="/js/src/theme.js?v=1.1"></script>
+<script type="text/javascript" src="/js/src/bootstrap.js?v=1.1"></script>
+
+  </body>
+</html>
