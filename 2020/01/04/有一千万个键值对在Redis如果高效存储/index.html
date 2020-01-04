@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang>
+  <head><meta name="generator" content="Hexo 3.9.0">
+    
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1,minimum-scale=1,maximum-scale=1">
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+  <meta name="description" content="有一千万个键值对在Redis如果高效存储？">
+
+
+
+
+  <meta name="keywords" content="Redis,">
+
+
+
+
+
+  <link rel="alternate" href="/default" title="Illusory">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=1.1">
+
+
+
+<link rel="canonical" href="http://yaoper.github.io/2020/01/04/有一千万个键值对在Redis如果高效存储/">
+
+
+<meta name="description" content="redis数据结构和编码方式  String int embstr raw  String的底层存储，redis共用了三种方式，分别是int、embstr和raw。 当value的长度小于44的时候，纯数字value用int编码，字符串用embstr编码(set k1 abc和set k2 123就会分别用embstr、int)。当value的长度大于44个字节时，会采用raw。 Hash has">
+<meta name="keywords" content="Redis">
+<meta property="og:type" content="article">
+<meta property="og:title" content="有一千万个键值对在Redis如果高效存储？">
+<meta property="og:url" content="http://yaoper.github.io/2020/01/04/有一千万个键值对在Redis如果高效存储/index.html">
+<meta property="og:site_name" content="Illusory">
+<meta property="og:description" content="redis数据结构和编码方式  String int embstr raw  String的底层存储，redis共用了三种方式，分别是int、embstr和raw。 当value的长度小于44的时候，纯数字value用int编码，字符串用embstr编码(set k1 abc和set k2 123就会分别用embstr、int)。当value的长度大于44个字节时，会采用raw。 Hash has">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://s2.ax1x.com/2020/01/04/ld2z9O.png">
+<meta property="og:updated_time" content="2020-01-04T02:24:13.611Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="有一千万个键值对在Redis如果高效存储？">
+<meta name="twitter:description" content="redis数据结构和编码方式  String int embstr raw  String的底层存储，redis共用了三种方式，分别是int、embstr和raw。 当value的长度小于44的时候，纯数字value用int编码，字符串用embstr编码(set k1 abc和set k2 123就会分别用embstr、int)。当value的长度大于44个字节时，会采用raw。 Hash has">
+<meta name="twitter:image" content="https://s2.ax1x.com/2020/01/04/ld2z9O.png">
+
+
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=1.1">
+<link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+
+
+
+
+
+<script type="text/javascript">
+  var themeConfig = {
+    fancybox: {
+      enable: false
+    },
+  };
+</script>
+
+
+
+
+  
+
+
+
+    <title> 有一千万个键值对在Redis如果高效存储？ - Illusory </title>
+  </head>
+
+  <body>
+    <div id="page">
+      <header id="masthead"><div class="site-header-inner">
+    <h1 class="site-title">
+        <a href="/." class="logo">Illusory</a>
+    </h1>
+
+    <nav id="nav-top">
+        
+            <ul id="menu-top" class="nav-top-items">
+                
+                    <li class="menu-item">
+                        <a href="/archives">
+                            
+                            
+                                Archives
+                            
+                        </a>
+                    </li>
+                
+                    <li class="menu-item">
+                        <a href="/about">
+                            
+                            
+                                About
+                            
+                        </a>
+                    </li>
+                
+            </ul>
+        
+  </nav>
+</div>
+
+      </header>
+      <div id="content">
+        
+    <div id="primary">
+        
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          有一千万个键值对在Redis如果高效存储？
+        
+      </h1>
+
+      <time class="post-time">
+          Jan 04 2020
+      </time>
+    </header>
+
+
+
+    
+            <div class="post-content">
+            <p>redis数据结构和编码方式</p>
+<p><img src="https://s2.ax1x.com/2020/01/04/ld2z9O.png" alt="ld2z9O.png"></p>
+<h4 id="String"><a href="#String" class="headerlink" title="String"></a>String</h4><ol>
+<li>int</li>
+<li>embstr</li>
+<li>raw</li>
+</ol>
+<p>String的底层存储，redis共用了三种方式，分别是int、embstr和raw。</p>
+<p>当value的长度小于44的时候，纯数字value用int编码，字符串用embstr编码(set k1 abc和set k2 123就会分别用embstr、int)。当value的长度大于44个字节时，会采用raw。</p>
+<h4 id="Hash"><a href="#Hash" class="headerlink" title="Hash"></a>Hash</h4><ol>
+<li>hashtable</li>
+<li>ziplist</li>
+</ol>
+<p>hashtable和Java中的hashtable类似采用数组＋链表的实现方式，为了减少冲突设置了负载因子。</p>
+<p>ziplist最大的特点就是，它根本不是hash结构，而是一个比较长的字符串，将key-value都按顺序依次摆放到一个长长的字符串里来存储。如果要找某个key的话，就直接遍历整个长字符串就好了。<br>所以很明显，zipList要比hashTable占用少的多的空间。但是会耗费更多的cpu来进行查询。</p>
+<p>一个结论：用int作为可以会比较节省空间，ziplist代替hashtable也能节省更大的空间</p>
+<p>针对以上，解决思路明确了。就是把Key转换成int类型，hash存储的时候使用ziplist；可以采取如下措施：</p>
+<ol>
+<li>1千万个键值对，放到N个bucket中，每个bucket是一个redis的hash数据结构，并且要让每个bucket内不超过默认的512个元素（如果改了配置文件，如1024，则不能超过修改后的值），以避免hash将编码方式从zipList变成hashTable。</li>
+<li>选用哈希算法，决定将key放到哪个bucket。这里我们采用高效而且均衡的知名算法crc32，该哈希算法可以将一个字符串变成一个long型的数字，通过获取这个md5型的key的crc32后，再对bucket的数量进行取余，就可以确定该key要被放到哪个bucket中。</li>
+<li>我们确定了key即将存放在的redis里hash结构的外层key，对于内层field，我们就选用另一个hash算法，以避免两个完全不同的值，通过crc32（key） % COUNT后，发生field再次相同，产生hash冲突导致值被覆盖的情况。内层field我们选用bkdr哈希算法（或直接选用Java的hashCode），该算法也会得到一个long整形的数字。value的存储保持不变。</li>
+</ol>
+<p>缺点：<br>hash结构不支持对单个field的超时设置。但可以通过代码来控制删除，对于那些不需要超时的长期存放的数据，则没有这种顾虑。</p>
+<p>存在较小的hash冲突概率，对于对数据要求极其精确的场合，不适合用这种压缩方式。</p>
+
+            </div>
+          
+
+    
+      <footer class="post-footer">
+		
+		<div class="post-tags">
+		  
+			<a href="/tags/Redis/">Redis</a>
+		  
+		</div>
+		
+
+        
+        
+  <nav class="post-nav">
+    
+    
+      <a class="next" href="/2020/01/02/2019复盘与2020计划/">
+        <span class="next-text nav-default">2019复盘与2020计划</span>
+        <span class="prev-text nav-mobile">Next</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    
+  </nav>
+
+        
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+      </footer>
+    
+  </article>
+
+    </div>
+
+      </div>
+
+      <footer id="colophon"><span class="copyright-year">
+    
+        &copy;
+    
+        2014 -
+    
+    2020
+    <span class="footer-author">yaoper.</span>
+    <span class="power-by">
+        Powered by <a class="hexo-link" href="https://hexo.io/">Hexo</a> and <a class="theme-link" href="https://github.com/frostfan/hexo-theme-polarbear">Polar Bear</a>
+    </span>
+</span>
+
+      </footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div>
+    
+
+
+    
+
+
+
+
+  
+    <script type="text/javascript" src="/lib/jquery/jquery-3.1.1.min.js"></script>
+  
+
+  
+
+    <script type="text/javascript" src="/js/src/theme.js?v=1.1"></script>
+<script type="text/javascript" src="/js/src/bootstrap.js?v=1.1"></script>
+
+  </body>
+</html>
