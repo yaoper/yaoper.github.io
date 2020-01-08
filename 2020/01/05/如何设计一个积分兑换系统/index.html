@@ -43,7 +43,7 @@
 <meta property="og:site_name" content="Illusory">
 <meta property="og:description" content="1. 业务需求描述用户在电商平台通过购物评论晒单累计了一定的积分，积分达到一定数量的时候可以在积分中心页面兑换心仪的物品。 2. 业务流程的思考用户的购物评论晒单行为会不断的累积积分，那么这里就需要一个积分表来记录用户的积分。 积分表    列名 属性 备注    id 主键ID 自增   user_id 用户ID    credit 积分    用户使用积分兑换商品以后需要扣除商品对应的积分，这">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2020-01-05T03:52:16.186Z">
+<meta property="og:updated_time" content="2020-01-08T09:27:57.409Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="如何设计一个积分兑换系统">
 <meta name="twitter:description" content="1. 业务需求描述用户在电商平台通过购物评论晒单累计了一定的积分，积分达到一定数量的时候可以在积分中心页面兑换心仪的物品。 2. 业务流程的思考用户的购物评论晒单行为会不断的累积积分，那么这里就需要一个积分表来记录用户的积分。 积分表    列名 属性 备注    id 主键ID 自增   user_id 用户ID    credit 积分    用户使用积分兑换商品以后需要扣除商品对应的积分，这">
@@ -189,7 +189,36 @@
 </tr>
 </tbody></table>
 <p>商品兑换完以后是不是要给用户发货，需要向库存中心提交一个发货申请呢？这个时候可以搞一个发货申请表。</p>
-<p><u>发货申请表</u><br>| 列名 | 属性 | 备注 |<br>| —- | —- | —- |<br>|id|主键ID|自增|<br>|type|发货类型|1：购买，2：积分兑换|<br>|credit_exchange_id|积分兑换表ID||<br>|product_id|商品ID||</p>
+<p><u>发货申请表</u></p>
+<table>
+<thead>
+<tr>
+<th>列名</th>
+<th>属性</th>
+<th>备注</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>id</td>
+<td>主键ID</td>
+<td>自增</td>
+</tr>
+<tr>
+<td>type</td>
+<td>发货类型</td>
+<td>1：购买，2：积分兑换</td>
+</tr>
+<tr>
+<td>credit_exchange_id</td>
+<td>积分兑换表ID</td>
+<td></td>
+</tr>
+<tr>
+<td>product_id</td>
+<td>商品ID</td>
+<td></td>
+</tr>
+</tbody></table>
 <p>申请发货后需要一个生产一个物流单号给用户反馈物流信息，可以扩展发货申请表添加一个物流单号</p>
 <table>
 <thead>
