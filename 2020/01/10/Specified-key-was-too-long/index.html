@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang>
+  <head><meta name="generator" content="Hexo 3.9.0">
+    
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1,minimum-scale=1,maximum-scale=1">
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+  <meta name="description" content="Specified key was too long">
+
+
+
+
+  <meta name="keywords" content="MySQL,">
+
+
+
+
+
+  <link rel="alternate" href="/default" title="Illusory">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=1.1">
+
+
+
+<link rel="canonical" href="http://yaoper.github.io/2020/01/10/Specified-key-was-too-long/">
+
+
+<meta name="description" content="今天通过SQL脚本创建数据库的时候MySQL报错 ERROR 1071 (42000): Specified key was too long; max key length is 767 bytes，SQL脚本是没有问题的，那么为什么会报出来这个错误呢？ 从字面意思上来看，索引字段长度太长，超过了767bytes。那么这个767是怎么来的，跟什么有关系呢？带着这些问题，我们来对MySQL（v5.">
+<meta name="keywords" content="MySQL">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Specified key was too long">
+<meta property="og:url" content="http://yaoper.github.io/2020/01/10/Specified-key-was-too-long/index.html">
+<meta property="og:site_name" content="Illusory">
+<meta property="og:description" content="今天通过SQL脚本创建数据库的时候MySQL报错 ERROR 1071 (42000): Specified key was too long; max key length is 767 bytes，SQL脚本是没有问题的，那么为什么会报出来这个错误呢？ 从字面意思上来看，索引字段长度太长，超过了767bytes。那么这个767是怎么来的，跟什么有关系呢？带着这些问题，我们来对MySQL（v5.">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://s2.ax1x.com/2020/01/10/lhrZyn.png">
+<meta property="og:updated_time" content="2020-01-10T08:18:34.154Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Specified key was too long">
+<meta name="twitter:description" content="今天通过SQL脚本创建数据库的时候MySQL报错 ERROR 1071 (42000): Specified key was too long; max key length is 767 bytes，SQL脚本是没有问题的，那么为什么会报出来这个错误呢？ 从字面意思上来看，索引字段长度太长，超过了767bytes。那么这个767是怎么来的，跟什么有关系呢？带着这些问题，我们来对MySQL（v5.">
+<meta name="twitter:image" content="https://s2.ax1x.com/2020/01/10/lhrZyn.png">
+
+
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=1.1">
+<link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+
+
+
+
+
+<script type="text/javascript">
+  var themeConfig = {
+    fancybox: {
+      enable: false
+    },
+  };
+</script>
+
+
+
+
+  
+
+
+
+    <title> Specified key was too long - Illusory </title>
+  </head>
+
+  <body>
+    <div id="page">
+      <header id="masthead"><div class="site-header-inner">
+    <h1 class="site-title">
+        <a href="/." class="logo">Illusory</a>
+    </h1>
+
+    <nav id="nav-top">
+        
+            <ul id="menu-top" class="nav-top-items">
+                
+                    <li class="menu-item">
+                        <a href="/archives">
+                            
+                            
+                                Archives
+                            
+                        </a>
+                    </li>
+                
+                    <li class="menu-item">
+                        <a href="/about">
+                            
+                            
+                                About
+                            
+                        </a>
+                    </li>
+                
+            </ul>
+        
+  </nav>
+</div>
+
+      </header>
+      <div id="content">
+        
+    <div id="primary">
+        
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          Specified key was too long
+        
+      </h1>
+
+      <time class="post-time">
+          Jan 10 2020
+      </time>
+    </header>
+
+
+
+    
+            <div class="post-content">
+            <p>今天通过SQL脚本创建数据库的时候MySQL报错 <strong>ERROR 1071 (42000): Specified key was too long; max key length is 767 bytes</strong>，SQL脚本是没有问题的，那么为什么会报出来这个错误呢？</p>
+<p>从字面意思上来看，<strong>索引字段长度太长，超过了767bytes</strong>。那么这个767是怎么来的，跟什么有关系呢？带着这些问题，我们来对MySQL（v5.5.27）做一些实验。</p>
+<p> 1.创建一个InnoDB引擎UTF8字符集的数据表Test，来重现这个错误。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">drop table <span class="keyword">if</span> exists test;</span><br><span class="line"><span class="function">create table <span class="title">test</span><span class="params">(</span></span></span><br><span class="line"><span class="function"><span class="params">  test varchar(<span class="number">256</span>)</span> primary key</span></span><br><span class="line"><span class="function">) ENGINE</span>=InnoDB DEFAULT charset=UTF8;</span><br></pre></td></tr></table></figure>
+
+<p>修改一下字符集，改成charset=GBK,这个时候执行创建语句能把表创建成功，没有问题。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">drop table <span class="keyword">if</span> exists test;</span><br><span class="line"><span class="function">create table <span class="title">test</span><span class="params">(</span></span></span><br><span class="line"><span class="function"><span class="params">  test varchar(<span class="number">256</span>)</span> primary key</span></span><br><span class="line"><span class="function">) ENGINE</span>=InnoDB DEFAULT charset=GBK;</span><br></pre></td></tr></table></figure>
+
+<p>这说明767bytes与字符编码及charset有关，那么字符集是GBK的时候varchar最多能设置多少呢？因为GBK是双字节的，UTF8是三字节的，所以最多能设置到383，我们可以验证。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">drop table <span class="keyword">if</span> exists test;</span><br><span class="line"><span class="function">create table <span class="title">test</span><span class="params">(</span></span></span><br><span class="line"><span class="function"><span class="params">  test varchar(<span class="number">383</span>)</span> primary key</span></span><br><span class="line"><span class="function">) ENGINE</span>=InnoDB DEFAULT charset=GBK;</span><br></pre></td></tr></table></figure>
+
+<p>基于以上实验我们可以得出这样一个结论：</p>
+<ol>
+<li>InnoDB引擎下<strong>MySQL的varchar主键只支持不超过767个字节</strong></li>
+<li>varchar的个数与字符编码集的设置有关（latin1一字节GBK双字节UTF8三字节UTF8mb4四字节）</li>
+</ol>
+<p>那么我们修改下存储引擎到MyISAM上，再次创建这个数据表，也能创建成功，这又是什么情况呢？</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">drop table <span class="keyword">if</span> exists test;</span><br><span class="line"><span class="function">create table <span class="title">test</span><span class="params">(</span></span></span><br><span class="line"><span class="function"><span class="params">  test varchar(<span class="number">256</span>)</span> primary key</span></span><br><span class="line"><span class="function">) ENGINE</span>=MyISAMD EFAULT charset=UTF8;</span><br></pre></td></tr></table></figure>
+
+<p>原来在MyISAM引擎下，<strong>单列的长度不能大于1000 bytes，所有组成索引列的长度和不能大于1000 bytes</strong>。
+我们可以做个验证，重新创建数据库表指定varchar(334)，发现报出错误。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">drop table <span class="keyword">if</span> exists test;</span><br><span class="line"><span class="function">create table <span class="title">test</span><span class="params">(</span></span></span><br><span class="line"><span class="function"><span class="params">  test varchar(<span class="number">334</span>)</span> primary key</span></span><br><span class="line"><span class="function">) ENGINE</span>=MyISAM DEFAULT charset=UTF8;</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://s2.ax1x.com/2020/01/10/lhrZyn.png" alt="lhrZyn.png"></p>
+<p>综上，不同的存储引擎对单列字节大小限制不同。</p>
+<p><strong>① innodb存储引擎，多列索引的长度限制如下：</strong><br><strong>每个列的长度不能大于767 bytes；所有组成索引列的长度和不能大于3072 bytes</strong><br><strong>② myisam存储引擎，多列索引长度限制如下：</strong><br><strong>每个列的长度不能大于1000 bytes，所有组成索引列的长度和不能大于1000 bytes</strong></p>
+
+            </div>
+          
+
+    
+      <footer class="post-footer">
+		
+		<div class="post-tags">
+		  
+			<a href="/tags/MySQL/">MySQL</a>
+		  
+		</div>
+		
+
+        
+        
+  <nav class="post-nav">
+    
+    
+      <a class="next" href="/2020/01/09/TCP的三次握手与四次挥手/">
+        <span class="next-text nav-default">TCP的三次握手与四次挥手</span>
+        <span class="prev-text nav-mobile">Next</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    
+  </nav>
+
+        
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+      </footer>
+    
+  </article>
+
+    </div>
+
+      </div>
+
+      <footer id="colophon"><span class="copyright-year">
+    
+        &copy;
+    
+        2014 -
+    
+    2020
+    <span class="footer-author">yaoper.</span>
+    <span class="power-by">
+        Powered by <a class="hexo-link" href="https://hexo.io/">Hexo</a> and <a class="theme-link" href="https://github.com/frostfan/hexo-theme-polarbear">Polar Bear</a>
+    </span>
+</span>
+
+      </footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div>
+    
+
+
+    
+
+
+
+
+  
+    <script type="text/javascript" src="/lib/jquery/jquery-3.1.1.min.js"></script>
+  
+
+  
+
+    <script type="text/javascript" src="/js/src/theme.js?v=1.1"></script>
+<script type="text/javascript" src="/js/src/bootstrap.js?v=1.1"></script>
+
+  </body>
+</html>
