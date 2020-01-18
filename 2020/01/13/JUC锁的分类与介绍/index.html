@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang>
+  <head><meta name="generator" content="Hexo 3.9.0">
+    
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1,minimum-scale=1,maximum-scale=1">
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+  <meta name="description" content="JUC锁的分类与介绍">
+
+
+
+
+  <meta name="keywords" content="JUC,">
+
+
+
+
+
+  <link rel="alternate" href="/default" title="Illusory">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=1.1">
+
+
+
+<link rel="canonical" href="http://yaoper.github.io/2020/01/13/JUC锁的分类与介绍/">
+
+
+<meta name="description" content="从不同的维度，锁可以分为一下几类：  乐观锁与悲观锁 乐观就像小米的宣传语-永远相信，美好的事情即将发生； 而悲观就像透过有色眼睛看世界，永远都带有颜色；synchronized就是悲观锁，他会为你保障百分百的加锁与同步  公平锁与非公平锁线程如果在某个监视器的等待集合中，那么如果当前线程执行结束后，谁应该被选作下一个进入监视器的线程呢？这就是锁的公平性针对的点：  对于锁的请求，每个线程总是有一">
+<meta name="keywords" content="JUC">
+<meta property="og:type" content="article">
+<meta property="og:title" content="JUC锁的分类与介绍">
+<meta property="og:url" content="http://yaoper.github.io/2020/01/13/JUC锁的分类与介绍/index.html">
+<meta property="og:site_name" content="Illusory">
+<meta property="og:description" content="从不同的维度，锁可以分为一下几类：  乐观锁与悲观锁 乐观就像小米的宣传语-永远相信，美好的事情即将发生； 而悲观就像透过有色眼睛看世界，永远都带有颜色；synchronized就是悲观锁，他会为你保障百分百的加锁与同步  公平锁与非公平锁线程如果在某个监视器的等待集合中，那么如果当前线程执行结束后，谁应该被选作下一个进入监视器的线程呢？这就是锁的公平性针对的点：  对于锁的请求，每个线程总是有一">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://s2.ax1x.com/2020/01/13/l7AFq1.png">
+<meta property="og:updated_time" content="2020-01-13T04:02:49.719Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="JUC锁的分类与介绍">
+<meta name="twitter:description" content="从不同的维度，锁可以分为一下几类：  乐观锁与悲观锁 乐观就像小米的宣传语-永远相信，美好的事情即将发生； 而悲观就像透过有色眼睛看世界，永远都带有颜色；synchronized就是悲观锁，他会为你保障百分百的加锁与同步  公平锁与非公平锁线程如果在某个监视器的等待集合中，那么如果当前线程执行结束后，谁应该被选作下一个进入监视器的线程呢？这就是锁的公平性针对的点：  对于锁的请求，每个线程总是有一">
+<meta name="twitter:image" content="https://s2.ax1x.com/2020/01/13/l7AFq1.png">
+
+
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=1.1">
+<link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+
+
+
+
+
+<script type="text/javascript">
+  var themeConfig = {
+    fancybox: {
+      enable: false
+    },
+  };
+</script>
+
+
+
+
+  
+
+
+
+    <title> JUC锁的分类与介绍 - Illusory </title>
+  </head>
+
+  <body>
+    <div id="page">
+      <header id="masthead"><div class="site-header-inner">
+    <h1 class="site-title">
+        <a href="/." class="logo">Illusory</a>
+    </h1>
+
+    <nav id="nav-top">
+        
+            <ul id="menu-top" class="nav-top-items">
+                
+                    <li class="menu-item">
+                        <a href="/archives">
+                            
+                            
+                                Archives
+                            
+                        </a>
+                    </li>
+                
+                    <li class="menu-item">
+                        <a href="/about">
+                            
+                            
+                                About
+                            
+                        </a>
+                    </li>
+                
+            </ul>
+        
+  </nav>
+</div>
+
+      </header>
+      <div id="content">
+        
+    <div id="primary">
+        
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          JUC锁的分类与介绍
+        
+      </h1>
+
+      <time class="post-time">
+          Jan 13 2020
+      </time>
+    </header>
+
+
+
+    
+            <div class="post-content">
+            <p>从不同的维度，锁可以分为一下几类：</p>
+<p><img src="https://s2.ax1x.com/2020/01/13/l7AFq1.png" alt="l7AFq1.png"></p>
+<h4 id="乐观锁与悲观锁"><a href="#乐观锁与悲观锁" class="headerlink" title="乐观锁与悲观锁"></a>乐观锁与悲观锁</h4><ul>
+<li>乐观就像小米的宣传语-永远相信，美好的事情即将发生；</li>
+<li>而悲观就像透过有色眼睛看世界，永远都带有颜色；<br>synchronized就是悲观锁，他会为你保障百分百的加锁与同步</li>
+</ul>
+<h4 id="公平锁与非公平锁"><a href="#公平锁与非公平锁" class="headerlink" title="公平锁与非公平锁"></a>公平锁与非公平锁</h4><p>线程如果在某个监视器的等待集合中，那么如果当前线程执行结束后，谁应该被选作下一个进入监视器的线程呢？<br>这就是锁的公平性针对的点：</p>
+<ul>
+<li>对于锁的请求，每个线程总是有一个先来后到的先后顺序，如果按照先后顺序，那么就是公平锁</li>
+<li>如果不按照先后顺序，随机的或者按照什么算法优先级等选择，那么就是非公平锁</li>
+<li><em>除非有额外的公平性要求，否则不应该使用公平锁，因为对性能是有损耗的*</em></li>
+</ul>
+<h4 id="独占锁与共享锁"><a href="#独占锁与共享锁" class="headerlink" title="独占锁与共享锁"></a>独占锁与共享锁</h4><ul>
+<li>如果一个锁仅仅只能被一个进程拥有，那么他就是独占的；</li>
+<li>如果一个锁可以同时被多个线程拥有，那么他就是共享的；<br>独占锁会保障任何时候都只是有一个线程进行访问，ReentrantLock就是独占锁，synchronized的原理也是独占锁<br>而读写锁ReadWriteLock就是共享锁，可以同时允许多个读线程进行操作</li>
+</ul>
+<h4 id="可重入锁"><a href="#可重入锁" class="headerlink" title="可重入锁"></a>可重入锁</h4><p>当一个线程想要获取一个被其他线程独占的锁时，你需要等待，但是如果是自己已经获得的锁呢？答案就是可重入。<br>可重入锁在内部维护了一个计数器，用于记录重入次数。自己获得一次，那么计数器+1，释放一次计数器-1，如果计数器为0，说明该线程释放了该锁，否则，锁仍旧被该线程持有。</p>
+<h4 id="自旋锁"><a href="#自旋锁" class="headerlink" title="自旋锁"></a>自旋锁</h4><p>如果一个线程请求获取一个锁时，并不能获取到，那么将会进入阻塞状态，也就是会被切换到内核态然后挂起，当该线程获取到锁时，又需要切换到内核状态进行唤醒，说白了需要用户状态与内核状态的切换。而且，这个状态的切换，还是比较消耗性能的。</p>
+<p>有一种解决办法就是线程继续运行，过一会儿再次尝试锁的获取。怎么做到的？其实就是相当于CPU空跑，而不是直接将线程进行挂起，所以说相当于牺牲了CPU的时间片，换取内核状态的开销，这就涉及到一个平衡点的问题。如果线程之间竞争不激烈，可能下次的尝试获取就成功了，但是如果线程之间竞争非常激烈，下次还是抢不到，下下次还是抢不到。</p>
+<p>刚才说到，对于自旋不能无止境的，那就是类似“死循环”，所以都有限制，通常用次数，比如规定次数为5，但是实际情况中，可能有时经常1次就能够成功，也可能经常5次了还没有成功，如果1次就成功的还好，如果说限制为5次，每次都5次后还是失败，这就是纯粹的白忙活</p>
+<p>所以后来出现了自适应的自旋锁，自旋的次数（限制）不再是固定的了，如果对于某个锁，自旋很少成功获得过，那在以后尝试获取这个锁时将可能省略掉自旋过程，直接阻塞线程，避免浪费处理器资源，如果对于某个锁，自旋等待刚刚成功获得过锁，那么将会认为这次也很可能是成功的，所以将会允许自旋，甚至允许更多次数（时间）的自旋等待。</p>
+<p>对于适应性自旋，大致逻辑是这样，具体细节由具体算法决定。</p>
+
+            </div>
+          
+
+    
+      <footer class="post-footer">
+		
+		<div class="post-tags">
+		  
+			<a href="/tags/JUC/">JUC</a>
+		  
+		</div>
+		
+
+        
+        
+  <nav class="post-nav">
+    
+      <a class="prev" href="/2020/01/13/JUC包的Lock-Interface/">
+        <i class="iconfont icon-left"></i>
+        <span class="prev-text nav-default">JUC包的Lock Interface</span>
+        <span class="prev-text nav-mobile">Prev</span>
+      </a>
+    
+    
+      <a class="next" href="/2020/01/10/Specified-key-was-too-long/">
+        <span class="next-text nav-default">Specified key was too long</span>
+        <span class="prev-text nav-mobile">Next</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    
+  </nav>
+
+        
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+      </footer>
+    
+  </article>
+
+    </div>
+
+      </div>
+
+      <footer id="colophon"><span class="copyright-year">
+    
+        &copy;
+    
+        2014 -
+    
+    2020
+    <span class="footer-author">yaoper.</span>
+    <span class="power-by">
+        Powered by <a class="hexo-link" href="https://hexo.io/">Hexo</a> and <a class="theme-link" href="https://github.com/frostfan/hexo-theme-polarbear">Polar Bear</a>
+    </span>
+</span>
+
+      </footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div>
+    
+
+
+    
+
+
+
+
+  
+    <script type="text/javascript" src="/lib/jquery/jquery-3.1.1.min.js"></script>
+  
+
+  
+
+    <script type="text/javascript" src="/js/src/theme.js?v=1.1"></script>
+<script type="text/javascript" src="/js/src/bootstrap.js?v=1.1"></script>
+
+  </body>
+</html>

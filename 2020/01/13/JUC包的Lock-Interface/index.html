@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang>
+  <head><meta name="generator" content="Hexo 3.9.0">
+    
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1,minimum-scale=1,maximum-scale=1">
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+  <meta name="description" content="JUC包的Lock Interface">
+
+
+
+
+  <meta name="keywords" content="JUC,">
+
+
+
+
+
+  <link rel="alternate" href="/default" title="Illusory">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=1.1">
+
+
+
+<link rel="canonical" href="http://yaoper.github.io/2020/01/13/JUC包的Lock-Interface/">
+
+
+<meta name="description" content="我们知道显式锁的概念，是基于JDK层面的实现，是Lock接口，通过这个接口可以实现同步访问；而不同于synchronized关键字，他是Java的内置特性，是基于JVM的实现。 Lock接口非常简单，提供以下几个方法：  void lock(); void lockInterruptibly() throws InterruptedException; boolean tryLock(); boo">
+<meta name="keywords" content="JUC">
+<meta property="og:type" content="article">
+<meta property="og:title" content="JUC包的Lock Interface">
+<meta property="og:url" content="http://yaoper.github.io/2020/01/13/JUC包的Lock-Interface/index.html">
+<meta property="og:site_name" content="Illusory">
+<meta property="og:description" content="我们知道显式锁的概念，是基于JDK层面的实现，是Lock接口，通过这个接口可以实现同步访问；而不同于synchronized关键字，他是Java的内置特性，是基于JVM的实现。 Lock接口非常简单，提供以下几个方法：  void lock(); void lockInterruptibly() throws InterruptedException; boolean tryLock(); boo">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2020-01-14T06:40:08.250Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="JUC包的Lock Interface">
+<meta name="twitter:description" content="我们知道显式锁的概念，是基于JDK层面的实现，是Lock接口，通过这个接口可以实现同步访问；而不同于synchronized关键字，他是Java的内置特性，是基于JVM的实现。 Lock接口非常简单，提供以下几个方法：  void lock(); void lockInterruptibly() throws InterruptedException; boolean tryLock(); boo">
+
+
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=1.1">
+<link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+
+
+
+
+
+<script type="text/javascript">
+  var themeConfig = {
+    fancybox: {
+      enable: false
+    },
+  };
+</script>
+
+
+
+
+  
+
+
+
+    <title> JUC包的Lock Interface - Illusory </title>
+  </head>
+
+  <body>
+    <div id="page">
+      <header id="masthead"><div class="site-header-inner">
+    <h1 class="site-title">
+        <a href="/." class="logo">Illusory</a>
+    </h1>
+
+    <nav id="nav-top">
+        
+            <ul id="menu-top" class="nav-top-items">
+                
+                    <li class="menu-item">
+                        <a href="/archives">
+                            
+                            
+                                Archives
+                            
+                        </a>
+                    </li>
+                
+                    <li class="menu-item">
+                        <a href="/about">
+                            
+                            
+                                About
+                            
+                        </a>
+                    </li>
+                
+            </ul>
+        
+  </nav>
+</div>
+
+      </header>
+      <div id="content">
+        
+    <div id="primary">
+        
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          JUC包的Lock Interface
+        
+      </h1>
+
+      <time class="post-time">
+          Jan 13 2020
+      </time>
+    </header>
+
+
+
+    
+            <div class="post-content">
+            <p>我们知道显式锁的概念，是基于JDK层面的实现，是Lock接口，通过这个接口可以实现同步访问；而不同于synchronized关键字，他是Java的内置特性，是基于JVM的实现。</p>
+<p>Lock接口非常简单，提供以下几个方法：</p>
+<ul>
+<li>void lock();</li>
+<li>void lockInterruptibly() throws InterruptedException;</li>
+<li>boolean tryLock();</li>
+<li>boolean tryLock(long time, TimeUnit unit) throws InterruptedException;</li>
+<li>void unlock();</li>
+<li>Condition newCondition();</li>
+</ul>
+<h4 id="lock"><a href="#lock" class="headerlink" title="lock()"></a>lock()</h4><p>显式获取锁，与synchronized一样，如果获取不到锁，那么将会进入阻塞状态。</p>
+<h4 id="lockInterruptibly"><a href="#lockInterruptibly" class="headerlink" title="lockInterruptibly()"></a>lockInterruptibly()</h4><p>lockInterruptibly 阻塞式的 就是一个可中断的锁获取操作，在尝试获取锁的过程中，如果不能够获取到，如果被中断，那么它将能够感知到这个中断，而不是一直阻塞下去。</p>
+<h4 id="unlock"><a href="#unlock" class="headerlink" title="unlock()"></a>unlock()</h4><p>unlock并没有什么特殊的，他替代了synchronized关键字隐式的解锁操作</p>
+<h4 id="tryLock"><a href="#tryLock" class="headerlink" title="tryLock()"></a>tryLock()</h4><p>tryLock方法尝试获取锁（只尝试一次），如果锁可用，则获取锁，并立即返回值 true。如果锁不可用，则此方法将立即返回值 false</p>
+<h4 id="tryLock-long-time-TimeUnit-unit"><a href="#tryLock-long-time-TimeUnit-unit" class="headerlink" title="tryLock(long time, TimeUnit unit)"></a>tryLock(long time, TimeUnit unit)</h4><p>可以配置超时时间的尝试获取锁方法（一直尝试直到超时），在指定的超时时间内，如果能够获取到锁，那么将会返回true，如果超过了指定的时间，但是却不能获取到锁，那么将会返回false；</p>
+<h4 id="condition"><a href="#condition" class="headerlink" title="condition()"></a>condition()</h4><p>在显式锁中，可以定义多个Condition，也就是一个锁，可以对应多个监视器，可以更加细粒度的进行同步协作的处理</p>
+<h4 id="与synchronized再次对比"><a href="#与synchronized再次对比" class="headerlink" title="与synchronized再次对比"></a>与synchronized再次对比</h4><ul>
+<li>synchronized是JVM底层实现的，Lock是JDK接口层面的</li>
+<li>synchronized是隐式的，Lock是显式的，需要手动加锁与解锁</li>
+<li>synchronized无论如何都会释放，即使出现错误，Lock需要自己保障正确释放</li>
+<li>synchronized是阻塞式的获取锁，Lock可以阻塞获取，可中断，还可以尝试获取，还可以设置超时等待获取</li>
+<li>synchronized无法判断锁的状态，Lock可以进行判断</li>
+<li>synchronized可重入、不可中断、非公平，Lock可重入、可中断、可配置公平性（公平和非公平都可以）</li>
+<li>如果竞争不激烈，两者的性能是差不多的，可是synchronized的性能还在不断的优化，当竞争资源非常激烈时（即有大量线程同时竞争），此时Lock的性能要远远优于synchronized</li>
+</ul>
+
+            </div>
+          
+
+    
+      <footer class="post-footer">
+		
+		<div class="post-tags">
+		  
+			<a href="/tags/JUC/">JUC</a>
+		  
+		</div>
+		
+
+        
+        
+  <nav class="post-nav">
+    
+      <a class="prev" href="/2020/01/14/Synchronized锁性能优化/">
+        <i class="iconfont icon-left"></i>
+        <span class="prev-text nav-default">Synchronized锁性能优化</span>
+        <span class="prev-text nav-mobile">Prev</span>
+      </a>
+    
+    
+      <a class="next" href="/2020/01/13/JUC锁的分类与介绍/">
+        <span class="next-text nav-default">JUC锁的分类与介绍</span>
+        <span class="prev-text nav-mobile">Next</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    
+  </nav>
+
+        
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+      </footer>
+    
+  </article>
+
+    </div>
+
+      </div>
+
+      <footer id="colophon"><span class="copyright-year">
+    
+        &copy;
+    
+        2014 -
+    
+    2020
+    <span class="footer-author">yaoper.</span>
+    <span class="power-by">
+        Powered by <a class="hexo-link" href="https://hexo.io/">Hexo</a> and <a class="theme-link" href="https://github.com/frostfan/hexo-theme-polarbear">Polar Bear</a>
+    </span>
+</span>
+
+      </footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div>
+    
+
+
+    
+
+
+
+
+  
+    <script type="text/javascript" src="/lib/jquery/jquery-3.1.1.min.js"></script>
+  
+
+  
+
+    <script type="text/javascript" src="/js/src/theme.js?v=1.1"></script>
+<script type="text/javascript" src="/js/src/bootstrap.js?v=1.1"></script>
+
+  </body>
+</html>
