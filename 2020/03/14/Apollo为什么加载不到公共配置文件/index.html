@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang>
+  <head><meta name="generator" content="Hexo 3.9.0">
+    
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1,minimum-scale=1,maximum-scale=1">
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+  <meta name="description" content="Apollo为什么加载不到公共配置文件">
+
+
+
+
+  <meta name="keywords" content="Apollo,">
+
+
+
+
+
+  <link rel="alternate" href="/default" title="Illusory">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=1.1">
+
+
+
+<link rel="canonical" href="http://yaoper.github.io/2020/03/14/Apollo为什么加载不到公共配置文件/">
+
+
+<meta name="description" content="1. 问题描述袁沼同学在开发的过程中反馈从Apollo中获取配置很慢，而且修改配置通知很不及时需要等待很久。如果真是这样的话，可以说Apollo很基本上算是不能用了。之前使用的过程中并不存在这样的问题，于是我启动了之前Apollo使用的demo来测试是服务出现了问题。 我尝试加载一些公共命名空间UUPT.DBConnectionStrings,UUPT.RedisConfig,UUPT.Rabbi">
+<meta name="keywords" content="Apollo">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Apollo为什么加载不到公共配置文件">
+<meta property="og:url" content="http://yaoper.github.io/2020/03/14/Apollo为什么加载不到公共配置文件/index.html">
+<meta property="og:site_name" content="Illusory">
+<meta property="og:description" content="1. 问题描述袁沼同学在开发的过程中反馈从Apollo中获取配置很慢，而且修改配置通知很不及时需要等待很久。如果真是这样的话，可以说Apollo很基本上算是不能用了。之前使用的过程中并不存在这样的问题，于是我启动了之前Apollo使用的demo来测试是服务出现了问题。 我尝试加载一些公共命名空间UUPT.DBConnectionStrings,UUPT.RedisConfig,UUPT.Rabbi">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2020-03-14T02:39:04.097Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Apollo为什么加载不到公共配置文件">
+<meta name="twitter:description" content="1. 问题描述袁沼同学在开发的过程中反馈从Apollo中获取配置很慢，而且修改配置通知很不及时需要等待很久。如果真是这样的话，可以说Apollo很基本上算是不能用了。之前使用的过程中并不存在这样的问题，于是我启动了之前Apollo使用的demo来测试是服务出现了问题。 我尝试加载一些公共命名空间UUPT.DBConnectionStrings,UUPT.RedisConfig,UUPT.Rabbi">
+
+
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=1.1">
+<link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+
+
+
+
+
+<script type="text/javascript">
+  var themeConfig = {
+    fancybox: {
+      enable: false
+    },
+  };
+</script>
+
+
+
+
+  
+
+
+
+    <title> Apollo为什么加载不到公共配置文件 - Illusory </title>
+  </head>
+
+  <body>
+    <div id="page">
+      <header id="masthead"><div class="site-header-inner">
+    <h1 class="site-title">
+        <a href="/." class="logo">Illusory</a>
+    </h1>
+
+    <nav id="nav-top">
+        
+            <ul id="menu-top" class="nav-top-items">
+                
+                    <li class="menu-item">
+                        <a href="/archives">
+                            
+                            
+                                Archives
+                            
+                        </a>
+                    </li>
+                
+                    <li class="menu-item">
+                        <a href="/about">
+                            
+                            
+                                About
+                            
+                        </a>
+                    </li>
+                
+            </ul>
+        
+  </nav>
+</div>
+
+      </header>
+      <div id="content">
+        
+    <div id="primary">
+        
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          Apollo为什么加载不到公共配置文件
+        
+      </h1>
+
+      <time class="post-time">
+          Mar 14 2020
+      </time>
+    </header>
+
+
+
+    
+            <div class="post-content">
+            <h3 id="1-问题描述"><a href="#1-问题描述" class="headerlink" title="1. 问题描述"></a>1. 问题描述</h3><p>袁沼同学在开发的过程中反馈从Apollo中获取配置很慢，而且修改配置通知很不及时需要等待很久。如果真是这样的话，可以说Apollo很基本上算是不能用了。之前使用的过程中并不存在这样的问题，于是我启动了之前Apollo使用的demo来测试是服务出现了问题。</p>
+<p>我尝试加载一些公共命名空间UUPT.DBConnectionStrings,UUPT.RedisConfig,UUPT.RabbitMQConfig,UUPT.CommonAPIUrl；发现加载不了配置信息。本地目录/opt/data/appid/清空也不行。</p>
+<h3 id="2-原因探究"><a href="#2-原因探究" class="headerlink" title="2. 原因探究"></a>2. 原因探究</h3><ol>
+<li><p>一定一定要使用使用相同的环境，不能是你使用DEV他使用FAT，这样就很坑，配置信息大概率是不一致的，没法儿做比较。</p>
+</li>
+<li><p>Apollo不会加载没有从来没有发布过的namespace，这个在portal里面有一行红色的提醒，看的时候不在意，排查问题的时候很苦恼。（Tips: 此namespace从来没有发布过，Apollo客户端将获取不到配置并记录404日志信息，请及时发布。）从程序的控制台上可以能得到证实。</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Sync config failed, will retry. Repository class com.ctrip.framework.apollo.internals.RemoteConfigRepository, reason: Load Apollo Config failed - appId: 10461001, cluster: default, namespace: UUPT.CommonAPIUrl, url: http://192.168.6.32:18080/configs/10461001/default/UUPT.CommonAPIUrl?ip=192.168.5.20&amp;messages=%7B%22details%22%3A%7B%2210461001%2Bdefault%2BUUPT.CommonAPIUrl%22%3A258%7D%7D [Cause: [status code: 404] Could not find config for namespace - appId: 10461001, cluster: default, namespace: UUPT.CommonAPIUrl, please check whether the configs are released in Apollo!]</span><br></pre></td></tr></table></figure>
+
+<p>但是发布过以后被清空的namespace就不受这个影响，/opt/目录会获取一个空配置文件下来。</p>
+</li>
+<li><p>关于获取配置信息慢和修改配置通知不及时的问题，这边测试同事监控4个公共配置，对其中一个的修改进行监控，通知很及时。</p>
+</li>
+</ol>
+
+            </div>
+          
+
+    
+      <footer class="post-footer">
+		
+		<div class="post-tags">
+		  
+			<a href="/tags/Apollo/">Apollo</a>
+		  
+		</div>
+		
+
+        
+        
+  <nav class="post-nav">
+    
+    
+      <a class="next" href="/2020/01/20/Docker-部署Consul/">
+        <span class="next-text nav-default">Docker 部署 Consul</span>
+        <span class="prev-text nav-mobile">Next</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    
+  </nav>
+
+        
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+      </footer>
+    
+  </article>
+
+    </div>
+
+      </div>
+
+      <footer id="colophon"><span class="copyright-year">
+    
+        &copy;
+    
+        2014 -
+    
+    2020
+    <span class="footer-author">yaoper.</span>
+    <span class="power-by">
+        Powered by <a class="hexo-link" href="https://hexo.io/">Hexo</a> and <a class="theme-link" href="https://github.com/frostfan/hexo-theme-polarbear">Polar Bear</a>
+    </span>
+</span>
+
+      </footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div>
+    
+
+
+    
+
+
+
+
+  
+    <script type="text/javascript" src="/lib/jquery/jquery-3.1.1.min.js"></script>
+  
+
+  
+
+    <script type="text/javascript" src="/js/src/theme.js?v=1.1"></script>
+<script type="text/javascript" src="/js/src/bootstrap.js?v=1.1"></script>
+
+  </body>
+</html>

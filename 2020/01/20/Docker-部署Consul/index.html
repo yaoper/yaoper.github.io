@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang>
+  <head><meta name="generator" content="Hexo 3.9.0">
+    
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1,minimum-scale=1,maximum-scale=1">
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+  <meta name="description" content="Docker 部署 Consul">
+
+
+
+
+  <meta name="keywords" content="Consul,">
+
+
+
+
+
+  <link rel="alternate" href="/default" title="Illusory">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=1.1">
+
+
+
+<link rel="canonical" href="http://yaoper.github.io/2020/01/20/Docker-部署Consul/">
+
+
+<meta name="description" content="docker 拉取 consul 镜像 1docker pull consul:1.4.4  创建数据文件夹 1mkdir -p /data/consul  启动consul 1docker run -d -p 8500:8500 -v /data/consul:/consul/data -e CONSUL_BIND_INTERFACE=&apos;eth0&apos; --name=consul0 consul:">
+<meta name="keywords" content="Consul">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Docker 部署 Consul">
+<meta property="og:url" content="http://yaoper.github.io/2020/01/20/Docker-部署Consul/index.html">
+<meta property="og:site_name" content="Illusory">
+<meta property="og:description" content="docker 拉取 consul 镜像 1docker pull consul:1.4.4  创建数据文件夹 1mkdir -p /data/consul  启动consul 1docker run -d -p 8500:8500 -v /data/consul:/consul/data -e CONSUL_BIND_INTERFACE=&apos;eth0&apos; --name=consul0 consul:">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2020-01-20T09:26:29.966Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Docker 部署 Consul">
+<meta name="twitter:description" content="docker 拉取 consul 镜像 1docker pull consul:1.4.4  创建数据文件夹 1mkdir -p /data/consul  启动consul 1docker run -d -p 8500:8500 -v /data/consul:/consul/data -e CONSUL_BIND_INTERFACE=&apos;eth0&apos; --name=consul0 consul:">
+
+
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=1.1">
+<link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+
+
+
+
+
+<script type="text/javascript">
+  var themeConfig = {
+    fancybox: {
+      enable: false
+    },
+  };
+</script>
+
+
+
+
+  
+
+
+
+    <title> Docker 部署 Consul - Illusory </title>
+  </head>
+
+  <body>
+    <div id="page">
+      <header id="masthead"><div class="site-header-inner">
+    <h1 class="site-title">
+        <a href="/." class="logo">Illusory</a>
+    </h1>
+
+    <nav id="nav-top">
+        
+            <ul id="menu-top" class="nav-top-items">
+                
+                    <li class="menu-item">
+                        <a href="/archives">
+                            
+                            
+                                Archives
+                            
+                        </a>
+                    </li>
+                
+                    <li class="menu-item">
+                        <a href="/about">
+                            
+                            
+                                About
+                            
+                        </a>
+                    </li>
+                
+            </ul>
+        
+  </nav>
+</div>
+
+      </header>
+      <div id="content">
+        
+    <div id="primary">
+        
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          Docker 部署 Consul
+        
+      </h1>
+
+      <time class="post-time">
+          Jan 20 2020
+      </time>
+    </header>
+
+
+
+    
+            <div class="post-content">
+            <ol>
+<li><p>docker 拉取 consul 镜像</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker pull consul:<span class="number">1.4</span>.4</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>创建数据文件夹</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mkdir -p /data/consul</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>启动consul</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker run -d -p <span class="number">8500</span>:<span class="number">8500</span> -v /data/consul:/consul/data -e CONSUL_BIND_INTERFACE=<span class="string">'eth0'</span> --name=consul0 consul:<span class="number">1.4</span>.4 agent -server -bootstrap -ui -client=<span class="string">'0.0.0.0'</span></span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<ul>
+<li>agent: 表示启动 agent 进程</li>
+<li>server: 表示 consul 为 server 模式</li>
+<li>client: 表示 consul 为 client 模式</li>
+<li>bootstrap: 表示这个节点是 Server-Leader</li>
+<li>ui: 启动 Web UI, 默认端口 8500</li>
+<li>node: 指定节点名称, 集群中节点名称唯一</li>
+<li>client: 绑定客户端接口地址, 0.0.0.0 表示所有地址都可以访问</li>
+</ul>
+<ol start="4">
+<li><p>命令查询容器ip</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker inspect --format <span class="string">'&#123;&#123; .NetworkSettings.IPAddress &#125;&#125;'</span> consul0</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>集群中插入其他节点</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">docker run -d --name=consul1 -e CONSUL_BIND_INTERFACE=eth0 consul:<span class="number">1.4</span>.4 agent --server=<span class="keyword">true</span> --client=<span class="number">0.0</span>.0.0 --join <span class="number">172.17</span>.0.16;</span><br><span class="line">docker run -d --name=consul2 -e CONSUL_BIND_INTERFACE=eth0 consul:<span class="number">1.4</span>.4 agent --server=<span class="keyword">true</span> --client=<span class="number">0.0</span>.0.0 --join <span class="number">172.17</span>.0.16;</span><br><span class="line">docker run -d --name=consul3 -e CONSUL_BIND_INTERFACE=eth0 consul:<span class="number">1.4</span>.4 agent --server=<span class="keyword">false</span> --client=<span class="number">0.0</span>.0.0 --join <span class="number">172.17</span>.0.16;</span><br><span class="line">docker run -d --name=consul4 -e CONSUL_BIND_INTERFACE=eth0 consul:<span class="number">1.4</span>.4 agent --server=<span class="keyword">false</span> --client=<span class="number">0.0</span>.0.0 --join <span class="number">172.17</span>.0.16;</span><br><span class="line">docker run -d --name=consul5 -e CONSUL_BIND_INTERFACE=eth0 consul:<span class="number">1.4</span>.4 agent --server=<span class="keyword">false</span> --client=<span class="number">0.0</span>.0.0 --join <span class="number">172.17</span>.0.16;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>查看集群下的节点</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker exec -it consul1 consul members</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>访问web ui,查看节点 <a href="http://192.168.6.32:8500/ui/" target="_blank" rel="noopener">http://192.168.6.32:8500/ui/</a></p>
+</li>
+</ol>
+
+            </div>
+          
+
+    
+      <footer class="post-footer">
+		
+		<div class="post-tags">
+		  
+			<a href="/tags/Consul/">Consul</a>
+		  
+		</div>
+		
+
+        
+        
+  <nav class="post-nav">
+    
+      <a class="prev" href="/2020/03/14/Apollo为什么加载不到公共配置文件/">
+        <i class="iconfont icon-left"></i>
+        <span class="prev-text nav-default">Apollo为什么加载不到公共配置文件</span>
+        <span class="prev-text nav-mobile">Prev</span>
+      </a>
+    
+    
+      <a class="next" href="/2020/01/18/春节万邦批发市场水果价格/">
+        <span class="next-text nav-default">春节万邦批发市场水果价格</span>
+        <span class="prev-text nav-mobile">Next</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    
+  </nav>
+
+        
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+      </footer>
+    
+  </article>
+
+    </div>
+
+      </div>
+
+      <footer id="colophon"><span class="copyright-year">
+    
+        &copy;
+    
+        2014 -
+    
+    2020
+    <span class="footer-author">yaoper.</span>
+    <span class="power-by">
+        Powered by <a class="hexo-link" href="https://hexo.io/">Hexo</a> and <a class="theme-link" href="https://github.com/frostfan/hexo-theme-polarbear">Polar Bear</a>
+    </span>
+</span>
+
+      </footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div>
+    
+
+
+    
+
+
+
+
+  
+    <script type="text/javascript" src="/lib/jquery/jquery-3.1.1.min.js"></script>
+  
+
+  
+
+    <script type="text/javascript" src="/js/src/theme.js?v=1.1"></script>
+<script type="text/javascript" src="/js/src/bootstrap.js?v=1.1"></script>
+
+  </body>
+</html>
