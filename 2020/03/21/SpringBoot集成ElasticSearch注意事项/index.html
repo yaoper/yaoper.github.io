@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang>
+  <head><meta name="generator" content="Hexo 3.9.0">
+    
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1,minimum-scale=1,maximum-scale=1">
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+  <meta name="description" content="SpringBoot集成ElasticSearch注意事项">
+
+
+
+
+  <meta name="keywords" content="ElasticSearch,">
+
+
+
+
+
+  <link rel="alternate" href="/default" title="Illusory">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=1.1">
+
+
+
+<link rel="canonical" href="http://yaoper.github.io/2020/03/21/SpringBoot集成ElasticSearch注意事项/">
+
+
+<meta name="description" content="1. 版本怎么选择基础知识 Elasticsearch使用Java开发并使用Lucene作为其核心来实现所有索引和搜索的功能，但是它的目的是通过简单的RESTful API来隐藏Lucene的复杂性，从而让全文搜索变得简单。    ES MySQL    index dababase   type table   document row   field column   在Elasticsear">
+<meta name="keywords" content="ElasticSearch">
+<meta property="og:type" content="article">
+<meta property="og:title" content="SpringBoot集成ElasticSearch注意事项">
+<meta property="og:url" content="http://yaoper.github.io/2020/03/21/SpringBoot集成ElasticSearch注意事项/index.html">
+<meta property="og:site_name" content="Illusory">
+<meta property="og:description" content="1. 版本怎么选择基础知识 Elasticsearch使用Java开发并使用Lucene作为其核心来实现所有索引和搜索的功能，但是它的目的是通过简单的RESTful API来隐藏Lucene的复杂性，从而让全文搜索变得简单。    ES MySQL    index dababase   type table   document row   field column   在Elasticsear">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2020-03-21T04:29:00.642Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="SpringBoot集成ElasticSearch注意事项">
+<meta name="twitter:description" content="1. 版本怎么选择基础知识 Elasticsearch使用Java开发并使用Lucene作为其核心来实现所有索引和搜索的功能，但是它的目的是通过简单的RESTful API来隐藏Lucene的复杂性，从而让全文搜索变得简单。    ES MySQL    index dababase   type table   document row   field column   在Elasticsear">
+
+
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=1.1">
+<link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+
+
+
+
+
+<script type="text/javascript">
+  var themeConfig = {
+    fancybox: {
+      enable: false
+    },
+  };
+</script>
+
+
+
+
+  
+
+
+
+    <title> SpringBoot集成ElasticSearch注意事项 - Illusory </title>
+  </head>
+
+  <body>
+    <div id="page">
+      <header id="masthead"><div class="site-header-inner">
+    <h1 class="site-title">
+        <a href="/." class="logo">Illusory</a>
+    </h1>
+
+    <nav id="nav-top">
+        
+            <ul id="menu-top" class="nav-top-items">
+                
+                    <li class="menu-item">
+                        <a href="/archives">
+                            
+                            
+                                Archives
+                            
+                        </a>
+                    </li>
+                
+                    <li class="menu-item">
+                        <a href="/about">
+                            
+                            
+                                About
+                            
+                        </a>
+                    </li>
+                
+            </ul>
+        
+  </nav>
+</div>
+
+      </header>
+      <div id="content">
+        
+    <div id="primary">
+        
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          SpringBoot集成ElasticSearch注意事项
+        
+      </h1>
+
+      <time class="post-time">
+          Mar 21 2020
+      </time>
+    </header>
+
+
+
+    
+            <div class="post-content">
+            <h4 id="1-版本怎么选择"><a href="#1-版本怎么选择" class="headerlink" title="1. 版本怎么选择"></a>1. 版本怎么选择</h4><p><strong>基础知识</strong></p>
+<p>Elasticsearch使用Java开发并使用Lucene作为其核心来实现所有索引和搜索的功能，但是它的目的是通过简单的<code>RESTful API</code>来隐藏Lucene的复杂性，从而让全文搜索变得简单。</p>
+<table>
+<thead>
+<tr>
+<th>ES</th>
+<th>MySQL</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>index</td>
+<td>dababase</td>
+</tr>
+<tr>
+<td>type</td>
+<td>table</td>
+</tr>
+<tr>
+<td>document</td>
+<td>row</td>
+</tr>
+<tr>
+<td>field</td>
+<td>column</td>
+</tr>
+</tbody></table>
+<p>在Elasticsearch6.0.0或者或者更新版本中创建的索引只会包含一个映射类型（mappingtype）。在5.x中创建的具有多个映射类型的索引在Elasticsearch6.x中依然会正常工作。在Elasticsearch7.0.0中，映射类型type将会被完全移除。</p>
+<p>本次集成我们使用的版本</p>
+<ul>
+<li><p>ElasticSearch 7.0.1</p>
+</li>
+<li><p>ElasticSearch 7.4.0</p>
+</li>
+<li><p>SpringBoot  2.2.2</p>
+</li>
+<li><p>JDK 1.8</p>
+</li>
+</ul>
+<h4 id="2-客户端如何选择"><a href="#2-客户端如何选择" class="headerlink" title="2.客户端如何选择"></a>2.客户端如何选择</h4><p>Elasticsearch连接方式有两种；分别为<strong>TCP协议</strong>与<strong>HTTP协议</strong>，基于TCP协议的spring-data-elasticsearch版本对应起来比较烦，API不是很好用。因此不是首选。</p>
+<p>另外，官方推荐使用<strong>RestHighLevelClient</strong>，通过HTTP协议与Elasticsearch集群进行通信，REST API风格在编码上很是习惯。</p>
+<p>TransportClient，socket连接，用官方提供的TransPort客户端，底层是netty。ES的发展规划中在7.0版本开始将废弃 TransportClient，8.0版本中将完全移除 TransportClient，取而代之的是High Level REST Client。</p>
+<p>综上所述，客户端选择<strong>RestHighLevelClient</strong>是不二之选。</p>
+<h4 id="3-如何集成"><a href="#3-如何集成" class="headerlink" title="3.如何集成"></a>3.如何集成</h4><p>pom文件</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">&lt;!-- elasticsearch --&gt;</span><br><span class="line">&lt;dependency&gt;</span><br><span class="line">    &lt;groupId&gt;org.elasticsearch.client&lt;/groupId&gt;</span><br><span class="line">    &lt;artifactId&gt;elasticsearch-rest-high-level-client&lt;/artifactId&gt;</span><br><span class="line">    &lt;version&gt;7.4.0&lt;/version&gt;</span><br><span class="line">    &lt;exclusions&gt;</span><br><span class="line">        &lt;exclusion&gt;</span><br><span class="line">            &lt;groupId&gt;org.elasticsearch&lt;/groupId&gt;</span><br><span class="line">            &lt;artifactId&gt;elasticsearch&lt;/artifactId&gt;</span><br><span class="line">        &lt;/exclusion&gt;</span><br><span class="line">        &lt;exclusion&gt;</span><br><span class="line">            &lt;groupId&gt;org.elasticsearch.client&lt;/groupId&gt;</span><br><span class="line">            &lt;artifactId&gt;elasticsearch-rest-client&lt;/artifactId&gt;</span><br><span class="line">        &lt;/exclusion&gt;</span><br><span class="line">    &lt;/exclusions&gt;</span><br><span class="line">&lt;/dependency&gt;</span><br><span class="line">&lt;dependency&gt;</span><br><span class="line">    &lt;groupId&gt;org.elasticsearch.client&lt;/groupId&gt;</span><br><span class="line">    &lt;artifactId&gt;elasticsearch-rest-client&lt;/artifactId&gt;</span><br><span class="line">    &lt;version&gt;7.4.0&lt;/version&gt;</span><br><span class="line">&lt;/dependency&gt;</span><br><span class="line">&lt;dependency&gt;</span><br><span class="line">    &lt;groupId&gt;org.elasticsearch&lt;/groupId&gt;</span><br><span class="line">    &lt;artifactId&gt;elasticsearch&lt;/artifactId&gt;</span><br><span class="line">    &lt;version&gt;7.4.0&lt;/version&gt;</span><br><span class="line">&lt;/dependency&gt;</span><br></pre></td></tr></table></figure>
+
+<p>ElasticsearchRestHighLevelClient.java</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ElasticsearchRestHighLevelClient</span> </span>&#123;</span><br><span class="line">	<span class="comment">//ES服务器IP</span></span><br><span class="line">    <span class="meta">@Value</span>(<span class="string">"$&#123;elasticsearch.host&#125;"</span>)</span><br><span class="line">    <span class="keyword">public</span> String host;</span><br><span class="line">    <span class="comment">//ES服务器端口</span></span><br><span class="line">    <span class="meta">@Value</span>(<span class="string">"$&#123;elasticsearch.port&#125;"</span>)</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">int</span> port;</span><br><span class="line">    <span class="comment">//ES服务器链接协议</span></span><br><span class="line">    <span class="meta">@Value</span>(<span class="string">"$&#123;elasticsearch.scheme&#125;"</span>)</span><br><span class="line">    <span class="keyword">public</span> String scheme;</span><br><span class="line">    <span class="comment">//ES认证用户名</span></span><br><span class="line">    <span class="meta">@Value</span>(<span class="string">"$&#123;elasticsearch.username&#125;"</span>)</span><br><span class="line">    <span class="keyword">private</span> String username;</span><br><span class="line">    <span class="comment">//ES认证密码</span></span><br><span class="line">    <span class="meta">@Value</span>(<span class="string">"$&#123;elasticsearch.password&#125;"</span>)</span><br><span class="line">    <span class="keyword">private</span> String password;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> RestHighLevelClient <span class="title">restHighLevelClient</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="keyword">final</span> CredentialsProvider credentialsProvider = <span class="keyword">new</span> BasicCredentialsProvider();</span><br><span class="line">        credentialsProvider.setCredentials(AuthScope.ANY, <span class="keyword">new</span> UsernamePasswordCredentials(username, password));</span><br><span class="line">        RestHighLevelClient client = <span class="keyword">new</span> RestHighLevelClient(RestClient.builder(<span class="keyword">new</span> HttpHost(host, port, scheme)).setHttpClientConfigCallback(<span class="keyword">new</span> RestClientBuilder.HttpClientConfigCallback() &#123;</span><br><span class="line">            <span class="function"><span class="keyword">public</span> HttpAsyncClientBuilder <span class="title">customizeHttpClient</span><span class="params">(HttpAsyncClientBuilder httpClientBuilder)</span> </span>&#123;</span><br><span class="line">                httpClientBuilder.disableAuthCaching();</span><br><span class="line">                <span class="keyword">return</span> httpClientBuilder.setDefaultCredentialsProvider(credentialsProvider);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;));</span><br><span class="line">        <span class="keyword">return</span> client;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+            </div>
+          
+
+    
+      <footer class="post-footer">
+		
+		<div class="post-tags">
+		  
+			<a href="/tags/ElasticSearch/">ElasticSearch</a>
+		  
+		</div>
+		
+
+        
+        
+  <nav class="post-nav">
+    
+    
+      <a class="next" href="/2020/03/14/Apollo为什么加载不到公共配置文件/">
+        <span class="next-text nav-default">Apollo为什么加载不到公共配置文件</span>
+        <span class="prev-text nav-mobile">Next</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    
+  </nav>
+
+        
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+      </footer>
+    
+  </article>
+
+    </div>
+
+      </div>
+
+      <footer id="colophon"><span class="copyright-year">
+    
+        &copy;
+    
+        2014 -
+    
+    2020
+    <span class="footer-author">yaoper.</span>
+    <span class="power-by">
+        Powered by <a class="hexo-link" href="https://hexo.io/">Hexo</a> and <a class="theme-link" href="https://github.com/frostfan/hexo-theme-polarbear">Polar Bear</a>
+    </span>
+</span>
+
+      </footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div>
+    
+
+
+    
+
+
+
+
+  
+    <script type="text/javascript" src="/lib/jquery/jquery-3.1.1.min.js"></script>
+  
+
+  
+
+    <script type="text/javascript" src="/js/src/theme.js?v=1.1"></script>
+<script type="text/javascript" src="/js/src/bootstrap.js?v=1.1"></script>
+
+  </body>
+</html>
