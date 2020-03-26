@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang>
+  <head><meta name="generator" content="Hexo 3.9.0">
+    
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1,minimum-scale=1,maximum-scale=1">
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+  <meta name="description" content="高性能MySQL读书笔记第二章">
+
+
+
+
+  <meta name="keywords" content="MySQL,">
+
+
+
+
+
+  <link rel="alternate" href="/default" title="Illusory">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=1.1">
+
+
+
+<link rel="canonical" href="http://yaoper.github.io/2020/03/26/高性能MySQL读书笔记（第二章）/">
+
+
+<meta name="description" content="2. MySQL基准测试基准测试是MySQL从业人员必须要掌握的一项基本技能，简单的说，基础测试是针对系统设计的一种压力测试。sysbench是一款非常优秀的MySQL基准测试工具。 2.1 为什么需要基准测试基准测试是唯一方便有效的、可以学习系统在给定的工作负载下会发生什么的方法。基准测试可以观察系统在不同压力下的行为，评估系统的容量掌握哪些是重要的变化，或者观察系统如何处理不同的数据。 2.2">
+<meta name="keywords" content="MySQL">
+<meta property="og:type" content="article">
+<meta property="og:title" content="高性能MySQL读书笔记第二章">
+<meta property="og:url" content="http://yaoper.github.io/2020/03/26/高性能MySQL读书笔记（第二章）/index.html">
+<meta property="og:site_name" content="Illusory">
+<meta property="og:description" content="2. MySQL基准测试基准测试是MySQL从业人员必须要掌握的一项基本技能，简单的说，基础测试是针对系统设计的一种压力测试。sysbench是一款非常优秀的MySQL基准测试工具。 2.1 为什么需要基准测试基准测试是唯一方便有效的、可以学习系统在给定的工作负载下会发生什么的方法。基准测试可以观察系统在不同压力下的行为，评估系统的容量掌握哪些是重要的变化，或者观察系统如何处理不同的数据。 2.2">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2020-03-26T04:05:34.810Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="高性能MySQL读书笔记第二章">
+<meta name="twitter:description" content="2. MySQL基准测试基准测试是MySQL从业人员必须要掌握的一项基本技能，简单的说，基础测试是针对系统设计的一种压力测试。sysbench是一款非常优秀的MySQL基准测试工具。 2.1 为什么需要基准测试基准测试是唯一方便有效的、可以学习系统在给定的工作负载下会发生什么的方法。基准测试可以观察系统在不同压力下的行为，评估系统的容量掌握哪些是重要的变化，或者观察系统如何处理不同的数据。 2.2">
+
+
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=1.1">
+<link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+
+
+
+
+
+<script type="text/javascript">
+  var themeConfig = {
+    fancybox: {
+      enable: false
+    },
+  };
+</script>
+
+
+
+
+  
+
+
+
+    <title> 高性能MySQL读书笔记第二章 - Illusory </title>
+  </head>
+
+  <body>
+    <div id="page">
+      <header id="masthead"><div class="site-header-inner">
+    <h1 class="site-title">
+        <a href="/." class="logo">Illusory</a>
+    </h1>
+
+    <nav id="nav-top">
+        
+            <ul id="menu-top" class="nav-top-items">
+                
+                    <li class="menu-item">
+                        <a href="/archives">
+                            
+                            
+                                Archives
+                            
+                        </a>
+                    </li>
+                
+                    <li class="menu-item">
+                        <a href="/about">
+                            
+                            
+                                About
+                            
+                        </a>
+                    </li>
+                
+            </ul>
+        
+  </nav>
+</div>
+
+      </header>
+      <div id="content">
+        
+    <div id="primary">
+        
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          高性能MySQL读书笔记第二章
+        
+      </h1>
+
+      <time class="post-time">
+          Mar 26 2020
+      </time>
+    </header>
+
+
+
+    
+            <div class="post-content">
+            <h3 id="2-MySQL基准测试"><a href="#2-MySQL基准测试" class="headerlink" title="2. MySQL基准测试"></a>2. MySQL基准测试</h3><p>基准测试是MySQL从业人员必须要掌握的一项基本技能，简单的说，基础测试是针对系统设计的一种压力测试。sysbench是一款非常优秀的MySQL基准测试工具。</p>
+<h4 id="2-1-为什么需要基准测试"><a href="#2-1-为什么需要基准测试" class="headerlink" title="2.1 为什么需要基准测试"></a>2.1 为什么需要基准测试</h4><p>基准测试是唯一方便有效的、可以学习系统在给定的工作负载下会发生什么的方法。基准测试可以观察系统在不同压力下的行为，评估系统的容量掌握哪些是重要的变化，或者观察系统如何处理不同的数据。</p>
+<h4 id="2-2-基准测试的策略"><a href="#2-2-基准测试的策略" class="headerlink" title="2.2 基准测试的策略"></a>2.2 基准测试的策略</h4><p>基准测试有两种主要的策略：一是针对真个系统的整体测试，另外是单独测试MySQL。这两种策略也被称为集成式（full-stack）以及单组件式（single-component）基准测试。</p>
+<h5 id="2-2-1-测试何总指标"><a href="#2-2-1-测试何总指标" class="headerlink" title="2.2.1 测试何总指标"></a>2.2.1 测试何总指标</h5><p>在开始执行甚至是在设置基础测试之前，需要先明确测试的目标。常见的测试指标如下：</p>
+<ul>
+<li>吞吐量</li>
+<li>响应时间或者延迟</li>
+<li>并发性</li>
+<li>可扩展性</li>
+</ul>
+<h4 id="2-3-基准测试方法"><a href="#2-3-基准测试方法" class="headerlink" title="2.3 基准测试方法"></a>2.3 基准测试方法</h4><p>常见的错误：</p>
+<p>1.使用真实数据的子集而不是全集。</p>
+<p>2.使用错误的数据分布。</p>
+<p>3.使用不真实的分布参数。</p>
+<p>4.在多用户场景中，只做单用户测试。</p>
+<p>5.在单服务器上测试分布式应用。</p>
+<p>6.与真实用户行为不匹配。</p>
+<p>7.反复执行同一个查询。</p>
+<p>8.没有检查错误。</p>
+<p>9.忽略了系统预热的过程。</p>
+<p>10.使用默认的服务器配置。</p>
+<p>11.测试时间太短。</p>
+<h5 id="2-3-1-设计和规划基准测试"><a href="#2-3-1-设计和规划基准测试" class="headerlink" title="2.3.1 设计和规划基准测试"></a>2.3.1 设计和规划基准测试</h5><p>规划基准测试的第一步是提出问题并明确目标，然后决定是采用标准的基准测试还是设计专用的测试。选择合适的测试方案，或者设计专用的基准测试方案。</p>
+<h5 id="2-3-2-基准测试应该运行多长时间"><a href="#2-3-2-基准测试应该运行多长时间" class="headerlink" title="2.3.2 基准测试应该运行多长时间"></a>2.3.2 基准测试应该运行多长时间</h5><p>基准测试应该运行足够长的时间，这一点很重要。如果需要测试系统在稳定状态时的性能，那么就需要在稳定的状态下测试并观察系统状态。</p>
+<h5 id="2-3-3-获取系统性能和状态"><a href="#2-3-3-获取系统性能和状态" class="headerlink" title="2.3.3 获取系统性能和状态"></a>2.3.3 获取系统性能和状态</h5><p>在执行基准测试时，需要竟可能多的收集被测试系统的信息，诸如CPU使用率、磁盘IO、网络流量统计、SHOW_GLOBAL_STATUS计数器等。</p>
+<h5 id="2-3-4-获取准确的测试结果"><a href="#2-3-4-获取准确的测试结果" class="headerlink" title="2.3.4 获取准确的测试结果"></a>2.3.4 获取准确的测试结果</h5><p>最好的办法是回答一些关于基准测试的基本问题，接着确认测试结果是否可重复。每次重复测试之前要确保系统的状态是一致的。最后，如果测试中出现异常结果，不要轻易当做坏数据点儿丢弃，应该认真研判并找到真正的原因。</p>
+<h5 id="2-3-5-运行基准测试并分析结果"><a href="#2-3-5-运行基准测试并分析结果" class="headerlink" title="2.3.5 运行基准测试并分析结果"></a>2.3.5 运行基准测试并分析结果</h5><p>自动化基准测试是推荐的办法，这样做可以获得更精确的测试结果。尽可能地使所有测试过程都自动化，包括装载数据、系统预热、执行测试、记录结果等。</p>
+<p>基准测试通常需要运行多次，获得测试结果后，还需要对结果进行分析。</p>
+<h5 id="2-3-6-绘图的重要性"><a href="#2-3-6-绘图的重要性" class="headerlink" title="2.3.6 绘图的重要性"></a>2.3.6 绘图的重要性</h5><p>简单有效的图形就是将性能指标按照时间顺序绘制，通过图像可以立刻发现一些问题，而这些问题再原始数据中却很难被注意到。</p>
+<p>﻿#### 2.4 基准测试工具</p>
+<h5 id="2-4-1-集成式测试工具"><a href="#2-4-1-集成式测试工具" class="headerlink" title="2.4.1 集成式测试工具"></a>2.4.1 集成式测试工具</h5><ul>
+<li>ab Apache HTTP服务器基准测试工具</li>
+<li>http_load</li>
+<li>JMeter  用Java编写的一个性能测试软件，被设计用来测试Web应用，比上面两个复杂的多</li>
+</ul>
+<h5 id="2-4-2-单组件式测试工具"><a href="#2-4-2-单组件式测试工具" class="headerlink" title="2.4.2 单组件式测试工具"></a>2.4.2 单组件式测试工具</h5><ul>
+<li>mysqlslap 模拟测试服务器复杂并输出计时信息，包含在MySQL5.1的发行包中</li>
+<li>MySQL Benchmark Suite MySQL发行包中的基准测试套件，单线程，主要用于测试服务器执行查询的速度</li>
+<li>Super Smack</li>
+<li>Database Test Suite</li>
+<li>Percona’s TPCC-MYSQL Tool</li>
+<li>sysbench 一款多线程系统压力测试工具</li>
+</ul>
+<h4 id="2-5-基准测试案列"><a href="#2-5-基准测试案列" class="headerlink" title="2.5 基准测试案列"></a>2.5 基准测试案列</h4><h5 id="2-5-1-http-load"><a href="#2-5-1-http-load" class="headerlink" title="2.5.1 http_load"></a>2.5.1 http_load</h5><p>首先创建一个urls.txt文件，输入如下的URL：</p>
+<blockquote>
+<p><a href="http://www.uupaotui.com" target="_blank" rel="noopener">http://www.uupaotui.com</a></p>
+<p><a href="http://www.google.com" target="_blank" rel="noopener">http://www.google.com</a></p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http_load -parallel <span class="number">1</span> -seconds <span class="number">10</span> urls.txt</span><br></pre></td></tr></table></figure>
+
+<h5 id="2-5-2-MySQL基准测试套件"><a href="#2-5-2-MySQL基准测试套件" class="headerlink" title="2.5.2 MySQL基准测试套件"></a>2.5.2 MySQL基准测试套件</h5><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cd /user/share/mysql/sql-bench</span><br><span class="line">./run-all-tests --server=mysql --user=root --log --fast</span><br></pre></td></tr></table></figure>
+
+<h5 id="2-5-3-sysbench"><a href="#2-5-3-sysbench" class="headerlink" title="2.5.3 sysbench"></a>2.5.3 sysbench</h5><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sysbench --test=cpu --cpu-max-prime=<span class="number">20000</span> run</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sysbench --test=fileio --file-totla-size=<span class="number">150</span>G --file-test-mode=rndrw/ --init-rng=on --max-time=<span class="number">300</span> --max-requests=<span class="number">0</span> run</span><br></pre></td></tr></table></figure>
+
+<p>sysbench的其他特性：内存、线程、互斥锁、顺序写</p>
+<h4 id="2-6-总结"><a href="#2-6-总结" class="headerlink" title="2.6 总结"></a>2.6 总结</h4><p>MySQL使用者都应该了解一些基准测试的知识，基准测试不仅仅是用来解决业务问题的一种实践行动，也是一种很好的学习方法。建议至少需要掌握sysbench，可以先学习如何使用olpt和fileio测试。</p>
+
+            </div>
+          
+
+    
+      <footer class="post-footer">
+		
+		<div class="post-tags">
+		  
+			<a href="/tags/MySQL/">MySQL</a>
+		  
+		</div>
+		
+
+        
+        
+  <nav class="post-nav">
+    
+      <a class="prev" href="/2020/03/26/高性能MySQL读书笔记（第五章）/">
+        <i class="iconfont icon-left"></i>
+        <span class="prev-text nav-default">高性能MySQL读书笔记第五章</span>
+        <span class="prev-text nav-mobile">Prev</span>
+      </a>
+    
+    
+      <a class="next" href="/2020/03/25/优秀的个人博客汇总/">
+        <span class="next-text nav-default">优秀的个人博客汇总</span>
+        <span class="prev-text nav-mobile">Next</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    
+  </nav>
+
+        
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+      </footer>
+    
+  </article>
+
+    </div>
+
+      </div>
+
+      <footer id="colophon"><span class="copyright-year">
+    
+        &copy;
+    
+        2014 -
+    
+    2020
+    <span class="footer-author">yaoper.</span>
+    <span class="power-by">
+        Powered by <a class="hexo-link" href="https://hexo.io/">Hexo</a> and <a class="theme-link" href="https://github.com/frostfan/hexo-theme-polarbear">Polar Bear</a>
+    </span>
+</span>
+
+      </footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div>
+    
+
+
+    
+
+
+
+
+  
+    <script type="text/javascript" src="/lib/jquery/jquery-3.1.1.min.js"></script>
+  
+
+  
+
+    <script type="text/javascript" src="/js/src/theme.js?v=1.1"></script>
+<script type="text/javascript" src="/js/src/bootstrap.js?v=1.1"></script>
+
+  </body>
+</html>

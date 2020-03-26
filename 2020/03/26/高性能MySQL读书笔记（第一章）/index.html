@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang>
+  <head><meta name="generator" content="Hexo 3.9.0">
+    
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1,minimum-scale=1,maximum-scale=1">
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+  <meta name="description" content="高性能MySQL读书笔记第一章">
+
+
+
+
+  <meta name="keywords" content="MySQL,">
+
+
+
+
+
+  <link rel="alternate" href="/default" title="Illusory">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=1.1">
+
+
+
+<link rel="canonical" href="http://yaoper.github.io/2020/03/26/高性能MySQL读书笔记（第一章）/">
+
+
+<meta name="description" content="1. MySQL架构与历史1.1 MySQL逻辑架构MySQL服务器逻辑架构图  最上层的服务负责连接处理、授权认证、安全等等。 第二层架构是MySQL比较核心的部分，包括查询解析，分析，优化，缓存以及所有的内置函数，所有跨存储引擎的功能都在这一层实现（存储过程，触发器，视图等）。 第三层包含了存储引擎。存储引擎负责MySQL中数据的存储和提取。不同的存储引擎有它的优势和劣势，服务器通过API与存">
+<meta name="keywords" content="MySQL">
+<meta property="og:type" content="article">
+<meta property="og:title" content="高性能MySQL读书笔记第一章">
+<meta property="og:url" content="http://yaoper.github.io/2020/03/26/高性能MySQL读书笔记（第一章）/index.html">
+<meta property="og:site_name" content="Illusory">
+<meta property="og:description" content="1. MySQL架构与历史1.1 MySQL逻辑架构MySQL服务器逻辑架构图  最上层的服务负责连接处理、授权认证、安全等等。 第二层架构是MySQL比较核心的部分，包括查询解析，分析，优化，缓存以及所有的内置函数，所有跨存储引擎的功能都在这一层实现（存储过程，触发器，视图等）。 第三层包含了存储引擎。存储引擎负责MySQL中数据的存储和提取。不同的存储引擎有它的优势和劣势，服务器通过API与存">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://www.imageoss.com/images/2020/02/26/20200226202955.png">
+<meta property="og:updated_time" content="2020-03-26T04:05:16.941Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="高性能MySQL读书笔记第一章">
+<meta name="twitter:description" content="1. MySQL架构与历史1.1 MySQL逻辑架构MySQL服务器逻辑架构图  最上层的服务负责连接处理、授权认证、安全等等。 第二层架构是MySQL比较核心的部分，包括查询解析，分析，优化，缓存以及所有的内置函数，所有跨存储引擎的功能都在这一层实现（存储过程，触发器，视图等）。 第三层包含了存储引擎。存储引擎负责MySQL中数据的存储和提取。不同的存储引擎有它的优势和劣势，服务器通过API与存">
+<meta name="twitter:image" content="https://www.imageoss.com/images/2020/02/26/20200226202955.png">
+
+
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=1.1">
+<link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+
+
+
+
+
+<script type="text/javascript">
+  var themeConfig = {
+    fancybox: {
+      enable: false
+    },
+  };
+</script>
+
+
+
+
+  
+
+
+
+    <title> 高性能MySQL读书笔记第一章 - Illusory </title>
+  </head>
+
+  <body>
+    <div id="page">
+      <header id="masthead"><div class="site-header-inner">
+    <h1 class="site-title">
+        <a href="/." class="logo">Illusory</a>
+    </h1>
+
+    <nav id="nav-top">
+        
+            <ul id="menu-top" class="nav-top-items">
+                
+                    <li class="menu-item">
+                        <a href="/archives">
+                            
+                            
+                                Archives
+                            
+                        </a>
+                    </li>
+                
+                    <li class="menu-item">
+                        <a href="/about">
+                            
+                            
+                                About
+                            
+                        </a>
+                    </li>
+                
+            </ul>
+        
+  </nav>
+</div>
+
+      </header>
+      <div id="content">
+        
+    <div id="primary">
+        
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          高性能MySQL读书笔记第一章
+        
+      </h1>
+
+      <time class="post-time">
+          Mar 26 2020
+      </time>
+    </header>
+
+
+
+    
+            <div class="post-content">
+            <h3 id="1-MySQL架构与历史"><a href="#1-MySQL架构与历史" class="headerlink" title="1. MySQL架构与历史"></a>1. MySQL架构与历史</h3><h4 id="1-1-MySQL逻辑架构"><a href="#1-1-MySQL逻辑架构" class="headerlink" title="1.1 MySQL逻辑架构"></a>1.1 MySQL逻辑架构</h4><p>MySQL服务器逻辑架构图</p>
+<p><img src="https://www.imageoss.com/images/2020/02/26/20200226202955.png" alt="20200226202955.png"></p>
+<p>最上层的服务负责连接处理、授权认证、安全等等。</p>
+<p>第二层架构是MySQL比较核心的部分，包括查询解析，分析，优化，缓存以及所有的内置函数，所有跨存储引擎的功能都在这一层实现（存储过程，触发器，视图等）。</p>
+<p>第三层包含了存储引擎。存储引擎负责MySQL中数据的存储和提取。不同的存储引擎有它的优势和劣势，服务器通过API与存储引擎进行通信。存储引擎API包含几十个底层函数，但是存储引擎不会去解析SQL（InnoDB是个例外，他会解析外键定义），不同的存储引擎之间不会相互通信。</p>
+<h5 id="1-1-1-连接管理与安全性"><a href="#1-1-1-连接管理与安全性" class="headerlink" title="1.1.1 连接管理与安全性"></a>1.1.1 连接管理与安全性</h5><p>每个客户端连接都会在服务器进程中拥有一个线程，这个连接的查询只会在这个单独的线程中执行，该线程只能轮流在某个CPU核心或者CPU中运行。服务器会负责缓存线程，因此不需要为每一个新建的连接创建或者销毁线程。</p>
+<h5 id="1-1-2-优化与执行"><a href="#1-1-2-优化与执行" class="headerlink" title="1.1.2 优化与执行"></a>1.1.2 优化与执行</h5><p>MySQL会解析查询，并创建内部数据结构（解析树），然后对其进行各种优化，包括重写查询、决定表的读取顺序，以及选择合适的索引等。用户可以使用关键字提示优化器，也可以使用explain来查看优化器的解析。</p>
+<h4 id="1-2-并发控制"><a href="#1-2-并发控制" class="headerlink" title="1.2 并发控制"></a>1.2 并发控制</h4><h5 id="1-2-1-读写锁"><a href="#1-2-1-读写锁" class="headerlink" title="1.2.1 读写锁"></a>1.2.1 读写锁</h5><p>MySQL是通过共享锁和排他锁，也叫读锁和写锁来解决并发控制问题的。</p>
+<h5 id="1-2-2-锁粒度"><a href="#1-2-2-锁粒度" class="headerlink" title="1.2.2 锁粒度"></a>1.2.2 锁粒度</h5><p>一种提高共享资源并发性的方式就是让锁定对象更具有选择性，尽量只锁定需要修改的部分数，而不是所有的资源。问题是加锁也需要消耗资源，所谓的锁策略，就是在锁的开销和数据的安全性之间寻求平衡，这种平衡当然也会影响到性能。</p>
+<p><strong>表锁</strong></p>
+<p>表锁是MySQL中最基本的锁策略，并且是开销最小的策略。它会<strong>锁定整张表</strong>，一个用户在对表进行写操作前，需要先获得写锁，它会<strong>阻塞其他用户对该表的所有读写操作</strong>。只有没有写锁时，其他读取的用户才能获得读锁，读锁之间是不相互阻塞的。</p>
+<p>另外，写锁比读锁有更高的优先级，因此一个写锁请求可能会被插入到读锁队列的前面。</p>
+<p><strong>行级锁</strong></p>
+<p>行级锁可以最大程度地支持并发处理，同时也带来了最大的锁开销。在InnoDB和XtraDB，以及其他一些存储引擎中实现了行级锁。行级锁只在存储引擎层实现，而MySQL服务器层没有实现。</p>
+<h4 id="1-3-事务"><a href="#1-3-事务" class="headerlink" title="1.3 事务"></a><strong>1.3 事务</strong></h4><p>ACID表示原子性、一致性、隔离性、和持久性。</p>
+<p>原子性（Atomicity），一个事务必须被视为一个不可分割的最小工作单元，整个事务中的所有操作要么全部提交成功，要么全部失败回滚。</p>
+<p>一致性（Consistency），数据库总是从一个一致性状态转换到另外一个一致性的状态。</p>
+<p>隔离性（Isolation），通常来说一个事务所做的修改在最终提交以前，对其他事务是不可见的。</p>
+<p>持久性（Durability）,一旦事务提交，则其所做的修改就会永久保存到数据库中，此时即使系统崩溃，修改的数据也不会丢失。</p>
+<h5 id="1-3-1-隔离级别"><a href="#1-3-1-隔离级别" class="headerlink" title="1.3.1 隔离级别"></a>1.3.1 隔离级别</h5><p>1.Read Uncommitted(未提交读)：事务中的修改即使没有提交，对其他事务也都是可见的，会产生脏读。</p>
+<p>2.Read Committed(提交读)：大多数数据库系统的默认隔离级别都是提交读（但MySQL不是）。</p>
+<p>3.Repeatable Read（可重复读）：Repeatable Read解决了脏读的问题，该级别保证了在同一个事务中多次读取同样记录的结果是一致的。但是可重复读隔离级别还是无法解决另外一个幻读问题。InnoDB通过多版本并发控制（MVVC）解决了幻读的问题。<strong>可重复读是MySQL模式的事务隔离级别。</strong></p>
+<p>4.Serializable(可串行化)：串行化是最高的隔离级别，它通过强制事务串行化执行，避免了前面说的幻读问题。简单来说，串行化会在读取的每一行数据上都加锁，所以会导致大量的超时和锁争用的问题。</p>
+<h5 id="1-3-2-死锁"><a href="#1-3-2-死锁" class="headerlink" title="1.3.2 死锁"></a>1.3.2 死锁</h5><p>死锁是指两个或者多个事务在同一资源上相互占用，并请求锁定对方占用的资源，从而导致恶性循环的现象。当多个事务试图以不同的顺序锁定资源时，就可能会产生死锁。多个事务同时锁定同一个资源时，也会产生死锁。</p>
+<p>为了解决死锁问题，数据库系统实现了各种死锁检查和死锁超时机制。越复杂的系统，越能检测到死锁的循环依赖，并立即放回一个 错误。还有一种解决方式，就是当查询的时间达到锁定等待超时的设定后放弃锁请求。InnoDB目前处理死锁的方法是将有最少行级排它锁的事务进行回滚。</p>
+<h5 id="1-3-3-事务日志"><a href="#1-3-3-事务日志" class="headerlink" title="1.3.3 事务日志"></a>1.3.3 事务日志</h5><p>事务日志可以帮助提高事务的效率，使用事务日志，存储引擎在修改表的数据时只需要修改其内存拷贝，再把该修改行为记录到持久化在硬盘上的事务日志中，而不是每次都将修改的数据本身持久化到磁盘。事务日志采用的是追加的方式，因此写日志的操作是磁盘上一小块区域内的顺序IO，而不像随机IO需要在磁盘的多个地方移动磁头，所以采用事务日志的方式相对来说要快的多。事务日志持久化以后，内存中被修改的数据在后台可以慢慢的刷回磁盘。目前大多数的存储引擎都是这样实现的，我们称之为预写式日志（Write-Ahead Logging），修改数据需要些两次磁盘。</p>
+<p>如果数据的修改已经记录到事务日志并持久化，但是数据本身还没写回磁盘，此时系统崩溃，存储引擎在重启的时候能够自动恢复这部分修改的数据。</p>
+<h5 id="1-3-4-MySQL中的事务"><a href="#1-3-4-MySQL中的事务" class="headerlink" title="1.3.4 MySQL中的事务"></a>1.3.4 MySQL中的事务</h5><p>MySQL提供两种事务型的存储引擎：InnoDB和NDB Cluster。</p>
+<p><strong>自动提交（Autocommit）</strong></p>
+<p>MySQL默认采用自动提交模式。也就是说，如果不是显式地开始一个事务，则每个查询都被当做一个事务执行提交操作。</p>
+<p>mysql&gt; show variables like ‘AUTOCOMMIT’; </p>
+<p>AUTOCOMMIT=0或者OFF时表示禁用，1或者ON时表示启用。AUTOCOMMIT对非事务型的表不会有任何影响。</p>
+<p>MySQL可以通过执行命令来设置隔离级别，新的隔离级别会在下一个事务开始的时候生效。</p>
+<p><strong>在事务中混合使用存储引擎</strong></p>
+<p>MySQL服务器层不管理事务，事务是由下层的存储引擎实现的。所以在同一个事务中，使用多种存储引擎是不可靠的。</p>
+<p>如果在事务中混合使用了事务型和非事务型的表（InnoDB和MyISAM表），在正常提交的情况下不会有什么问题，但是如果要回滚该事务，非事务型的表上的变更就无法撤销，这会导致数据库处于不一致的状态，这种情况很看修复，事务最终的结果将无法确定。所以为每张表选择合适的存储引擎非常的重要。</p>
+<p><strong>隐式和显式锁定</strong></p>
+<p>InnoDB采用的是两阶段锁定协议。在事务执行的过程中，随时够可以执行锁定，锁只有在执行Commit或者Rollback的时候才会释放，并且所有的锁是在同一时刻被释放。前面描述的锁定都是隐式锁定，InnoDB会根据隔离级别在需要的时候自动加锁。</p>
+<h4 id="1-4-多版本并发控制MVCC"><a href="#1-4-多版本并发控制MVCC" class="headerlink" title="1.4 多版本并发控制MVCC"></a>1.4 多版本并发控制MVCC</h4><p>MySQL的大多数事务存储引擎实现的都不是简单的行级锁，基于提升并发性能的考虑，它们一般都同时实现了多版本并发控制（MVCC）。</p>
+<p>可以任务MVCC是行级锁的一个变种，他是在很多情况下都避免了加锁的操作，因此开销更低，实现了非阻塞的读操作，写操作也只锁定必要的行。</p>
+<p>MVCC的实现是通过保存数据在某个时间点的快照来实现的，也就是说，不管需要执行多长时间，每个事务看到的数据都是一致的。根据存储引擎额差异MVCC的实现也是不同的，典型的又乐观并发控制和悲观并发控制。</p>
+<p>InnoDB MVCC是通过在每行记录后面保存两个隐藏的列来实现的。一个保存了行的创建时间，一个保存了行的过期时间。每开始一个事务，系统版本号会自动递增，事务开始时刻的系统版本号会作为事务的版本号，用来和查询到的每行记录的版本号进行比较。</p>
+<p>MVCC只在Repeatable Read和Read Committed两个隔离级别下工作，其他的两个隔离级别与MVCC不兼容。</p>
+<h4 id="1-5-MySQL的存储引擎"><a href="#1-5-MySQL的存储引擎" class="headerlink" title="1.5 MySQL的存储引擎"></a>1.5 MySQL的存储引擎</h4><p>在文件系统中，MySQL将每个数据库（也称之为schema）保存为数据目录下的一个子目录。创建表时，MySQL会在数据库子目录下创建一个和表同名的.frm文件保存表的定义。因为MySQL使用文件系统的目录和文件来保存数据库和表的定义，大小写敏感性和具体的平台密切相关。</p>
+<p>在Windows中，大小写是不敏感的；而在Unix中则是敏感的。</p>
+<h5 id="1-5-1-InnoDB存储引擎"><a href="#1-5-1-InnoDB存储引擎" class="headerlink" title="1.5.1 InnoDB存储引擎"></a>1.5.1 InnoDB存储引擎</h5><p>InnoDB是MySQL的默认事务型引擎，也是最重要、使用最广泛的存储引擎。它被设计用来处理大量的短期事务，短期事务大部分情况是正常提交的，很少会被回滚。</p>
+<p><strong>InnoDB的历史</strong></p>
+<p>2008年  InnoDB plugin 适用于MySQL 5.1，其拥有者是InnoDB而不是MySQL。Oracle收购Sun以后发布MySQL5.5才彻底使用InnoDB plugin替换旧版本的InnoDB。</p>
+<p><strong>InnoDB概览</strong></p>
+<p>InnoDB的数据存储在表空间中，表空间是由InnoDB管理的一个黑盒子，又一系列的数据文件组成。InnoDB用MVCC来支持高并发，并实现了四个标准的隔离级别，其默认级别是可重复读。</p>
+<p>InnoDB表是基于聚簇索引建立的，InnoDB的索引结构和MySQL的其他存储引擎有很大的不同，聚簇索引对主键查询有很高的性能。它的二级索引必须包含主键列，所以如果主键列很大的恶化，其他的所有索引都会很大。因此，若表上的索引较多的话，主键应当尽可能的小。</p>
+<h5 id="1-5-2MyISAM存储引擎"><a href="#1-5-2MyISAM存储引擎" class="headerlink" title="1.5.2MyISAM存储引擎"></a>1.5.2MyISAM存储引擎</h5><p>在MySQL5.1及其之前的版本，MyISAM是默认的存储引擎。MyISAM提供了大量的特性，包括全文检索，压缩，GIS函数等，但是MyISAM不支持事务和行级锁，而且有一个缺陷就是崩溃后无法安全恢复。</p>
+<p><strong>存储</strong></p>
+<p>MyISAM会将表存在在两个文件中：数据文件和索引文件，分别是.MYD和.MYI为扩展名。MyISAM表可以包含动态或者静态行。MyISAM表可以存储对的行记录数，一般受限于可用的磁盘空间或者操作系统中单个文件的最大尺寸。</p>
+<p><strong>特性</strong></p>
+<p>加锁与并发、修复</p>
+<p><strong>MyISAM压缩表</strong></p>
+<p>如果表在创建并导入数据以后不会再进行修改操作，那么这样的表或者适合采用MyISAM压缩表。压缩表是不能进行修改的，压缩表可以极大的减少磁盘空间占用，因此也可以减少磁盘IO，从而提升查询性能。压缩表也支持索引，但是索引也是只读的。</p>
+<p><strong>MyISAM性能</strong></p>
+<p>MyISAM引擎设计简单，数据以紧密格式存储，所以在某些场景下的性能很好。但是MyISAM最典型的性能问题还是表锁问题。如果你发现所有的查询都长期处于Locked状态，那毫无疑问就是表锁导致的。</p>
+<h5 id="1-5-3-MySQL内建的其他存储引擎"><a href="#1-5-3-MySQL内建的其他存储引擎" class="headerlink" title="1.5.3 MySQL内建的其他存储引擎"></a>1.5.3 MySQL内建的其他存储引擎</h5><p>Archive，Blackhole，CSV，Federated，Memory，Merge，NDB</p>
+<h5 id="1-5-4-第三方存储引擎"><a href="#1-5-4-第三方存储引擎" class="headerlink" title="1.5.4 第三方存储引擎"></a>1.5.4 第三方存储引擎</h5><p>OLTP引擎：XtraDB、TokuDB、PBXT、RethinkDB</p>
+<p>面向列的存储引擎：Infobright、InfiniDB</p>
+<p>社区存储引擎：Aria、Groonga、OQGraph、Q4M</p>
+<h5 id="1-5-5-选择合适的引擎"><a href="#1-5-5-选择合适的引擎" class="headerlink" title="1.5.5 选择合适的引擎"></a>1.5.5 选择合适的引擎</h5><p>除非需要用到某些InnoDB不具备的特性，并且美哦与其他办法可以替代，否则都应该优先选择InnoDB引擎。</p>
+<p>除非万不得已，否则建议不要混合使用多种存储引擎，否者可能带来一系列的复杂问题，以及一些潜在的bug和边界问题。</p>
+<p>如果应用需要不同的存储引擎，请考虑以下因素：</p>
+<ul>
+<li>事务 需要事务优先选择InnoDB，不需要事务推荐使用MyISAM</li>
+<li>备份 可以停机备份可以忽略这个问题，在线热备份推荐选择InnoDB</li>
+<li>崩溃恢复 MyISAM崩溃后发生损坏的概率比InnoDB高很多，而且恢复速度慢。</li>
+<li>特有的特性</li>
+</ul>
+<p><strong>日志型应用</strong></p>
+<p>对插入速度有很高要求的应用，MyISAM或者Archive存储引擎对这类应用比较合适，因为他们开销低，插入快。</p>
+<p><strong>只读或者大部分情况下只读的表</strong></p>
+<p>这种应用场景是典型的读多写少的业务，如果不介意MyISAM的崩溃恢复问题，可以选用MyISAM引擎。</p>
+<p><strong>订单处理</strong></p>
+<p>订单处理必须支持事务选项，毫无疑问选择InnoDB存储引擎。</p>
+<p><strong>电子公告牌和主题讨论论坛</strong></p>
+<p>几张表处理业务，读写竞争非常大，这就要考虑特殊的方式。</p>
+<p><strong>大户数量</strong></p>
+<p>一般InnoDB单机数据量在3~5TB之间，这个时候系统运行的还是不错的。超过10TB以上的级别，就要考虑数据仓库了。</p>
+<h5 id="1-5-6-转换表引擎"><a href="#1-5-6-转换表引擎" class="headerlink" title="1.5.6 转换表引擎"></a>1.5.6 转换表引擎</h5><p>有很多种办法把表从一种存储引擎转换成另外一种存储引擎，下面介绍三种主要的方法：</p>
+<ul>
+<li>alter table , 通用的方法，但是执行时间比较长。牵扯到复制新表，消耗系统IO能力，原来表会加上读锁。</li>
+<li>导出导入，能更好的控制转换过程，可以使用mysqldump工具导出文件，然后修改create语句的存储引擎。</li>
+<li>创建于查询，这种方法综合了以上两种方法的安全与高效。</li>
+</ul>
+<h4 id="1-6-MySQL时间线"><a href="#1-6-MySQL时间线" class="headerlink" title="1.6 MySQL时间线"></a>1.6 MySQL时间线</h4><blockquote>
+<p>版本3.23 2001年</p>
+<p>版本4.0 2003年</p>
+<p>版本4.1 2005年</p>
+<p>版本5.0 2006年</p>
+<p>版本5.1 2008年</p>
+<p>版本5.5 2010年</p>
+<p>版本5.6  2011年</p>
+<p>版本5.7 2013年</p>
+<p>版本8.0 2016年</p>
+</blockquote>
+<h4 id="1-7-MySQL的开发模式"><a href="#1-7-MySQL的开发模式" class="headerlink" title="1.7 MySQL的开发模式"></a>1.7 MySQL的开发模式</h4><p>定期里程碑版本里会包含下一个GA版本的全部新特性，实验室预览版包含一些需要评估的特性，不保证会在正式版中出现。</p>
+<p>遵循GPL开源协议，全部的源代码都会开放给社区。</p>
+<h4 id="1-8-总结"><a href="#1-8-总结" class="headerlink" title="1.8 总结"></a>1.8 总结</h4><p>MySQL拥有分层架构，上层是服务器层的服务和查询执行引擎，下层是存储引擎。MyISAM最初基于ISAM构建，随后陆续添加了更多的存储引擎和事务支持。Oracle收购了InnoDB又收购了MySQL，是的两者之间更快地协同发展，MySQL正在变得越来越可扩展有用。</p>
+
+            </div>
+          
+
+    
+      <footer class="post-footer">
+		
+		<div class="post-tags">
+		  
+			<a href="/tags/MySQL/">MySQL</a>
+		  
+		</div>
+		
+
+        
+        
+  <nav class="post-nav">
+    
+    
+      <a class="next" href="/2020/03/26/MySQL数据和Redis缓存一致性方案详解/">
+        <span class="next-text nav-default">MySQL数据和Redis缓存一致性方案详解</span>
+        <span class="prev-text nav-mobile">Next</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    
+  </nav>
+
+        
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+      </footer>
+    
+  </article>
+
+    </div>
+
+      </div>
+
+      <footer id="colophon"><span class="copyright-year">
+    
+        &copy;
+    
+        2014 -
+    
+    2020
+    <span class="footer-author">yaoper.</span>
+    <span class="power-by">
+        Powered by <a class="hexo-link" href="https://hexo.io/">Hexo</a> and <a class="theme-link" href="https://github.com/frostfan/hexo-theme-polarbear">Polar Bear</a>
+    </span>
+</span>
+
+      </footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div>
+    
+
+
+    
+
+
+
+
+  
+    <script type="text/javascript" src="/lib/jquery/jquery-3.1.1.min.js"></script>
+  
+
+  
+
+    <script type="text/javascript" src="/js/src/theme.js?v=1.1"></script>
+<script type="text/javascript" src="/js/src/bootstrap.js?v=1.1"></script>
+
+  </body>
+</html>
