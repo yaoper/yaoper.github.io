@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang>
+  <head><meta name="generator" content="Hexo 3.9.0">
+    
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1,minimum-scale=1,maximum-scale=1">
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+  <meta name="description" content="Redis性能问题分析">
+
+
+
+
+  <meta name="keywords" content="Redis,">
+
+
+
+
+
+  <link rel="alternate" href="/default" title="Illusory">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=1.1">
+
+
+
+<link rel="canonical" href="http://yaoper.github.io/2020/04/01/Redis性能问题分析/">
+
+
+<meta name="description" content="1. Redis性能的基本面1.1 Redis单线程运行Redis的单线程运行模式本身就是一大特性，除非进行源码级别的修改，这也是Redis性能的基本面 1.2 Redis持久化方案Redis使用OS提供的虚拟内存存储数据，这个操作系统一般就是指 Unix。Windows 上也能运行 Redis，但是需要特殊处理。如果你的操作系统使用交换空间，那么 Redis 的数据可能会被实际保存在硬盘上。 R">
+<meta name="keywords" content="Redis">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Redis性能问题分析">
+<meta property="og:url" content="http://yaoper.github.io/2020/04/01/Redis性能问题分析/index.html">
+<meta property="og:site_name" content="Illusory">
+<meta property="og:description" content="1. Redis性能的基本面1.1 Redis单线程运行Redis的单线程运行模式本身就是一大特性，除非进行源码级别的修改，这也是Redis性能的基本面 1.2 Redis持久化方案Redis使用OS提供的虚拟内存存储数据，这个操作系统一般就是指 Unix。Windows 上也能运行 Redis，但是需要特殊处理。如果你的操作系统使用交换空间，那么 Redis 的数据可能会被实际保存在硬盘上。 R">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2020-04-01T03:19:18.711Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Redis性能问题分析">
+<meta name="twitter:description" content="1. Redis性能的基本面1.1 Redis单线程运行Redis的单线程运行模式本身就是一大特性，除非进行源码级别的修改，这也是Redis性能的基本面 1.2 Redis持久化方案Redis使用OS提供的虚拟内存存储数据，这个操作系统一般就是指 Unix。Windows 上也能运行 Redis，但是需要特殊处理。如果你的操作系统使用交换空间，那么 Redis 的数据可能会被实际保存在硬盘上。 R">
+
+
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=1.1">
+<link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+
+
+
+
+
+<script type="text/javascript">
+  var themeConfig = {
+    fancybox: {
+      enable: false
+    },
+  };
+</script>
+
+
+
+
+  
+
+
+
+    <title> Redis性能问题分析 - Illusory </title>
+  </head>
+
+  <body>
+    <div id="page">
+      <header id="masthead"><div class="site-header-inner">
+    <h1 class="site-title">
+        <a href="/." class="logo">Illusory</a>
+    </h1>
+
+    <nav id="nav-top">
+        
+            <ul id="menu-top" class="nav-top-items">
+                
+                    <li class="menu-item">
+                        <a href="/archives">
+                            
+                            
+                                Archives
+                            
+                        </a>
+                    </li>
+                
+                    <li class="menu-item">
+                        <a href="/about">
+                            
+                            
+                                About
+                            
+                        </a>
+                    </li>
+                
+            </ul>
+        
+  </nav>
+</div>
+
+      </header>
+      <div id="content">
+        
+    <div id="primary">
+        
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          Redis性能问题分析
+        
+      </h1>
+
+      <time class="post-time">
+          Apr 01 2020
+      </time>
+    </header>
+
+
+
+    
+            <div class="post-content">
+            <h3 id="1-Redis性能的基本面"><a href="#1-Redis性能的基本面" class="headerlink" title="1. Redis性能的基本面"></a>1. Redis性能的基本面</h3><h4 id="1-1-Redis单线程运行"><a href="#1-1-Redis单线程运行" class="headerlink" title="1.1 Redis单线程运行"></a>1.1 Redis单线程运行</h4><p>Redis的单线程运行模式本身就是一大特性，除非进行源码级别的修改，这也是Redis性能的基本面</p>
+<h4 id="1-2-Redis持久化方案"><a href="#1-2-Redis持久化方案" class="headerlink" title="1.2 Redis持久化方案"></a>1.2 Redis持久化方案</h4><p>Redis使用OS提供的虚拟内存存储数据，这个操作系统一般就是指 Unix。Windows 上也能运行 Redis，但是需要特殊处理。如果你的操作系统使用交换空间，那么 Redis 的数据可能会被实际保存在硬盘上。</p>
+<p>Redis 支持持久化，可以把数据保存在硬盘上。很多时候，我们也确实有必要进行持久化来实现备份，数据恢复等需求。但持久化不会凭空发生，它也会占用一部分资源。</p>
+<h4 id="1-3-丰富的数据类型"><a href="#1-3-丰富的数据类型" class="headerlink" title="1.3 丰富的数据类型"></a>1.3 丰富的数据类型</h4><p>丰富的数据类型有利有弊，多种数据类型从使用的角度来说能便捷的支持更多的使用场景。但是各种数据类型底层的实现不一样，不用的数据类型对应不同的使用场景。如果使用不当的话，可能会带来性能上的损耗。</p>
+<h3 id="2-网络延时优化"><a href="#2-网络延时优化" class="headerlink" title="2. 网络延时优化"></a>2. 网络延时优化</h3><p>网络大概是Redis的性能瓶颈，所以如果是单机部署（应用和Redis服务部署在同一台机器）的话，可以使用UNIX进程间通信取代localhost调用。如果不是单机部署的话，还是需要使用TCP来通信。</p>
+<ol>
+<li>使用 unix 进程间通信，如果单机部署；</li>
+<li>使用 multi-key 指令合并多个指令，减少请求数，如果有可能的话；</li>
+<li>使用 transaction、script 合并 requests 以及 responses；</li>
+<li>使用 pipeline 合并 response；</li>
+</ol>
+<h3 id="3-警惕敏感操作"><a href="#3-警惕敏感操作" class="headerlink" title="3. 警惕敏感操作"></a>3. 警惕敏感操作</h3><p>在大数量量的情况下，有些操作会执行相当长的时间，比如<code>KEYS*，LRANGE list 0-1</code>，以及其他算法复杂度为 O(n) 的指令。因为 Redis 只用一个线程来做数据查询，如果这些指令耗时很长，就会阻塞 Redis，造成大量延时。</p>
+<p>Redis管理员可以配置<code>rename-command KEYS &#39;&#39;</code>来禁止在服务器上的这种敏感操作。</p>
+<p>可以利用 <code>SLOWLOG GET count</code> 来查看最近的 count 个执行时间很长的指令。至于多长算长，可以通过在 redis.conf 中设置 slowlog-log-slower-than 来定义。</p>
+<p>如果熟悉Redis的过期删除数据过的话，可以把过期时间设置一个随机波动，防止大量的Key集中过期带来的短时间类循环删除数据，影响主线程的性能。Redis对每次淘汰任务执行的最大时长也有一个限定，这样保证了每次主动淘汰不会过多阻塞应用请求。</p>
+<h3 id="4-使用正确的数据结构"><a href="#4-使用正确的数据结构" class="headerlink" title="4. 使用正确的数据结构"></a>4. 使用正确的数据结构</h3><p><code>ZADD</code> 的时间复杂度是 O(log(N))，这比其他数据类型增加一个新元素的操作更复杂，所以要小心使用。</p>
+<p>若 Hash 类型的值的 fields 数量有限，它很有可能采用 ziplist 这种结构做存储，而 ziplist 的查询效率可能没有同等字段数量的 hashtable 效率高，在必要时，可以调整 Redis 的存储结构。</p>
+<h3 id="5-OS以及硬件角度的考量"><a href="#5-OS以及硬件角度的考量" class="headerlink" title="5. OS以及硬件角度的考量"></a>5. OS以及硬件角度的考量</h3><p>主要参考官方文档给出的一些列子：</p>
+<ol>
+<li>CPU：Intel 多种 CPU 都比 AMD 皓龙系列好。</li>
+<li>虚拟化：实体机比虚拟机好，主要是因为部分虚拟机上，硬盘不是本地硬盘，监控软件导致 fork 指令的速度慢（持久化时会用到 fork），尤其是用 Xen 来做虚拟化时。</li>
+<li>内存管理：请禁止掉操作系统中的 transparent huge pages 功能。</li>
+<li>交换空间：当一些内存 page 被存储在交换空间文件上，而 Redis 又要请求那些数据，那么操作系统会阻塞 Redis 进程，然后把想要的 page，从交换空间中拿出来，放进内存。这其中涉及整个进程的阻塞，所以可能会造成延时问题，一个解决方法是禁止使用交换空间。</li>
+</ol>
+<h3 id="6-合理使用持久化"><a href="#6-合理使用持久化" class="headerlink" title="6. 合理使用持久化"></a>6. 合理使用持久化</h3><p>RDB持久化是fork子进程把数据持久化到硬盘，在fork子进程的过程中，主线程阻塞。所以要合理控制RDB的频率，不能太频繁。</p>
+<p>AOF持久化分为两个步骤①write命令到AOF文件②fsync把write到AOF文件的命令落盘。步骤一可能因为buff满了此时系统进程正在把buff中的数据同步到硬盘导致阻塞，步骤二牵扯到数据落盘，相对来说性能开销还是大的，更关键的是在fsync的时候，write可能会被阻塞。这个时候就需要根据机器的性能来确定fsync的执行策略。</p>
+<h3 id="7-数据分片读写分离"><a href="#7-数据分片读写分离" class="headerlink" title="7.  数据分片读写分离"></a>7.  数据分片读写分离</h3><p>在分布式的架构下，应该遵守的一些准则：</p>
+<ol>
+<li>把慢速的指令发到某些从库中执行</li>
+<li>把持久化功能放在一个很少使用的从库上</li>
+<li>把某些大 list 分片</li>
+</ol>
+<h3 id="8-总结"><a href="#8-总结" class="headerlink" title="8. 总结"></a>8. 总结</h3><p>以上是从Redis本身设计的基本面来剖析实际使用过程中肯能存在性能问题的一些点，在实际使用的过程中还是需要根据资源去权衡分析。</p>
+
+            </div>
+          
+
+    
+      <footer class="post-footer">
+		
+		<div class="post-tags">
+		  
+			<a href="/tags/Redis/">Redis</a>
+		  
+		</div>
+		
+
+        
+        
+  <nav class="post-nav">
+    
+      <a class="prev" href="/2020/04/01/高性能MySQL读书笔记/">
+        <i class="iconfont icon-left"></i>
+        <span class="prev-text nav-default">高性能MySQL读书笔记</span>
+        <span class="prev-text nav-mobile">Prev</span>
+      </a>
+    
+    
+      <a class="next" href="/2020/03/30/CNOV-2019带来的影响/">
+        <span class="next-text nav-default">CNOV-2019带来的影响</span>
+        <span class="prev-text nav-mobile">Next</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    
+  </nav>
+
+        
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+      </footer>
+    
+  </article>
+
+    </div>
+
+      </div>
+
+      <footer id="colophon"><span class="copyright-year">
+    
+        &copy;
+    
+        2014 -
+    
+    2020
+    <span class="footer-author">yaoper.</span>
+    <span class="power-by">
+        Powered by <a class="hexo-link" href="https://hexo.io/">Hexo</a> and <a class="theme-link" href="https://github.com/frostfan/hexo-theme-polarbear">Polar Bear</a>
+    </span>
+</span>
+
+      </footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div>
+    
+
+
+    
+
+
+
+
+  
+    <script type="text/javascript" src="/lib/jquery/jquery-3.1.1.min.js"></script>
+  
+
+  
+
+    <script type="text/javascript" src="/js/src/theme.js?v=1.1"></script>
+<script type="text/javascript" src="/js/src/bootstrap.js?v=1.1"></script>
+
+  </body>
+</html>

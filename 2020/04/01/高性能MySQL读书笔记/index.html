@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html lang>
+  <head><meta name="generator" content="Hexo 3.9.0">
+    
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1,minimum-scale=1,maximum-scale=1">
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+  <meta name="description" content="高性能MySQL读书笔记">
+
+
+
+
+  <meta name="keywords" content="MySQL,">
+
+
+
+
+
+  <link rel="alternate" href="/default" title="Illusory">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=1.1">
+
+
+
+<link rel="canonical" href="http://yaoper.github.io/2020/04/01/高性能MySQL读书笔记/">
+
+
+<meta name="description" content="1. MySQL架构与历史1.1 MySQL逻辑架构MySQL服务器逻辑架构图  最上层的服务负责连接处理、授权认证、安全等等。 第二层架构是MySQL比较核心的部分，包括查询解析，分析，优化，缓存以及所有的内置函数，所有跨存储引擎的功能都在这一层实现（存储过程，触发器，视图等）。 第三层包含了存储引擎。存储引擎负责MySQL中数据的存储和提取。不同的存储引擎有它的优势和劣势，服务器通过API与存">
+<meta name="keywords" content="MySQL">
+<meta property="og:type" content="article">
+<meta property="og:title" content="高性能MySQL读书笔记">
+<meta property="og:url" content="http://yaoper.github.io/2020/04/01/高性能MySQL读书笔记/index.html">
+<meta property="og:site_name" content="Illusory">
+<meta property="og:description" content="1. MySQL架构与历史1.1 MySQL逻辑架构MySQL服务器逻辑架构图  最上层的服务负责连接处理、授权认证、安全等等。 第二层架构是MySQL比较核心的部分，包括查询解析，分析，优化，缓存以及所有的内置函数，所有跨存储引擎的功能都在这一层实现（存储过程，触发器，视图等）。 第三层包含了存储引擎。存储引擎负责MySQL中数据的存储和提取。不同的存储引擎有它的优势和劣势，服务器通过API与存">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://www.imageoss.com/images/2020/02/26/20200226202955.png">
+<meta property="og:image" content="https://www.imageoss.com/images/2020/03/12/20200312220353.png">
+<meta property="og:image" content="https://www.imageoss.com/images/2020/03/12/20200312220809.png">
+<meta property="og:image" content="https://www.imageoss.com/images/2020/03/12/20200312221106.png">
+<meta property="og:updated_time" content="2020-04-01T03:31:32.819Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="高性能MySQL读书笔记">
+<meta name="twitter:description" content="1. MySQL架构与历史1.1 MySQL逻辑架构MySQL服务器逻辑架构图  最上层的服务负责连接处理、授权认证、安全等等。 第二层架构是MySQL比较核心的部分，包括查询解析，分析，优化，缓存以及所有的内置函数，所有跨存储引擎的功能都在这一层实现（存储过程，触发器，视图等）。 第三层包含了存储引擎。存储引擎负责MySQL中数据的存储和提取。不同的存储引擎有它的优势和劣势，服务器通过API与存">
+<meta name="twitter:image" content="https://www.imageoss.com/images/2020/02/26/20200226202955.png">
+
+
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=1.1">
+<link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+
+
+
+
+
+<script type="text/javascript">
+  var themeConfig = {
+    fancybox: {
+      enable: false
+    },
+  };
+</script>
+
+
+
+
+  
+
+
+
+    <title> 高性能MySQL读书笔记 - Illusory </title>
+  </head>
+
+  <body>
+    <div id="page">
+      <header id="masthead"><div class="site-header-inner">
+    <h1 class="site-title">
+        <a href="/." class="logo">Illusory</a>
+    </h1>
+
+    <nav id="nav-top">
+        
+            <ul id="menu-top" class="nav-top-items">
+                
+                    <li class="menu-item">
+                        <a href="/archives">
+                            
+                            
+                                Archives
+                            
+                        </a>
+                    </li>
+                
+                    <li class="menu-item">
+                        <a href="/about">
+                            
+                            
+                                About
+                            
+                        </a>
+                    </li>
+                
+            </ul>
+        
+  </nav>
+</div>
+
+      </header>
+      <div id="content">
+        
+    <div id="primary">
+        
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          高性能MySQL读书笔记
+        
+      </h1>
+
+      <time class="post-time">
+          Apr 01 2020
+      </time>
+    </header>
+
+
+
+    
+            <div class="post-content">
+            <h3 id="1-MySQL架构与历史"><a href="#1-MySQL架构与历史" class="headerlink" title="1. MySQL架构与历史"></a>1. MySQL架构与历史</h3><h4 id="1-1-MySQL逻辑架构"><a href="#1-1-MySQL逻辑架构" class="headerlink" title="1.1 MySQL逻辑架构"></a>1.1 MySQL逻辑架构</h4><p>MySQL服务器逻辑架构图</p>
+<p><img src="https://www.imageoss.com/images/2020/02/26/20200226202955.png" alt="20200226202955.png"></p>
+<p>最上层的服务负责连接处理、授权认证、安全等等。</p>
+<p>第二层架构是MySQL比较核心的部分，包括查询解析，分析，优化，缓存以及所有的内置函数，所有跨存储引擎的功能都在这一层实现（存储过程，触发器，视图等）。</p>
+<p>第三层包含了存储引擎。存储引擎负责MySQL中数据的存储和提取。不同的存储引擎有它的优势和劣势，服务器通过API与存储引擎进行通信。存储引擎API包含几十个底层函数，但是存储引擎不会去解析SQL（InnoDB是个例外，他会解析外键定义），不同的存储引擎之间不会相互通信。</p>
+<h5 id="1-1-1-连接管理与安全性"><a href="#1-1-1-连接管理与安全性" class="headerlink" title="1.1.1 连接管理与安全性"></a>1.1.1 连接管理与安全性</h5><p>每个客户端连接都会在服务器进程中拥有一个线程，这个连接的查询只会在这个单独的线程中执行，该线程只能轮流在某个CPU核心或者CPU中运行。服务器会负责缓存线程，因此不需要为每一个新建的连接创建或者销毁线程。</p>
+<h5 id="1-1-2-优化与执行"><a href="#1-1-2-优化与执行" class="headerlink" title="1.1.2 优化与执行"></a>1.1.2 优化与执行</h5><p>MySQL会解析查询，并创建内部数据结构（解析树），然后对其进行各种优化，包括重写查询、决定表的读取顺序，以及选择合适的索引等。用户可以使用关键字提示优化器，也可以使用explain来查看优化器的解析。</p>
+<h4 id="1-2-并发控制"><a href="#1-2-并发控制" class="headerlink" title="1.2 并发控制"></a>1.2 并发控制</h4><h5 id="1-2-1-读写锁"><a href="#1-2-1-读写锁" class="headerlink" title="1.2.1 读写锁"></a>1.2.1 读写锁</h5><p>MySQL是通过共享锁和排他锁，也叫读锁和写锁来解决并发控制问题的。</p>
+<h5 id="1-2-2-锁粒度"><a href="#1-2-2-锁粒度" class="headerlink" title="1.2.2 锁粒度"></a>1.2.2 锁粒度</h5><p>一种提高共享资源并发性的方式就是让锁定对象更具有选择性，尽量只锁定需要修改的部分数，而不是所有的资源。问题是加锁也需要消耗资源，所谓的锁策略，就是在锁的开销和数据的安全性之间寻求平衡，这种平衡当然也会影响到性能。</p>
+<p><strong>表锁</strong></p>
+<p>表锁是MySQL中最基本的锁策略，并且是开销最小的策略。它会<strong>锁定整张表</strong>，一个用户在对表进行写操作前，需要先获得写锁，它会<strong>阻塞其他用户对该表的所有读写操作</strong>。只有没有写锁时，其他读取的用户才能获得读锁，读锁之间是不相互阻塞的。</p>
+<p>另外，写锁比读锁有更高的优先级，因此一个写锁请求可能会被插入到读锁队列的前面。</p>
+<p><strong>行级锁</strong></p>
+<p>行级锁可以最大程度地支持并发处理，同时也带来了最大的锁开销。在InnoDB和XtraDB，以及其他一些存储引擎中实现了行级锁。行级锁只在存储引擎层实现，而MySQL服务器层没有实现。</p>
+<h4 id="1-3-事务"><a href="#1-3-事务" class="headerlink" title="1.3 事务"></a><strong>1.3 事务</strong></h4><p>ACID表示原子性、一致性、隔离性、和持久性。</p>
+<p>原子性（Atomicity），一个事务必须被视为一个不可分割的最小工作单元，整个事务中的所有操作要么全部提交成功，要么全部失败回滚。</p>
+<p>一致性（Consistency），数据库总是从一个一致性状态转换到另外一个一致性的状态。</p>
+<p>隔离性（Isolation），通常来说一个事务所做的修改在最终提交以前，对其他事务是不可见的。</p>
+<p>持久性（Durability）,一旦事务提交，则其所做的修改就会永久保存到数据库中，此时即使系统崩溃，修改的数据也不会丢失。</p>
+<h5 id="1-3-1-隔离级别"><a href="#1-3-1-隔离级别" class="headerlink" title="1.3.1 隔离级别"></a>1.3.1 隔离级别</h5><p>1.Read Uncommitted(未提交读)：事务中的修改即使没有提交，对其他事务也都是可见的，会产生脏读。</p>
+<p>2.Read Committed(提交读)：大多数数据库系统的默认隔离级别都是提交读（但MySQL不是）。</p>
+<p>3.Repeatable Read（可重复读）：Repeatable Read解决了脏读的问题，该级别保证了在同一个事务中多次读取同样记录的结果是一致的。但是可重复读隔离级别还是无法解决另外一个幻读问题。InnoDB通过多版本并发控制（MVVC）解决了幻读的问题。<strong>可重复读是MySQL模式的事务隔离级别。</strong></p>
+<p>4.Serializable(可串行化)：串行化是最高的隔离级别，它通过强制事务串行化执行，避免了前面说的幻读问题。简单来说，串行化会在读取的每一行数据上都加锁，所以会导致大量的超时和锁争用的问题。</p>
+<h5 id="1-3-2-死锁"><a href="#1-3-2-死锁" class="headerlink" title="1.3.2 死锁"></a>1.3.2 死锁</h5><p>死锁是指两个或者多个事务在同一资源上相互占用，并请求锁定对方占用的资源，从而导致恶性循环的现象。当多个事务试图以不同的顺序锁定资源时，就可能会产生死锁。多个事务同时锁定同一个资源时，也会产生死锁。</p>
+<p>为了解决死锁问题，数据库系统实现了各种死锁检查和死锁超时机制。越复杂的系统，越能检测到死锁的循环依赖，并立即放回一个 错误。还有一种解决方式，就是当查询的时间达到锁定等待超时的设定后放弃锁请求。InnoDB目前处理死锁的方法是将有最少行级排它锁的事务进行回滚。</p>
+<h5 id="1-3-3-事务日志"><a href="#1-3-3-事务日志" class="headerlink" title="1.3.3 事务日志"></a>1.3.3 事务日志</h5><p>事务日志可以帮助提高事务的效率，使用事务日志，存储引擎在修改表的数据时只需要修改其内存拷贝，再把该修改行为记录到持久化在硬盘上的事务日志中，而不是每次都将修改的数据本身持久化到磁盘。事务日志采用的是追加的方式，因此写日志的操作是磁盘上一小块区域内的顺序IO，而不像随机IO需要在磁盘的多个地方移动磁头，所以采用事务日志的方式相对来说要快的多。事务日志持久化以后，内存中被修改的数据在后台可以慢慢的刷回磁盘。目前大多数的存储引擎都是这样实现的，我们称之为预写式日志（Write-Ahead Logging），修改数据需要些两次磁盘。</p>
+<p>如果数据的修改已经记录到事务日志并持久化，但是数据本身还没写回磁盘，此时系统崩溃，存储引擎在重启的时候能够自动恢复这部分修改的数据。</p>
+<h5 id="1-3-4-MySQL中的事务"><a href="#1-3-4-MySQL中的事务" class="headerlink" title="1.3.4 MySQL中的事务"></a>1.3.4 MySQL中的事务</h5><p>MySQL提供两种事务型的存储引擎：InnoDB和NDB Cluster。</p>
+<p><strong>自动提交（Autocommit）</strong></p>
+<p>MySQL默认采用自动提交模式。也就是说，如果不是显式地开始一个事务，则每个查询都被当做一个事务执行提交操作。</p>
+<p>mysql&gt; show variables like ‘AUTOCOMMIT’; </p>
+<p>AUTOCOMMIT=0或者OFF时表示禁用，1或者ON时表示启用。AUTOCOMMIT对非事务型的表不会有任何影响。</p>
+<p>MySQL可以通过执行命令来设置隔离级别，新的隔离级别会在下一个事务开始的时候生效。</p>
+<p><strong>在事务中混合使用存储引擎</strong></p>
+<p>MySQL服务器层不管理事务，事务是由下层的存储引擎实现的。所以在同一个事务中，使用多种存储引擎是不可靠的。</p>
+<p>如果在事务中混合使用了事务型和非事务型的表（InnoDB和MyISAM表），在正常提交的情况下不会有什么问题，但是如果要回滚该事务，非事务型的表上的变更就无法撤销，这会导致数据库处于不一致的状态，这种情况很看修复，事务最终的结果将无法确定。所以为每张表选择合适的存储引擎非常的重要。</p>
+<p><strong>隐式和显式锁定</strong></p>
+<p>InnoDB采用的是两阶段锁定协议。在事务执行的过程中，随时够可以执行锁定，锁只有在执行Commit或者Rollback的时候才会释放，并且所有的锁是在同一时刻被释放。前面描述的锁定都是隐式锁定，InnoDB会根据隔离级别在需要的时候自动加锁。</p>
+<h4 id="1-4-多版本并发控制MVCC"><a href="#1-4-多版本并发控制MVCC" class="headerlink" title="1.4 多版本并发控制MVCC"></a>1.4 多版本并发控制MVCC</h4><p>MySQL的大多数事务存储引擎实现的都不是简单的行级锁，基于提升并发性能的考虑，它们一般都同时实现了多版本并发控制（MVCC）。</p>
+<p>可以任务MVCC是行级锁的一个变种，他是在很多情况下都避免了加锁的操作，因此开销更低，实现了非阻塞的读操作，写操作也只锁定必要的行。</p>
+<p>MVCC的实现是通过保存数据在某个时间点的快照来实现的，也就是说，不管需要执行多长时间，每个事务看到的数据都是一致的。根据存储引擎额差异MVCC的实现也是不同的，典型的又乐观并发控制和悲观并发控制。</p>
+<p>InnoDB MVCC是通过在每行记录后面保存两个隐藏的列来实现的。一个保存了行的创建时间，一个保存了行的过期时间。每开始一个事务，系统版本号会自动递增，事务开始时刻的系统版本号会作为事务的版本号，用来和查询到的每行记录的版本号进行比较。</p>
+<p>MVCC只在Repeatable Read和Read Committed两个隔离级别下工作，其他的两个隔离级别与MVCC不兼容。</p>
+<h4 id="1-5-MySQL的存储引擎"><a href="#1-5-MySQL的存储引擎" class="headerlink" title="1.5 MySQL的存储引擎"></a>1.5 MySQL的存储引擎</h4><p>在文件系统中，MySQL将每个数据库（也称之为schema）保存为数据目录下的一个子目录。创建表时，MySQL会在数据库子目录下创建一个和表同名的.frm文件保存表的定义。因为MySQL使用文件系统的目录和文件来保存数据库和表的定义，大小写敏感性和具体的平台密切相关。</p>
+<p>在Windows中，大小写是不敏感的；而在Unix中则是敏感的。</p>
+<h5 id="1-5-1-InnoDB存储引擎"><a href="#1-5-1-InnoDB存储引擎" class="headerlink" title="1.5.1 InnoDB存储引擎"></a>1.5.1 InnoDB存储引擎</h5><p>InnoDB是MySQL的默认事务型引擎，也是最重要、使用最广泛的存储引擎。它被设计用来处理大量的短期事务，短期事务大部分情况是正常提交的，很少会被回滚。</p>
+<p><strong>InnoDB的历史</strong></p>
+<p>2008年  InnoDB plugin 适用于MySQL 5.1，其拥有者是InnoDB而不是MySQL。Oracle收购Sun以后发布MySQL5.5才彻底使用InnoDB plugin替换旧版本的InnoDB。</p>
+<p><strong>InnoDB概览</strong></p>
+<p>InnoDB的数据存储在表空间中，表空间是由InnoDB管理的一个黑盒子，又一系列的数据文件组成。InnoDB用MVCC来支持高并发，并实现了四个标准的隔离级别，其默认级别是可重复读。</p>
+<p>InnoDB表是基于聚簇索引建立的，InnoDB的索引结构和MySQL的其他存储引擎有很大的不同，聚簇索引对主键查询有很高的性能。它的二级索引必须包含主键列，所以如果主键列很大的恶化，其他的所有索引都会很大。因此，若表上的索引较多的话，主键应当尽可能的小。</p>
+<h5 id="1-5-2MyISAM存储引擎"><a href="#1-5-2MyISAM存储引擎" class="headerlink" title="1.5.2MyISAM存储引擎"></a>1.5.2MyISAM存储引擎</h5><p>在MySQL5.1及其之前的版本，MyISAM是默认的存储引擎。MyISAM提供了大量的特性，包括全文检索，压缩，GIS函数等，但是MyISAM不支持事务和行级锁，而且有一个缺陷就是崩溃后无法安全恢复。</p>
+<p><strong>存储</strong></p>
+<p>MyISAM会将表存在在两个文件中：数据文件和索引文件，分别是.MYD和.MYI为扩展名。MyISAM表可以包含动态或者静态行。MyISAM表可以存储对的行记录数，一般受限于可用的磁盘空间或者操作系统中单个文件的最大尺寸。</p>
+<p><strong>特性</strong></p>
+<p>加锁与并发、修复</p>
+<p><strong>MyISAM压缩表</strong></p>
+<p>如果表在创建并导入数据以后不会再进行修改操作，那么这样的表或者适合采用MyISAM压缩表。压缩表是不能进行修改的，压缩表可以极大的减少磁盘空间占用，因此也可以减少磁盘IO，从而提升查询性能。压缩表也支持索引，但是索引也是只读的。</p>
+<p><strong>MyISAM性能</strong></p>
+<p>MyISAM引擎设计简单，数据以紧密格式存储，所以在某些场景下的性能很好。但是MyISAM最典型的性能问题还是表锁问题。如果你发现所有的查询都长期处于Locked状态，那毫无疑问就是表锁导致的。</p>
+<h5 id="1-5-3-MySQL内建的其他存储引擎"><a href="#1-5-3-MySQL内建的其他存储引擎" class="headerlink" title="1.5.3 MySQL内建的其他存储引擎"></a>1.5.3 MySQL内建的其他存储引擎</h5><p>Archive，Blackhole，CSV，Federated，Memory，Merge，NDB</p>
+<h5 id="1-5-4-第三方存储引擎"><a href="#1-5-4-第三方存储引擎" class="headerlink" title="1.5.4 第三方存储引擎"></a>1.5.4 第三方存储引擎</h5><p>OLTP引擎：XtraDB、TokuDB、PBXT、RethinkDB</p>
+<p>面向列的存储引擎：Infobright、InfiniDB</p>
+<p>社区存储引擎：Aria、Groonga、OQGraph、Q4M</p>
+<h5 id="1-5-5-选择合适的引擎"><a href="#1-5-5-选择合适的引擎" class="headerlink" title="1.5.5 选择合适的引擎"></a>1.5.5 选择合适的引擎</h5><p>除非需要用到某些InnoDB不具备的特性，并且美哦与其他办法可以替代，否则都应该优先选择InnoDB引擎。</p>
+<p>除非万不得已，否则建议不要混合使用多种存储引擎，否者可能带来一系列的复杂问题，以及一些潜在的bug和边界问题。</p>
+<p>如果应用需要不同的存储引擎，请考虑以下因素：</p>
+<ul>
+<li>事务 需要事务优先选择InnoDB，不需要事务推荐使用MyISAM</li>
+<li>备份 可以停机备份可以忽略这个问题，在线热备份推荐选择InnoDB</li>
+<li>崩溃恢复 MyISAM崩溃后发生损坏的概率比InnoDB高很多，而且恢复速度慢。</li>
+<li>特有的特性</li>
+</ul>
+<p><strong>日志型应用</strong></p>
+<p>对插入速度有很高要求的应用，MyISAM或者Archive存储引擎对这类应用比较合适，因为他们开销低，插入快。</p>
+<p><strong>只读或者大部分情况下只读的表</strong></p>
+<p>这种应用场景是典型的读多写少的业务，如果不介意MyISAM的崩溃恢复问题，可以选用MyISAM引擎。</p>
+<p><strong>订单处理</strong></p>
+<p>订单处理必须支持事务选项，毫无疑问选择InnoDB存储引擎。</p>
+<p><strong>电子公告牌和主题讨论论坛</strong></p>
+<p>几张表处理业务，读写竞争非常大，这就要考虑特殊的方式。</p>
+<p><strong>大户数量</strong></p>
+<p>一般InnoDB单机数据量在3~5TB之间，这个时候系统运行的还是不错的。超过10TB以上的级别，就要考虑数据仓库了。</p>
+<h5 id="1-5-6-转换表引擎"><a href="#1-5-6-转换表引擎" class="headerlink" title="1.5.6 转换表引擎"></a>1.5.6 转换表引擎</h5><p>有很多种办法把表从一种存储引擎转换成另外一种存储引擎，下面介绍三种主要的方法：</p>
+<ul>
+<li>alter table , 通用的方法，但是执行时间比较长。牵扯到复制新表，消耗系统IO能力，原来表会加上读锁。</li>
+<li>导出导入，能更好的控制转换过程，可以使用mysqldump工具导出文件，然后修改create语句的存储引擎。</li>
+<li>创建于查询，这种方法综合了以上两种方法的安全与高效。</li>
+</ul>
+<h4 id="1-6-MySQL时间线"><a href="#1-6-MySQL时间线" class="headerlink" title="1.6 MySQL时间线"></a>1.6 MySQL时间线</h4><blockquote>
+<p>版本3.23 2001年</p>
+<p>版本4.0 2003年</p>
+<p>版本4.1 2005年</p>
+<p>版本5.0 2006年</p>
+<p>版本5.1 2008年</p>
+<p>版本5.5 2010年</p>
+<p>版本5.6  2011年</p>
+<p>版本5.7 2013年</p>
+<p>版本8.0 2016年</p>
+</blockquote>
+<h4 id="1-7-MySQL的开发模式"><a href="#1-7-MySQL的开发模式" class="headerlink" title="1.7 MySQL的开发模式"></a>1.7 MySQL的开发模式</h4><p>定期里程碑版本里会包含下一个GA版本的全部新特性，实验室预览版包含一些需要评估的特性，不保证会在正式版中出现。</p>
+<p>遵循GPL开源协议，全部的源代码都会开放给社区。</p>
+<h4 id="1-8-总结"><a href="#1-8-总结" class="headerlink" title="1.8 总结"></a>1.8 总结</h4><p>MySQL拥有分层架构，上层是服务器层的服务和查询执行引擎，下层是存储引擎。MyISAM最初基于ISAM构建，随后陆续添加了更多的存储引擎和事务支持。Oracle收购了InnoDB又收购了MySQL，是的两者之间更快地协同发展，MySQL正在变得越来越可扩展有用。</p>
+<h3 id="2-MySQL基准测试"><a href="#2-MySQL基准测试" class="headerlink" title="2. MySQL基准测试"></a>2. MySQL基准测试</h3><p>基准测试是MySQL从业人员必须要掌握的一项基本技能，简单的说，基础测试是针对系统设计的一种压力测试。sysbench是一款非常优秀的MySQL基准测试工具。</p>
+<h4 id="2-1-为什么需要基准测试"><a href="#2-1-为什么需要基准测试" class="headerlink" title="2.1 为什么需要基准测试"></a>2.1 为什么需要基准测试</h4><p>基准测试是唯一方便有效的、可以学习系统在给定的工作负载下会发生什么的方法。基准测试可以观察系统在不同压力下的行为，评估系统的容量掌握哪些是重要的变化，或者观察系统如何处理不同的数据。</p>
+<h4 id="2-2-基准测试的策略"><a href="#2-2-基准测试的策略" class="headerlink" title="2.2 基准测试的策略"></a>2.2 基准测试的策略</h4><p>基准测试有两种主要的策略：一是针对真个系统的整体测试，另外是单独测试MySQL。这两种策略也被称为集成式（full-stack）以及单组件式（single-component）基准测试。</p>
+<h5 id="2-2-1-测试何总指标"><a href="#2-2-1-测试何总指标" class="headerlink" title="2.2.1 测试何总指标"></a>2.2.1 测试何总指标</h5><p>在开始执行甚至是在设置基础测试之前，需要先明确测试的目标。常见的测试指标如下：</p>
+<ul>
+<li>吞吐量</li>
+<li>响应时间或者延迟</li>
+<li>并发性</li>
+<li>可扩展性</li>
+</ul>
+<h4 id="2-3-基准测试方法"><a href="#2-3-基准测试方法" class="headerlink" title="2.3 基准测试方法"></a>2.3 基准测试方法</h4><p>常见的错误：</p>
+<p>1.使用真实数据的子集而不是全集。</p>
+<p>2.使用错误的数据分布。</p>
+<p>3.使用不真实的分布参数。</p>
+<p>4.在多用户场景中，只做单用户测试。</p>
+<p>5.在单服务器上测试分布式应用。</p>
+<p>6.与真实用户行为不匹配。</p>
+<p>7.反复执行同一个查询。</p>
+<p>8.没有检查错误。</p>
+<p>9.忽略了系统预热的过程。</p>
+<p>10.使用默认的服务器配置。</p>
+<p>11.测试时间太短。</p>
+<h5 id="2-3-1-设计和规划基准测试"><a href="#2-3-1-设计和规划基准测试" class="headerlink" title="2.3.1 设计和规划基准测试"></a>2.3.1 设计和规划基准测试</h5><p>规划基准测试的第一步是提出问题并明确目标，然后决定是采用标准的基准测试还是设计专用的测试。选择合适的测试方案，或者设计专用的基准测试方案。</p>
+<h5 id="2-3-2-基准测试应该运行多长时间"><a href="#2-3-2-基准测试应该运行多长时间" class="headerlink" title="2.3.2 基准测试应该运行多长时间"></a>2.3.2 基准测试应该运行多长时间</h5><p>基准测试应该运行足够长的时间，这一点很重要。如果需要测试系统在稳定状态时的性能，那么就需要在稳定的状态下测试并观察系统状态。</p>
+<h5 id="2-3-3-获取系统性能和状态"><a href="#2-3-3-获取系统性能和状态" class="headerlink" title="2.3.3 获取系统性能和状态"></a>2.3.3 获取系统性能和状态</h5><p>在执行基准测试时，需要竟可能多的收集被测试系统的信息，诸如CPU使用率、磁盘IO、网络流量统计、SHOW_GLOBAL_STATUS计数器等。</p>
+<h5 id="2-3-4-获取准确的测试结果"><a href="#2-3-4-获取准确的测试结果" class="headerlink" title="2.3.4 获取准确的测试结果"></a>2.3.4 获取准确的测试结果</h5><p>最好的办法是回答一些关于基准测试的基本问题，接着确认测试结果是否可重复。每次重复测试之前要确保系统的状态是一致的。最后，如果测试中出现异常结果，不要轻易当做坏数据点儿丢弃，应该认真研判并找到真正的原因。</p>
+<h5 id="2-3-5-运行基准测试并分析结果"><a href="#2-3-5-运行基准测试并分析结果" class="headerlink" title="2.3.5 运行基准测试并分析结果"></a>2.3.5 运行基准测试并分析结果</h5><p>自动化基准测试是推荐的办法，这样做可以获得更精确的测试结果。尽可能地使所有测试过程都自动化，包括装载数据、系统预热、执行测试、记录结果等。</p>
+<p>基准测试通常需要运行多次，获得测试结果后，还需要对结果进行分析。</p>
+<h5 id="2-3-6-绘图的重要性"><a href="#2-3-6-绘图的重要性" class="headerlink" title="2.3.6 绘图的重要性"></a>2.3.6 绘图的重要性</h5><p>简单有效的图形就是将性能指标按照时间顺序绘制，通过图像可以立刻发现一些问题，而这些问题再原始数据中却很难被注意到。</p>
+<p>﻿#### 2.4 基准测试工具</p>
+<h5 id="2-4-1-集成式测试工具"><a href="#2-4-1-集成式测试工具" class="headerlink" title="2.4.1 集成式测试工具"></a>2.4.1 集成式测试工具</h5><ul>
+<li>ab Apache HTTP服务器基准测试工具</li>
+<li>http_load</li>
+<li>JMeter  用Java编写的一个性能测试软件，被设计用来测试Web应用，比上面两个复杂的多</li>
+</ul>
+<h5 id="2-4-2-单组件式测试工具"><a href="#2-4-2-单组件式测试工具" class="headerlink" title="2.4.2 单组件式测试工具"></a>2.4.2 单组件式测试工具</h5><ul>
+<li>mysqlslap 模拟测试服务器复杂并输出计时信息，包含在MySQL5.1的发行包中</li>
+<li>MySQL Benchmark Suite MySQL发行包中的基准测试套件，单线程，主要用于测试服务器执行查询的速度</li>
+<li>Super Smack</li>
+<li>Database Test Suite</li>
+<li>Percona’s TPCC-MYSQL Tool</li>
+<li>sysbench 一款多线程系统压力测试工具</li>
+</ul>
+<h4 id="2-5-基准测试案列"><a href="#2-5-基准测试案列" class="headerlink" title="2.5 基准测试案列"></a>2.5 基准测试案列</h4><h5 id="2-5-1-http-load"><a href="#2-5-1-http-load" class="headerlink" title="2.5.1 http_load"></a>2.5.1 http_load</h5><p>首先创建一个urls.txt文件，输入如下的URL：</p>
+<blockquote>
+<p><a href="http://www.uupaotui.com" target="_blank" rel="noopener">http://www.uupaotui.com</a></p>
+<p><a href="http://www.google.com" target="_blank" rel="noopener">http://www.google.com</a></p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http_load -parallel <span class="number">1</span> -seconds <span class="number">10</span> urls.txt</span><br></pre></td></tr></table></figure>
+
+<h5 id="2-5-2-MySQL基准测试套件"><a href="#2-5-2-MySQL基准测试套件" class="headerlink" title="2.5.2 MySQL基准测试套件"></a>2.5.2 MySQL基准测试套件</h5><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cd /user/share/mysql/sql-bench</span><br><span class="line">./run-all-tests --server=mysql --user=root --log --fast</span><br></pre></td></tr></table></figure>
+
+<h5 id="2-5-3-sysbench"><a href="#2-5-3-sysbench" class="headerlink" title="2.5.3 sysbench"></a>2.5.3 sysbench</h5><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sysbench --test=cpu --cpu-max-prime=<span class="number">20000</span> run</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sysbench --test=fileio --file-totla-size=<span class="number">150</span>G --file-test-mode=rndrw/ --init-rng=on --max-time=<span class="number">300</span> --max-requests=<span class="number">0</span> run</span><br></pre></td></tr></table></figure>
+
+<p>sysbench的其他特性：内存、线程、互斥锁、顺序写</p>
+<h4 id="2-6-总结"><a href="#2-6-总结" class="headerlink" title="2.6 总结"></a>2.6 总结</h4><p>MySQL使用者都应该了解一些基准测试的知识，基准测试不仅仅是用来解决业务问题的一种实践行动，也是一种很好的学习方法。建议至少需要掌握sysbench，可以先学习如何使用olpt和fileio测试。</p>
+<h3 id="3-服务器性能剖析"><a href="#3-服务器性能剖析" class="headerlink" title="3. 服务器性能剖析"></a>3. 服务器性能剖析</h3><h4 id="3-1-性能优化简介"><a href="#3-1-性能优化简介" class="headerlink" title="3.1 性能优化简介"></a>3.1 性能优化简介</h4><p>我们将性能定义为完成某个任务所需要的时间度量，换句话说，性能即响应时间，这是一个非常重要的原则。无法度量就没有有效地优化，所以第一步应该测量时间花在什么地方。</p>
+<h5 id="3-1-1-通过性能剖析进行优化"><a href="#3-1-1-通过性能剖析进行优化" class="headerlink" title="3.1.1 通过性能剖析进行优化"></a>3.1.1 通过性能剖析进行优化</h5><p>掌握并实践面向响应时间的优化方法，就需要不断地对系统进行性能剖析。性能剖析是测量和分析时间花在那里的主要方法。</p>
+<h5 id="3-1-2-理解性能剖析"><a href="#3-1-2-理解性能剖析" class="headerlink" title="3.1.2 理解性能剖析"></a>3.1.2 理解性能剖析</h5><p>值得优化的查询、异常情况、未知的未知，被掩藏的细节</p>
+<h4 id="3-2-对应用程序进行性能剖析"><a href="#3-2-对应用程序进行性能剖析" class="headerlink" title="3.2 对应用程序进行性能剖析"></a>3.2 对应用程序进行性能剖析</h4><p>对任何需要消耗时间的任务都可以进行新能剖析，性能瓶颈可能有很多的影响因素：</p>
+<ul>
+<li>外部资源</li>
+<li>应用需要处理大量的数据</li>
+<li>在循环中执行了昂贵的操作</li>
+<li>使用了低效率的算法</li>
+</ul>
+<h4 id="3-3-剖析MySQL查询"><a href="#3-3-剖析MySQL查询" class="headerlink" title="3.3 剖析MySQL查询"></a>3.3 剖析MySQL查询</h4><h5 id="3-3-1-剖析服务器负载"><a href="#3-3-1-剖析服务器负载" class="headerlink" title="3.3.1 剖析服务器负载"></a>3.3.1 剖析服务器负载</h5><p>服务器端的剖析能有效地审计效率低下的查询，定位和优化慢查询能够显著提升应用的性能，也能解决某些特定的难题。</p>
+<p><strong>捕获MySQL的查询到日志中</strong></p>
+<p>可以通过long_query_time=0来捕获所有的查询日志。</p>
+<p><strong>分析查询日志</strong></p>
+<p>强烈建议对捕获的查询日志记性分析，可以借助工具pt-query-digets这个强大的日志分析工具。</p>
+<h5 id="3-3-2-剖析单条查询"><a href="#3-3-2-剖析单条查询" class="headerlink" title="3.3.2 剖析单条查询"></a>3.3.2 剖析单条查询</h5><p><strong>使用SHOW PROFILE</strong></p>
+<p><strong>使用SHOW STATUS</strong></p>
+<p><strong>使用慢查询日志</strong></p>
+<p><strong>使用Performance Schema</strong></p>
+<h5 id="3-3-3-使用性能剖析"><a href="#3-3-3-使用性能剖析" class="headerlink" title="3.3.3 使用性能剖析"></a>3.3.3 使用性能剖析</h5><p>﻿#### 3.4 诊断间歇性问题</p>
+<h5 id="3-4-1-单条查询问题还是服务器问题"><a href="#3-4-1-单条查询问题还是服务器问题" class="headerlink" title="3.4.1 单条查询问题还是服务器问题"></a>3.4.1 单条查询问题还是服务器问题</h5><p>判断是单条查询的问题还是服务器的问题可以使用以下三种办法：</p>
+<p>使用show global status</p>
+<p>使用show processlist</p>
+<p>使用查询日志</p>
+<h5 id="3-4-2-捕获诊断数据"><a href="#3-4-2-捕获诊断数据" class="headerlink" title="3.4.2 捕获诊断数据"></a>3.4.2 捕获诊断数据</h5><p>诊断触发器、解释结果数据、</p>
+<h4 id="3-5-其他剖析工具"><a href="#3-5-其他剖析工具" class="headerlink" title="3.5 其他剖析工具"></a>3.5 其他剖析工具</h4><h5 id="3-5-1-使用USER-STATISTICS表"><a href="#3-5-1-使用USER-STATISTICS表" class="headerlink" title="3.5.1 使用USER_STATISTICS表"></a>3.5.1 使用USER_STATISTICS表</h5><h5 id="3-5-2-使用strace"><a href="#3-5-2-使用strace" class="headerlink" title="3.5.2 使用strace"></a>3.5.2 使用strace</h5><h4 id="3-6-总结"><a href="#3-6-总结" class="headerlink" title="3.6 总结"></a>3.6 总结</h4><p>总的来说，解决性能问题的方法是首先澄清问题，然后选择合适的技术来解决这些问题。</p>
+<blockquote>
+<p>我们认为定义性能最有效的方法是响应时间。</p>
+<p>如果无法测量就无法有效的优化，所以性能优化工作需要基于高质量，全方位及完成的响应时间测量。</p>
+<p>测量的最佳开始点是应用程序，而不是数据库。即便是问题出在底层的数据库，借助良好的测量也可以很容易的发现问题。</p>
+<p>大多数系统无法完整的测量，测量有时候也会有错误的结果。但可以想办法绕过一些限制，并得到好的结果。</p>
+<p>完整的测量会产生大量需要分析的数据，所以需要用到剖析器。</p>
+<p>剖析报告是一种汇总信息，掩盖和丢弃了很多细节，所以需要去注意异常情况，未知的未知</p>
+<p>有两种消耗时间的操作：工作后者等待。大多数剖析器只能测量因为工作而消耗的时间，所以等待分析有时候是很有用的补充。</p>
+<p>优化和提升是两回事。当继续提升的成本超过收益的时候，应当停止优化。</p>
+<p>注意你的直觉，应该只根据直觉来知道觉得问题的思路，而不是用于确定系统的额问题。</p>
+</blockquote>
+<h3 id="4-Schema与数据类型优化"><a href="#4-Schema与数据类型优化" class="headerlink" title="4. Schema与数据类型优化"></a>4. Schema与数据类型优化</h3><p>良好的逻辑设计和物理设计是高性能的基石，应该根据系统将要执行的查询语句来设计schema，这往往需要权衡很多因素。</p>
+<h4 id="4-1-选择优化的数据类型"><a href="#4-1-选择优化的数据类型" class="headerlink" title="4.1 选择优化的数据类型"></a>4.1 选择优化的数据类型</h4><p>选择正确的数据类型对于获得高性能至关重要，在选择的时候应该遵循以下几个原则：</p>
+<p><strong>更小的通常更好</strong></p>
+<p>一般情况下，应该尽量使用可以正确存储数据的最小数据类型，更小的数据类型通常会更快，因为它占用更少的磁盘，内存和CPU缓存，并且处理的时候需要的CPU周期也更少。</p>
+<p><strong>简单就好</strong><br>简单的数据类型的造作通常需要更少的CPU周期。例如：整型比字符串的操作代价更低，使用MySQL内建类型而不是字符串来存储日期和时间，另外应该使用整型来存储IP地址。</p>
+<p><strong>尽量避免NULL</strong></p>
+<p>如果查询语句中包含可为NULL的列，对MySQL来说更难优化。因为可为NULL的列使得索引，索引统计和值比较更复杂。可为NULL的列会使用更多的存储空间，在MySQL里面需要特殊处理。可为NULL的列别索引时，每个索引需要一个额外的字节。</p>
+<p>通常把可为NULL的列改为NOT NULL带来的性能提升比较小，所以调优没有必要首先在现有Schema中查找并修改掉这种情况，除非确定是这里导致的问题。但是如果计划在该列上建立索引，就应该尽量避免设计成这样。</p>
+<p>InnoDB使用单独的bit存储NULL值，所以对于稀疏数据有很好的空间效率，这一点对MyISAM不适用。</p>
+<p>在为列选择数据类型时，第一步需要确定合适的大类型：数字，字符串，时间等。然后是选择根据存储的长度，范围，精度或者是物理存储空间的不同选择合适的具体类型。</p>
+<p>Datetime和Timestamp都可以存储日期时间，并且都精确到秒。但是Timestamp只使用Datetime一半的存储空间，并且会根据时区变化，但是Timestamp允许的时间范围到2038年，比Datetime要小的多。</p>
+<h5 id="4-1-1-整数类型"><a href="#4-1-1-整数类型" class="headerlink" title="4.1.1 整数类型"></a>4.1.1 整数类型</h5><table>
+<thead>
+<tr>
+<th>名称</th>
+<th>字节</th>
+<th>位</th>
+<th>范围</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>tinyint</td>
+<td>1</td>
+<td>8</td>
+<td>-2^7~2^7-1</td>
+</tr>
+<tr>
+<td>smallint</td>
+<td>2</td>
+<td>16</td>
+<td>-2^15~2^15-1</td>
+</tr>
+<tr>
+<td>mediumint</td>
+<td>2.5</td>
+<td>24</td>
+<td>-2^23~2^23-1</td>
+</tr>
+<tr>
+<td>int</td>
+<td>4</td>
+<td>32</td>
+<td>-2^31~2^31-1</td>
+</tr>
+<tr>
+<td>bigint</td>
+<td>8</td>
+<td>64</td>
+<td>-2^63~2^63-1</td>
+</tr>
+</tbody></table>
+<p>整数类型有可选的unsigned属性，表示不允许复制，这大致可以使正数的上限提高一倍。有符号和无符号类型使用相同的存储空间，并具备相同的性能。</p>
+<p>选择决定的只是MySQL在内存和磁盘中的存储，而计算一般使用的是64位的bigint，即时在32位的环境下也是如此。MySQL可以为整数类型指定宽度，如int(11)，对于大多数应用来说这是没有意义的：它不会限制值得合法范围，只是规定了MySQL的一些交互工具用来显示字符的个数。对于存储来说int(1)和int(20)是相同的。</p>
+<h5 id="4-1-2-实数类型"><a href="#4-1-2-实数类型" class="headerlink" title="4.1.2 实数类型"></a>4.1.2 实数类型</h5><p>实数是带有小数点部分的数字，然而它们不只是为了存储小数部分；也可以使用decimal存储比bigint还大的整数。MySQL既支持精确类型也支持不精确类型。</p>
+<p>float和double类型支持使用标准的浮点运算进行的近似计算。decimal类型用户存储精确的小数。MySQL5.0以后的版本中，decimal类型支持精确计算。MySQL4.1以及更早的版本使用浮点运算来实现decimal的计算。</p>
+<p>decimal将数字打包保存到一个二进制字符串中（每4个字节存9个数字），例如decimal（18,9）小数点两边各存储9个数字，一共使用9个字节（小数点本身单独占用一个字节）。MySQL5.0以上版本中decimal类型允许最多存65个数字，之前的版本是254个数字，因为实际用不到这么大的数字。</p>
+<p>在存储同样范围的数时浮点类型通常比decimal使用更少的空间，float使用4个字节存储，double使用8个字节存储。</p>
+<p>因为需要额外的空间和计算开销，所以应该尽量只在对小数进行精确计算时候才使用decimal。在数据量比较大的时候可以考虑使用bigint代替decimal，将需要存储的货币单位根据小数位数乘以相应的倍数即可。</p>
+<h5 id="4-1-3-字符串类型"><a href="#4-1-3-字符串类型" class="headerlink" title="4.1.3 字符串类型"></a>4.1.3 字符串类型</h5><p><strong>varchar和char类型</strong></p>
+<p>varchar和char是两种主要的字符串类型，在磁盘和内存中如何存储很难单独说清楚，这主要跟存储引擎的具体实现有关系。</p>
+<p><strong>varchar</strong></p>
+<p>varchar用于存储可变长字符串，是最常见的字符串数据类型。它比定长类型更节省空间。例外，如果表使用的row_format=fixed创建的话，每一行都会使用定长存储，这样会浪费空间。</p>
+<p>varchar需要使用1或2个额外的字节记录字符串的长度，如果列的最大长度小于等于255字节则使用1个字节表示，否者使用2个字节记录长度。</p>
+<p>varchar节省了空间所以对性能提升有帮助，但是由于是变长的，在update时可能使行变得比原来更长，也可能带来一些问题。如果一个行占用的空间增长并且在页内没有更多的空间可以存储，MyISAM会将行拆成片段存储，InnoDB则需要分裂页来使行可以放进页内。</p>
+<p>一些适合使用varchar的场景：1.字符串列的最大长度比平均长度大很多；2.列很少更新，不容易产生碎片；3.使用了UTF-8这样复杂的字符集</p>
+<p>MySQL5.X及其以上在存储和检索的时候会保留末尾的空格，但是在MySQL4.1以及更早的版本会剔除末尾的空格。</p>
+<p>InnoDB在存储过长的varchar时会转换为blob来进行存储。</p>
+<p><strong>char</strong></p>
+<p>char类型是固定长度的字符串，MySQL会根据定义的长度来分配足够的空间；不一样的，MySQL各个版本会删除末尾的空格来存储。</p>
+<p>char特别适合存储很短的字符串，后者所有长度接近同一个值得字符串。比如适合存储MD5的密码，因为他们是同样的长度。对于经常变更的数据，char也比varchar更合适，因为char类型不容易产生碎片。对于非常短的列，char在存储空间上也更有效率。因为varchar还需要额外的1字节来存储长度。</p>
+<p>与char和varchar类似的还有binary和varbinary，他们存储的是二进制字符串。</p>
+<p><strong>blob和text类型</strong></p>
+<p>它们是为了存储很大的数据而设计的字符串数据类型，分别采用二进制和字符串方式存储。与其他类型不同的是MySQL把每个blob和text值当做一个独立的对象处理。存储引擎在存储时通常会做特殊处理。当blob和text值太大时，InnoDB会使用专门的外部存储区域来今次那个存储，此时每个值在行内需要1~4个字节存储一个指针，然后在外部存储区域存储实际的值。</p>
+<p>blob和text的区别是前者存储的是二进制数据，没有排序规则或者字符集，后者是有字符集和排序规则的。MySQL对blob和text进行排序与其他类型不同：它只对每个列的最前max_sort_length字节而不是整个字符串做排序。</p>
+<p><strong>使用枚举类型代替字符串</strong></p>
+<p>某些场景下可以使用枚举类型代替常用的字符串类型，枚举列可以把一些不重复的字符串存储成一个预定义的集合。MySQL在存储枚举时非常紧凑，会根据列表值得数量压缩到一个或者两个字节中，在MySQL的内部会将每个值在列表中的未知保存为整数。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">select e+<span class="number">0</span> fro enum_test;</span><br><span class="line">+-------+</span><br><span class="line">|  e+<span class="number">0</span>  |</span><br><span class="line">+-------+</span><br><span class="line">|   <span class="number">1</span>   |</span><br><span class="line">|   <span class="number">2</span>   |</span><br><span class="line">|   <span class="number">3</span>   |</span><br><span class="line">+-------+</span><br></pre></td></tr></table></figure>
+
+<p>枚举不好的地方是字符串列表是固定的，添加或者杀出字符串必须使用alter table，因此对于未来可变的字符串来说使用枚举并不是一个很好的选择，除非能接受只在列表末尾添加元素。由于把枚举保存为整数，并且必须进行查询才能转换为字符串，所以枚举有些小小的开销。通常请款下开销可控，但是在某些场景使用char或varchar列与枚举列进行关联可能会比直接关联char或varchar列更慢。</p>
+<h5 id="4-1-4-日期和时间类型"><a href="#4-1-4-日期和时间类型" class="headerlink" title="4.1.4 日期和时间类型"></a>4.1.4 日期和时间类型</h5><p>MySQL能存储的最小时间粒度为秒。MySQL提供两种相似的日期类型：datetime和timestamp。</p>
+<p><strong>Datetime</strong></p>
+<p>存储范围从1001-9999年，精度为秒，与时区无关，使用8个字节的存储空间。</p>
+<p><strong>Timestamp</strong></p>
+<p>保存了从格林尼治标准时间以来的秒数，它和UNIX时间戳相同。timestamp只使用4个字节的存储空间，因此它的范围比datetime小的多，只能表示从1970年到2038年。可以使用from_unixtime()函数把Unix时间戳转换为日期，也可以使用nuix_timestamp()函数把日期转换成Unix时间戳。</p>
+<p>timestamp显示的值也依赖于时区，如果没有特殊的要求应尽量使用timestamp来存储时间，因为它的datetime空间效率更高。不推荐将Unix时间戳转换成整数来存储，效率上不能带来提升，通常在格式上处理很不方便。</p>
+<p>如果需要存储比秒粒度更少的日期和时间怎么办？可以使用bigint类型来存储微妙级别的时间戳或者使用double存储秒之后的小数部分。</p>
+<h5 id="4-1-5-位数据类型"><a href="#4-1-5-位数据类型" class="headerlink" title="4.1.5 位数据类型"></a>4.1.5 位数据类型</h5><p><strong>bit</strong></p>
+<p>MySQL把bit当做字符串类型，而不是数字类型。大部分场景下不建议使用bit类型。</p>
+<p><strong>set</strong></p>
+<p>如果需要保存很多true/false值，可以考虑合并这些列到一个set数据类型，它在MySQL内部以一系列的位的集合来表示。这样能有效的利用存储空间，但是不能在set列上使用索引，不推荐使用。</p>
+<p><strong>在整数列上进行按位操作</strong></p>
+<p>替代set的方式是使用一个整数包装一系列的位。</p>
+<h5 id="4-1-6-选择标识符"><a href="#4-1-6-选择标识符" class="headerlink" title="4.1.6 选择标识符"></a>4.1.6 选择标识符</h5><p>一旦选定了一种类型，要确保在所有关联表中都使用同样的类型。类型之间需要精确匹配，包括想unsigned这样的属性。在可以满足值得范围的需求，并且预留未来增长空间的前提下，应该选择最小的数据类型。</p>
+<p><strong>整数类型</strong></p>
+<p>整数通常是标识列最好的选择，因为它很快并且可以使用auto_increment。</p>
+<p><strong>ENUM和SET类型</strong></p>
+<p>标识列选择enum和set类型通常是一个糟糕的选择。</p>
+<p><strong>字符串类型</strong></p>
+<p>尽量避免使用字符串类型作为标识列，因为它消耗空间，并且通常比数字类型慢。特别是MD5(),SHA1(),UUID()产生的字符串，这些值任意分布在很大的空间内，这会导致insert和select查询变慢。因为插入值会随机的写到索引的不同位置不是顺序的写，导致insert慢。在逻辑上相邻的行会分布在磁盘或者内存不同的地方，导致查询也会变慢。另外，随机值导致缓存对所有类型的查询语句效果都很差，因为会使缓存赖以工作的访问局部性原理失效。</p>
+<p>如果存储UIID，应该移除“-”；后者使用UNHEX()函数转换成16字节的数字来存储。</p>
+<h5 id="4-1-7-特殊类型数据"><a href="#4-1-7-特殊类型数据" class="headerlink" title="4.1.7 特殊类型数据"></a>4.1.7 特殊类型数据</h5><p>IPv4经常看见有人使用varchar(15)来存储IP地址，然而实际上它是一个32位的无符号整数，不是字符串。MySQL提供INET_ATON()和INET_NTOA()函数在这两种表示方法之间转换。</p>
+<h4 id="4-2-Schema设计中的陷阱"><a href="#4-2-Schema设计中的陷阱" class="headerlink" title="4.2 Schema设计中的陷阱"></a>4.2 Schema设计中的陷阱</h4><p><strong>太多的列</strong></p>
+<p>MySQL的存储尹API在工作的时候需要在服务器层和存储引擎层之间通过行缓存格式拷贝数据，然后在服务器层将缓存内容解码成各个列。实际用到的其实是行的一小部分列，这时转换就带来了代价。</p>
+<p><strong>太多个关联</strong></p>
+<p>实体属性设计模式是一个常见的糟糕设计模式，MySQL限制了每个关联操作最多只能有61张表。一个经验，单个查询的关联最好控制在12张表以内。</p>
+<p><strong>全能的枚举</strong></p>
+<p>注意防止过度使用枚举（ENUM）类型，需要修改枚举列的值得时候在MySQL5.0以及更早的版本的时候是一个阻塞的操作。</p>
+<p><strong>变相的枚举</strong></p>
+<p>如果可以考虑使用枚举列替代集合列。</p>
+<p><strong>非此发明的NULL</strong></p>
+<p>避免使用NULL并建议尽可能的考虑替代方案，即使需要存储一个事实上的空值到表中，也不一定非得使用NULL，可以考虑使用0或者某一个特殊的值或者空字符串作为替代。</p>
+<p>﻿#### 4.3 范式和反范式</p>
+<h5 id="4-3-1-范式的优点和缺点"><a href="#4-3-1-范式的优点和缺点" class="headerlink" title="4.3.1 范式的优点和缺点"></a>4.3.1 范式的优点和缺点</h5><p>优点：</p>
+<ul>
+<li>范式化的更新操作通常比反范式要快。</li>
+<li>当数据较好地范式化时，就只有很少或者没有重复数据，所以只需要修改更少的数据。</li>
+<li>范式化的表通常更小，可以更好地存放在内存里，所以执行操作会更快。</li>
+<li>很少有多余的数据意味着检索列表数据时更少需要distinct或者group by语句。</li>
+</ul>
+<p>缺点：</p>
+<ul>
+<li>通常需要关联。使得查询语句更复杂，还有可能导致索引失效。</li>
+</ul>
+<h5 id="4-3-2-反范式的优点和缺点"><a href="#4-3-2-反范式的优点和缺点" class="headerlink" title="4.3.2 反范式的优点和缺点"></a>4.3.2 反范式的优点和缺点</h5><p>反范式的数据都在一张表中，可以很好的避免关联。单独的表也能使用更有效的索引策略。</p>
+<h5 id="4-3-3-混合使用范式和反范式"><a href="#4-3-3-混合使用范式和反范式" class="headerlink" title="4.3.3 混合使用范式和反范式"></a>4.3.3 混合使用范式和反范式</h5><p>事实上完全的范式和反范式都是实验室的东西，在实际的使用场景中经常混合使用范式与反范式设计。</p>
+<h4 id="4-4-缓存表和汇总表"><a href="#4-4-缓存表和汇总表" class="headerlink" title="4.4 缓存表和汇总表"></a>4.4 缓存表和汇总表</h4><p>有时候提升性能最好的方法是在同一张表中保存衍生的冗余数据。有时候需要创建一张完全独立的汇总表或者缓存表。实时计算统计是很昂贵的操作，因为要扫描表中的大部分数据。</p>
+<p>当重建汇总表和缓存表时，通常需要保证数据在操作时依然可用。这时候可用使用影子表来实现，可用通过一个原子的重命名操作切换影子表和原表。</p>
+<h5 id="4-4-1-物化实体"><a href="#4-4-1-物化实体" class="headerlink" title="4.4.1 物化实体"></a>4.4.1 物化实体</h5><p>MySQL并不原生支持物化视图，使用开源工具Flexviews可以实现自己的物化视图。</p>
+<h5 id="4-4-2-计数器表"><a href="#4-4-2-计数器表" class="headerlink" title="4.4.2 计数器表"></a>4.4.2 计数器表</h5><p>如果应用中存在计数器，则在更新计数器时可能碰上并发问题。为了获得更好的并发性，可以将计数器保存在多个行中，每次随机选择一个行进行更新，要获得统计结果使用聚合函数即可。</p>
+<h4 id="4-5-加快AITER-TABLE的操作速度"><a href="#4-5-加快AITER-TABLE的操作速度" class="headerlink" title="4.5 加快AITER TABLE的操作速度"></a>4.5 加快AITER TABLE的操作速度</h4><p>MySQL的alter table的操作性能对大表来说有很大的性能问题。执行大部分修改表结构操作的方法是用新的机构建一张空表，从旧表中查询所有数据插入，然后删除旧表的数据。这样的操作需要花费很长的时间，特别是内存不足而表又大，还有很多索引的情况下尤甚。</p>
+<p>MySQL5.1以及更新的版本包含一些类型的在线操作支持，不需要在整个操作过程中锁定表。一般来说，大部分的alter table操作将导致MySQL服务中断。针对一些场景有些操作技巧：一种是在一台不提供服务的机器上操作，然后和提供服务的主库进行切换；另外一种是影子拷贝，上文4.4有说到。可以使用Facebook团队的online schema change工具。</p>
+<h5 id="4-5-1-只修改-frm文件"><a href="#4-5-1-只修改-frm文件" class="headerlink" title="4.5.1 只修改.frm文件"></a>4.5.1 只修改.frm文件</h5><h5 id="4-5-2-快速创建MyISAM索引"><a href="#4-5-2-快速创建MyISAM索引" class="headerlink" title="4.5.2 快速创建MyISAM索引"></a>4.5.2 快速创建MyISAM索引</h5><p>先禁用索引，载入数据，再重新启用索引。特别注意，但是这个方位对唯一索引无效。</p>
+<h4 id="4-6-总结"><a href="#4-6-总结" class="headerlink" title="4.6 总结"></a>4.6 总结</h4><ul>
+<li>尽量避免过度设计。</li>
+<li>使用小而简单的合适数据类型，除非真实数据模型中有确切的需求，否者尽量避免使用NULL。</li>
+<li>尽量使用相同的数据类型存储相似或相关的值，尤其是在关联条件列。</li>
+<li>注意可变长字符串，其在临时表和排序时可能导致悲观的按最大长度分配内存。</li>
+<li>尽量使用整型定义标识列。</li>
+<li>避免使用已经废弃的特性。</li>
+<li>小心使用ENUM和SET</li>
+</ul>
+<p>范式和反范式要混合使用，使用的时候考虑使用场景，没有银弹。</p>
+<p>Alter Table操作相当的低效率，大部分都会锁表并且重建整张表。在一些特殊的场景可以使用非常规的方式来操作。</p>
+<h3 id="5-创建高性能的索引"><a href="#5-创建高性能的索引" class="headerlink" title="5. 创建高性能的索引"></a>5. 创建高性能的索引</h3><p>索引对于良好的性能非常关键，尤其是当表中的数据量越来越大的时候，索引对性能的影响愈发重要。索引优化应该是对查询性能优化最有效的手段。</p>
+<h4 id="5-1-索引基础"><a href="#5-1-索引基础" class="headerlink" title="5.1 索引基础"></a>5.1 索引基础</h4><h5 id="5-1-1-索引的类型"><a href="#5-1-1-索引的类型" class="headerlink" title="5.1.1 索引的类型"></a>5.1.1 索引的类型</h5><h6 id="B-Tree索引"><a href="#B-Tree索引" class="headerlink" title="B-Tree索引"></a>B-Tree索引</h6><p>大多数的MySQL都支持B-Tree索引，如果没有特别指出，我们讨论索引都是在说B-Tree索引。B-Tree索引意味着所有的值都是按照顺序存储的，并且每一个叶子也到根的距离相同。</p>
+<p>B-Tree索引能够加快访问数据的速度是因为存储引擎不再需要进行全表扫描来获取数据而是从索引的根节点开始进行搜索。B-Tree对索引列是顺序组织存储的，所以很适合查找范围数据。</p>
+<h6 id="可以使用B-Tree索引的查询类型"><a href="#可以使用B-Tree索引的查询类型" class="headerlink" title="可以使用B-Tree索引的查询类型"></a>可以使用B-Tree索引的查询类型</h6><p>B-Tree索引适用于全键值、键值范围或键前缀查找。其中键前缀查找只适用于根据最左前缀的查找。</p>
+<p>全值匹配</p>
+<p>匹配最左前缀</p>
+<p>匹配列前缀</p>
+<p>精确匹配某一列并范围匹配另外一列</p>
+<p>只访问索引的查询（覆盖索引）</p>
+<h6 id="哈希索引"><a href="#哈希索引" class="headerlink" title="哈希索引"></a>哈希索引</h6><p>哈希索引是基于哈希表实现，只有精确匹配索引所有列的查询才有效。对于每一行数据，存储引擎都会对所有索引列计算出一个哈希码，哈希码是一个比较小的值，并且不同键值得行计算出来的哈希码也不一样。</p>
+<p>MySQL中只有Memory引擎显式支持哈希索引。因为哈希索引自身只需要存储对于的哈希值，所以索引的结构十分的紧凑。然而哈希索引也有它的限制：</p>
+<ul>
+<li>哈希索引只包含哈希值和行指针，而不存储字段值，所以不可避免的需要回表。但因内存中（Memory引擎）行的读取速度很快，所以这一点基本可以忽略。</li>
+<li>哈希索引数据并不是按照索引值的顺序存储的，所以无法用于排序。</li>
+<li>哈希索引也不支持部分索引列匹配查找，因为哈希索引始终使用的是索引列的哈希值。</li>
+<li>哈希索引只支持等值比较查询（=，in,&lt;==&gt;），不支持范围查询。</li>
+<li>如果哈希冲突很多的话，一些索引维护操作会付出很高的代价。</li>
+</ul>
+<p>InnoDB是存储引擎有个特殊的功能叫“自适应哈希索引”，当InnoDB发现某些索引值被使用的非常频繁时，会在内存里面基于B-Tree创建一个哈希索引。这是一个完全自动化的，内部行为，用户无法控制或者配置，不过可以关闭该功能。</p>
+<p>一个例子，如果存储大量的网站URL，并且需要根据URL进行搜索，可以使用一个叫做url_crc的列做索引，使用CRC32做哈希，方便查询。</p>
+<h6 id="空间数据索引（R-Tree）"><a href="#空间数据索引（R-Tree）" class="headerlink" title="空间数据索引（R-Tree）"></a>空间数据索引（R-Tree）</h6><p>MyISAM表支持空间索引，可以用作地理数据存储。MySQL对GIS支持并不完善，推荐PostgreSQL或者Redis。</p>
+<h6 id="全文索引"><a href="#全文索引" class="headerlink" title="全文索引"></a>全文索引</h6><p>全文索引是一种特殊类型的索引，它查找的是文本中的关键词，而不是直接比较所以中的值，后面的章节会详细介绍。</p>
+<h6 id="其他索引类型"><a href="#其他索引类型" class="headerlink" title="其他索引类型"></a>其他索引类型</h6><p>TokuDB的分形树索引，是一种较新开发的数据结构，继承了B-Tree的许多优点也避免了缺点；还有ScaleDB的Patricia tries等索引。</p>
+<h4 id="5-2-索引的优点"><a href="#5-2-索引的优点" class="headerlink" title="5.2 索引的优点"></a>5.2 索引的优点</h4><p>总结起来索引的优点如下：</p>
+<ol>
+<li>索引大大减少了服务器需要扫描的数据量。</li>
+<li>索引可以帮助服务器避免排序和临时表。</li>
+<li>索引可以将随机IO变为顺序IO。</li>
+</ol>
+<h4 id="5-3-高性能的索引策略"><a href="#5-3-高性能的索引策略" class="headerlink" title="5.3 高性能的索引策略"></a>5.3 高性能的索引策略</h4><h5 id="5-3-1-独立的列"><a href="#5-3-1-独立的列" class="headerlink" title="5.3.1 独立的列"></a>5.3.1 独立的列</h5><p>独立的列是指索引列不能是表达式的一部分，也不能是函数的参数。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">× select * from students where age+<span class="number">1</span>=<span class="number">10</span>;</span><br><span class="line">√ select * from students where age=<span class="number">11</span>;</span><br><span class="line">× select * <span class="function">from students where <span class="title">to_days</span><span class="params">(create_time)</span> - <span class="title">to_days</span><span class="params">(login_time)</span></span>=<span class="number">10</span>;</span><br></pre></td></tr></table></figure>
+
+<h5 id="5-3-2-前缀索引和索引选择性"><a href="#5-3-2-前缀索引和索引选择性" class="headerlink" title="5.3.2 前缀索引和索引选择性"></a>5.3.2 前缀索引和索引选择性</h5><p>索引的选择性是值，不重复的索引值与数据表的记录总数的比值，范围从1/T到1之间。索引的选择性越高则查询效率越高，唯一索引的选择性是1，这是最好的索引选择性，性能也是最好的。</p>
+<p>对于BLOB或者TEXT后者很长的VARCHAR类型的列，必须使用前缀索引，因为MySQL不允许索引这些列的完整长度。选择合适的前缀的长度，使得前缀索引的选择性接近于索引整个列。前缀索引的缺点是无法使用前缀索引做ORDER BY和GROUP BY，也无法使用前缀索引做覆盖扫描。</p>
+<h5 id="5-3-3-多列索引"><a href="#5-3-3-多列索引" class="headerlink" title="5.3.3 多列索引"></a>5.3.3 多列索引</h5><p>为每个列创建独立的索引并不能提升性能问题，反而可能会带来性能问题。</p>
+<p>MySQL5.0引入的索引合并会优化复杂的查询，但是实际上更多时候说明表上的索引建的很糟糕：</p>
+<ul>
+<li>当出现服务器对多个索引做相交叉操作时，通常意味着需要建一个包含所有相关列的多列索引，而不是多个独立的索引列。</li>
+<li>当服务器需要对多个索引做联合操作是，通常需要耗费大量的CPU和内存资源在算法的缓存、排序和合并操作上。</li>
+<li>更重要的是，优化器不会把这些计算到“查询成本”中，优化器只关心随机页面读取；这会使得查询成本被低估，导致该执行计划甚至不如走全表扫描。</li>
+</ul>
+<p>可以通过参数optimizer_switch来关闭索引合并功能。也可以用过ignore index提示让优化器忽略调某些索引。</p>
+<h5 id="5-3-4-选择合适的索引列顺序"><a href="#5-3-4-选择合适的索引列顺序" class="headerlink" title="5.3.4 选择合适的索引列顺序"></a>5.3.4 选择合适的索引列顺序</h5><p>正确的顺序依赖于使用该索引的查询，并且同时需要考虑如何更好的满足排序和分组的需要。经验法则：将选择性最高的列放到索引最前列（当不需要考虑排序和分组时是最好的选择）。</p>
+<h5 id="5-3-5-聚簇索引"><a href="#5-3-5-聚簇索引" class="headerlink" title="5.3.5 聚簇索引"></a>5.3.5 聚簇索引</h5><p>聚簇索引并不是一种单独的索引类型，而是一种数据存储方式。当表有聚簇索引时，它的数据实际上存放在索引的叶子页中。因为存储引擎负责实现索引，所以不是所有的存储引擎都支持聚簇索引。InnoDB通过主键聚集数据，如果美哦与主键，InnoDB会选择一个唯一的非空索引代替，如果没有这样的索引，InnoDB会隐式的定义一个主键来作为聚簇索引。</p>
+<p>优点：</p>
+<ul>
+<li>可以把相关数据保存在一起。</li>
+<li>数据访问速度更快。</li>
+<li>使用覆盖索引扫描查询可以直接使用页节点中的主键值。</li>
+</ul>
+<p>缺点：</p>
+<ul>
+<li>聚簇数据最大限度地提高了IO密集型应用的性能，但是如果数据全部都放在内存里，则访问的顺序就没那么重要了，聚簇索引也就没什么优势。</li>
+<li>插入速度严重依赖插入顺序。按照主键的顺序插入是加载数据到InnoDB表中最快的方式。</li>
+<li>更新聚簇索引列的代价很高，因为会强制InnoDB将每个被更新的行移动到新的位置。</li>
+<li>基于聚簇索引的表在插入新行或者主键被更新导致的移动的时候，可能面临“页分裂”的问题。</li>
+<li>聚簇索引可能导致全表扫描变慢，尤其是行比较稀疏，或者由于页分裂导致数据存储不连续的时候。</li>
+<li>二级索引（非聚簇）可能比想象的要更大，因为叶子节点要包含引用行的主键列。</li>
+<li>二级索引访问需要两次索引查找，而不是一次（俗称回表）。</li>
+</ul>
+<p>为什么会回表，因为二级索引保存的是行的主键，而不是指向行的物理位置的指针，所以需要回表查询。</p>
+<h6 id="InnoDB和MyISAM的数据分布对比"><a href="#InnoDB和MyISAM的数据分布对比" class="headerlink" title="InnoDB和MyISAM的数据分布对比"></a>InnoDB和MyISAM的数据分布对比</h6><p>MyISAM按照数据插入的顺序存储在磁盘上，如果所示：</p>
+<p><img src="https://www.imageoss.com/images/2020/03/12/20200312220353.png" alt="20200312220353.png"></p>
+<p>事实上，MyISAM中主键索引和其他索引在结构上没有什么不同，主键索引就是一个名称为Primary的唯一非空索引。</p>
+<p>InnoDB因为支持聚簇索引，所以使用了非常不通的方式来存储同样的数据，如下图所示：</p>
+<p><img src="https://www.imageoss.com/images/2020/03/12/20200312220809.png" alt="20200312220809.png"></p>
+<p>聚簇索引的每一个叶子节点都包含了主键值、事务ID、MVCC的回滚指针以及所有剩余列。还有一点不同的是，InnoDB的二级索引的叶子节点中存储的不是“行指针”，而是主键值。</p>
+<p><img src="https://www.imageoss.com/images/2020/03/12/20200312221106.png" alt="20200312221106.png"></p>
+<h6 id="在InnoDB表中按主键顺序插入行"><a href="#在InnoDB表中按主键顺序插入行" class="headerlink" title="在InnoDB表中按主键顺序插入行"></a>在InnoDB表中按主键顺序插入行</h6><p>可以定义一个代理主键作为主键，这个主键的数据应和应用无关，最简单的方式是使用auto_increment自增列，来保证数据是顺序写入的。最好避免随机的聚簇索引，特别是对于IO密集型的应用。</p>
+<p>顺序的主键造成的性能问题？在高并发的时候，InnoDB中按照主键顺序插入可能造成争抢，主键的上届会成为一个热点，另外一个热点可能是auto_increment锁机制。如果遇到这样的问题，可以考虑更改innodb_autoinc_lock_mode配置。</p>
+<h5 id="5-3-6-覆盖索引"><a href="#5-3-6-覆盖索引" class="headerlink" title="5.3.6 覆盖索引"></a>5.3.6 覆盖索引</h5><p>索引包含所有需要查询的字段的值，我们就称之为覆盖索引。覆盖索引能极大的提高性能，而无需回表。因为：</p>
+<ul>
+<li>索引条目通常远远小于数据行大小，所以如果只需要读取索引，那么MySQL就会极大的减少数据访问量。</li>
+<li>因为索引是按照列值顺序存储的，所以对于IO密集型的范围查询会比随机从磁盘读取每一行数据的IO要少得多。</li>
+<li>MyISAM引擎在内存中缓存索引，数据则依赖操作系统缓存，因此访问数据需要一次系统调用。</li>
+<li>由于InnoDB的聚簇索引，覆盖索引对InnoDB特别有帮助，可以避免对主键索引的二次查询。</li>
+</ul>
+<p>不是所有的索引都能成为覆盖索引，这时候看可以对索引进行优化或者对SQL进行修改使用延迟关联来使用覆盖索引。</p>
+<h5 id="5-3-7-使用索引扫描来做排序"><a href="#5-3-7-使用索引扫描来做排序" class="headerlink" title="5.3.7 使用索引扫描来做排序"></a>5.3.7 使用索引扫描来做排序</h5><p>MySQL可以使用同一个索引既满足排序有用于查找行，如果有可能，在设计索引时尽量同时满足这两个任务。当explian出来的type列的值为index，则说明MySQL使用了索引列扫描来做排序了。</p>
+<p>只有当索引的列的顺序和排序语句的顺序完全一致，且所有列的排序方向一样，MySQL才能够使用索引来对结果进行排序。如果查询需要关联多张表，只有当排序子句引用的字段都是第一个表时，才能使用索引做排序。否则MySQL都需要执行排序操作而无法利用索引排序。</p>
+<h5 id="5-3-8-前缀压缩索引"><a href="#5-3-8-前缀压缩索引" class="headerlink" title="5.3.8 前缀压缩索引"></a>5.3.8 前缀压缩索引</h5><p>MyISAM使用前缀压缩来减少索引的大小，从而让更多的索引放到内存中，这样可以优化性能。默认只压缩字符串，但是通过调参也可以压缩整数。</p>
+<p>MyISAM压缩每个索引块的方法是先完全保存索引块的第一个值，然后将其他值和第一个进行比较得到相同前缀的字节数和剩余不同后缀部分，把这部分存储起来即可。压缩块使用了更少的空间，代价是一些操作可能更慢，所以MyISAM的二分查找只能从头开始，倒序的order by desc的性能也不是很好。</p>
+<h5 id="5-3-9-冗余和重复索引"><a href="#5-3-9-冗余和重复索引" class="headerlink" title="5.3.9 冗余和重复索引"></a>5.3.9 冗余和重复索引</h5><p>重复索引是值在相同的列上按照相同的顺序创建多个相同类型的索引。应该尽量避免这样，发现以后要及时删除。</p>
+<p>冗余索引和重复索引有一些不同，通常发生在为表添加新索引的时候。大多数情况下都不需要冗余索引，应该尽量扩展已有的索引而不是创建新索引。也有例外，数据量比较大扩展原索引有性能问题，而不得不创建新索引。</p>
+<p>解决重复索引和冗余索引的方法就是删除之。可以使用从工具如common_schema或者pt-duplicate-key-checker来分析和定位重复索引冗余索引。</p>
+<h5 id="5-3-10-未使用的索引"><a href="#5-3-10-未使用的索引" class="headerlink" title="5.3.10 未使用的索引"></a>5.3.10 未使用的索引</h5><p>这样的索引完全是累赘，直接删除之。借助工具pt-index-usage或者MariaDB打开userstates通过查询information_schema.index_statistics查询使用频率。</p>
+<h5 id="5-3-11-索引和锁"><a href="#5-3-11-索引和锁" class="headerlink" title="5.3.11 索引和锁"></a>5.3.11 索引和锁</h5><p>使用索引可以让查询锁定更少的行。InnoDB虽然行锁效率很高，但是锁定行的时候还是会带来额外的开销，其次锁定的行超过需要的行的时候会增加锁争用减少并发性。但这是有当InnoDB在存储引擎层能够过滤掉所有不需要的行才有效，如果无法过滤掉，存储引擎层把数据返回给服务器层来通过where子句过滤，这个时候已经无法避免锁定多余的行了。因为InnoDB已经锁定了这些行，在合适的时候才会释放。在MySQL5.1版本中，InnoDB可以在服务器层过滤掉行后就释放锁，早期版本要事务提交才释放。</p>
+<p>InnoDB在二级索引上使用共享锁，但是访问主键索引使用排它锁。这消除了使用覆盖索引的可能性，并且使得select for update比lock in share mode或非锁定查询要慢很多。</p>
+<h4 id="5-4-索引案例学习"><a href="#5-4-索引案例学习" class="headerlink" title="5.4 索引案例学习"></a>5.4 索引案例学习</h4><h5 id="5-4-1-支持多种过滤条件"><a href="#5-4-1-支持多种过滤条件" class="headerlink" title="5.4.1 支持多种过滤条件"></a>5.4.1 支持多种过滤条件</h5><h5 id="5-4-2-避免多个范围条件"><a href="#5-4-2-避免多个范围条件" class="headerlink" title="5.4.2 避免多个范围条件"></a>5.4.2 避免多个范围条件</h5><h5 id="5-4-3-优化排序"><a href="#5-4-3-优化排序" class="headerlink" title="5.4.3 优化排序"></a>5.4.3 优化排序</h5><p>优化排序的一个好的办法是限制用户能够翻页的数量，因为10000页的结果多用户来说意义不大；另外一个比较好的额策略就是使用延迟关联，通过覆盖索引查询返回需要的主键，再根据这些主键关联原表获得需要的行。</p>
+<h4 id="5-5-维护索引和表"><a href="#5-5-维护索引和表" class="headerlink" title="5.5 维护索引和表"></a>5.5 维护索引和表</h4><p>维护表的三个主要目的：找到并修复损坏的表，维护准确的索引信息，减少碎片。</p>
+<h5 id="5-5-1-找到并修复损坏的表"><a href="#5-5-1-找到并修复损坏的表" class="headerlink" title="5.5.1 找到并修复损坏的表"></a>5.5.1 找到并修复损坏的表</h5><p>针对MyISAM存储引擎，check table可以检查表是否损坏，repair table命令可以用来修复损坏的表。InnoDB引擎可以通过执行一个不做任何操作的命令来重建表</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">alter table innodb_tb engine=innodb;</span><br></pre></td></tr></table></figure>
+
+<p>也可以使用一些存储引擎相关的离线工具。</p>
+<h5 id="5-5-2-更新索引统计信息"><a href="#5-5-2-更新索引统计信息" class="headerlink" title="5.5.2 更新索引统计信息"></a>5.5.2 更新索引统计信息</h5><p>MySQL的查询优化器通过两个API来了解存储引擎的索引值分布信息，以决定如何使用索引。第一个API是records_in_range()，通过向存储引擎传两个边界值来获取这个范围大概有多少条记录，MyISAM返回精确值，InnoDB返回估算值。第二个API是info()，该结构返回各种类型的数据，包括所以的基数。</p>
+<p>可以通过运行analyze table来重新生成统计信息。</p>
+<h5 id="5-5-3-减少索引和数据碎片"><a href="#5-5-3-减少索引和数据碎片" class="headerlink" title="5.5.3 减少索引和数据碎片"></a>5.5.3 减少索引和数据碎片</h5><p>B-Tree索引可能会碎片化，这会降低查询的效率。碎片化的索引可能会以很差或者无序的方式存储在磁盘上。根据设计，B-Tree需要随机访问磁盘才能定位到叶子页，所以随机访问是不可避免的。然而，如果叶子页在物理上分布是顺序且紧密的，那么查询的性能就会更好。否则，对于范围查询，索引覆盖扫描来说速度可能会降低很多倍。</p>
+<p>数据存储的碎片化有三种类型：行碎片、行间碎片、剩余空间碎片。对于MyISAM来说三种碎片都有可能发生，但InnoDB不会出现短小的行碎片。可以通过optimize table或者导出导入的方式来重新整理数据。</p>
+<h5 id="5-6-总结"><a href="#5-6-总结" class="headerlink" title="5.6 总结"></a>5.6 总结</h5><p>在MySQL中，大多数情况下都会使用B-Tree索引。其他类型的索引大多只使用在特殊的场景。</p>
+<p>在选择索引和设计索引的时候，要记住如下三个原则：</p>
+<ol>
+<li>单行访问是慢的。最好读取的块中能包含尽可能多需要的行。使用索引可以创建位置引用来提升效率。</li>
+<li>按顺序访问范围数据是很快的，原因有二：1.顺序IO不需要多次磁盘寻道，比随机IO要快很多。2如果服务器能按照顺序读取数据，那么久不再需要额外的排序操作。</li>
+<li>索引覆盖查询是很快的。因为不需要回表查找行，这就避免了大量的单行访问。</li>
+</ol>
+<p>理解索引是如何工作的非常重要，根据理解的原理来创建最合适的索引，而不是根据一些经验之谈来创建索引。</p>
+
+            </div>
+          
+
+    
+      <footer class="post-footer">
+		
+		<div class="post-tags">
+		  
+			<a href="/tags/MySQL/">MySQL</a>
+		  
+		</div>
+		
+
+        
+        
+  <nav class="post-nav">
+    
+    
+      <a class="next" href="/2020/04/01/Redis性能问题分析/">
+        <span class="next-text nav-default">Redis性能问题分析</span>
+        <span class="prev-text nav-mobile">Next</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    
+  </nav>
+
+        
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+      </footer>
+    
+  </article>
+
+    </div>
+
+      </div>
+
+      <footer id="colophon"><span class="copyright-year">
+    
+        &copy;
+    
+        2014 -
+    
+    2020
+    <span class="footer-author">yaoper.</span>
+    <span class="power-by">
+        Powered by <a class="hexo-link" href="https://hexo.io/">Hexo</a> and <a class="theme-link" href="https://github.com/frostfan/hexo-theme-polarbear">Polar Bear</a>
+    </span>
+</span>
+
+      </footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div>
+    
+
+
+    
+
+
+
+
+  
+    <script type="text/javascript" src="/lib/jquery/jquery-3.1.1.min.js"></script>
+  
+
+  
+
+    <script type="text/javascript" src="/js/src/theme.js?v=1.1"></script>
+<script type="text/javascript" src="/js/src/bootstrap.js?v=1.1"></script>
+
+  </body>
+</html>
