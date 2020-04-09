@@ -17,7 +17,7 @@
 
 
 
-  <meta name="keywords" content="X-Job,">
+  <meta name="keywords" content="Docker,XJob,">
 
 
 
@@ -36,14 +36,14 @@
 
 
 <meta name="description" content="1.官方镜像下载x-job-admin的官方镜像已经被推送到公共镜像仓库https://hub.docker.com/r/xuxueli/xxl-job-admin,  获取时注意官方提供的tags。 1docker pull xuxueli/xxl-job-admin:2.1.0  2.推送镜像到仓库镜像打个本地标签 1docker tag xuxueli/xxl-job-admin:2.1.0">
-<meta name="keywords" content="X-Job">
+<meta name="keywords" content="Docker,XJob">
 <meta property="og:type" content="article">
 <meta property="og:title" content="docker部署x-job-admin">
 <meta property="og:url" content="http://yaoper.github.io/2019/09/04/docker部署x-job/index.html">
 <meta property="og:site_name" content="Illusory">
 <meta property="og:description" content="1.官方镜像下载x-job-admin的官方镜像已经被推送到公共镜像仓库https://hub.docker.com/r/xuxueli/xxl-job-admin,  获取时注意官方提供的tags。 1docker pull xuxueli/xxl-job-admin:2.1.0  2.推送镜像到仓库镜像打个本地标签 1docker tag xuxueli/xxl-job-admin:2.1.0">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2019-09-04T02:25:34.370Z">
+<meta property="og:updated_time" content="2020-04-09T06:18:30.381Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="docker部署x-job-admin">
 <meta name="twitter:description" content="1.官方镜像下载x-job-admin的官方镜像已经被推送到公共镜像仓库https://hub.docker.com/r/xuxueli/xxl-job-admin,  获取时注意官方提供的tags。 1docker pull xuxueli/xxl-job-admin:2.1.0  2.推送镜像到仓库镜像打个本地标签 1docker tag xuxueli/xxl-job-admin:2.1.0">
@@ -131,13 +131,13 @@
     
             <div class="post-content">
             <h4 id="1-官方镜像下载"><a href="#1-官方镜像下载" class="headerlink" title="1.官方镜像下载"></a>1.官方镜像下载</h4><p>x-job-admin的官方镜像已经被推送到公共镜像仓库<a href="https://hub.docker.com/r/xuxueli/xxl-job-admin" target="_blank" rel="noopener">https://hub.docker.com/r/xuxueli/xxl-job-admin</a>,  获取时注意官方提供的tags。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker pull xuxueli/xxl-job-admin:2.1.0</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker pull xuxueli/xxl-job-admin:2.1.0</span><br></pre></td></tr></table></figure>
 
 <h4 id="2-推送镜像到仓库"><a href="#2-推送镜像到仓库" class="headerlink" title="2.推送镜像到仓库"></a>2.推送镜像到仓库</h4><p>镜像打个本地标签</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker tag xuxueli/xxl-job-admin:2.1.0 hub.uupt-docker.com/local-test/xxl-job-admin:2.1.0</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker tag xuxueli/xxl-job-admin:2.1.0 hub.uupt-docker.com/local-test/xxl-job-admin:2.1.0</span><br></pre></td></tr></table></figure>
 
 <p>推送到私有镜像仓库</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">dokcer push hub.uupt-docker.com/local-test/xxl-job-admin:2.1.0</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">dokcer push hub.uupt-docker.com/local-test/xxl-job-admin:2.1.0</span><br></pre></td></tr></table></figure>
 
 <h4 id="3-配置启动参数"><a href="#3-配置启动参数" class="headerlink" title="3.配置启动参数"></a>3.配置启动参数</h4><p>编写docker compose文件，配置数据库连接</p>
 <figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">version:</span> <span class="string">'2'</span></span><br><span class="line"><span class="attr">services:</span></span><br><span class="line"><span class="attr">  admin:</span></span><br><span class="line"><span class="attr">    image:</span> <span class="string">hub.uupt-docker.com/local-test/xxl-job-admin:2.1.0</span></span><br><span class="line"><span class="attr">    ports:</span></span><br><span class="line"><span class="bullet">      -</span> <span class="string">"9180:8080"</span></span><br><span class="line"><span class="attr">    network_mode:</span> <span class="string">"bridge"</span></span><br><span class="line"><span class="attr">    restart:</span> <span class="string">always</span> </span><br><span class="line"><span class="attr">    environment:</span></span><br><span class="line"><span class="bullet">      -</span> <span class="string">spring.datasource.url=jdbc:mysql://192.168.6.36:3306/xxl_job?Unicode=true&amp;characterEncoding=UTF-8</span></span><br><span class="line"><span class="bullet">      -</span> <span class="string">spring.datasource.username=root</span></span><br><span class="line"><span class="bullet">      -</span> <span class="string">spring.datasource.password=123456</span></span><br><span class="line"><span class="attr">    volumes:</span></span><br><span class="line"><span class="bullet">      -</span> <span class="string">/tmp:/data/applogs</span></span><br><span class="line"><span class="attr">networks:</span></span><br><span class="line"><span class="attr">  default:</span></span><br><span class="line"><span class="attr">    external:</span></span><br><span class="line"><span class="attr">      name:</span> <span class="string">bridge</span></span><br></pre></td></tr></table></figure>
@@ -152,7 +152,9 @@
 		
 		<div class="post-tags">
 		  
-			<a href="/tags/X-Job/">X-Job</a>
+			<a href="/tags/Docker/">Docker</a>
+		  
+			<a href="/tags/XJob/">XJob</a>
 		  
 		</div>
 		

@@ -43,7 +43,7 @@
 <meta property="og:site_name" content="Illusory">
 <meta property="og:description" content="1.场景再现linux系统一次不正常关机后，通过命令 “mysql -u root -p ****”  登录mysql的时候系统提示“Can’t connect to local MySQL server through socket ‘/tmp/mysql.sock’ (2)”   2.解决办法通过查看my.cnf文件里面配置的mysql.sock的位置，然后建立软连接，将找到的mysql.so">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2019-08-17T03:02:36.206Z">
+<meta property="og:updated_time" content="2020-04-09T06:20:26.317Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Can&#39;t connect to local MySQL server through socket &#39;&#x2F;tmp&#x2F;mysql.sock&#39; (2)">
 <meta name="twitter:description" content="1.场景再现linux系统一次不正常关机后，通过命令 “mysql -u root -p ****”  登录mysql的时候系统提示“Can’t connect to local MySQL server through socket ‘/tmp/mysql.sock’ (2)”   2.解决办法通过查看my.cnf文件里面配置的mysql.sock的位置，然后建立软连接，将找到的mysql.so">
@@ -132,7 +132,7 @@
             <div class="post-content">
             <h5 id="1-场景再现"><a href="#1-场景再现" class="headerlink" title="1.场景再现"></a>1.场景再现</h5><p>linux系统一次不正常关机后，通过命令 “mysql -u root -p ****”  登录mysql的时候系统提示“Can’t connect to local MySQL server through socket ‘/tmp/mysql.sock’ (2)”  </p>
 <h5 id="2-解决办法"><a href="#2-解决办法" class="headerlink" title="2.解决办法"></a>2.解决办法</h5><p>通过查看my.cnf文件里面配置的mysql.sock的位置，然后建立软连接，将找到的mysql.sock的位置与配置文件中所说的位置连接起来  </p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ln  -s  /var/lib/mysql/mysql.sock  /tmp/mysql.sock</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ln  -s  /var/lib/mysql/mysql.sock  /tmp/mysql.sock</span><br></pre></td></tr></table></figure>
 
 <h5 id="3-mysql-sock作用"><a href="#3-mysql-sock作用" class="headerlink" title="3.mysql.sock作用"></a>3.mysql.sock作用</h5><p>mysql的连接方式有两种：<br>a、通过TCP/IP的连接<br>b、通过本地socket的连接，对mysql.sock来说，其作用是程序与mysql server处于同一台机器，发起本地连接时可用。在连接时你无须定义连接host的具体host ip，只要为空或localhost就可以。  </p>
 

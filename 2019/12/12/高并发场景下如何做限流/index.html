@@ -17,7 +17,7 @@
 
 
 
-  <meta name="keywords" content="限流,">
+  <meta name="keywords" content="高并发,限流,">
 
 
 
@@ -36,14 +36,14 @@
 
 
 <meta name="description" content="在开发高并发系统时有三把利器用来保护系统：缓存、降级和限流。本文介绍限流的相关概念、算法和常规的实现方式。 缓存缓存比较好理解，在大型高并发系统中，如果没有缓存数据库将分分钟被爆，系统也会瞬间瘫痪。使用缓存不单单能够提升系统访问速度、提高并发访问量，也是保护数据库、保护系统的有效方式。大型网站一般主要是“读”，缓存的使用很容易被想到。 在大型“写”系统中，缓存也常常扮演者非常重要的角色。比如累积一">
-<meta name="keywords" content="限流">
+<meta name="keywords" content="高并发,限流">
 <meta property="og:type" content="article">
 <meta property="og:title" content="高并发场景下如何做限流">
 <meta property="og:url" content="http://yaoper.github.io/2019/12/12/高并发场景下如何做限流/index.html">
 <meta property="og:site_name" content="Illusory">
 <meta property="og:description" content="在开发高并发系统时有三把利器用来保护系统：缓存、降级和限流。本文介绍限流的相关概念、算法和常规的实现方式。 缓存缓存比较好理解，在大型高并发系统中，如果没有缓存数据库将分分钟被爆，系统也会瞬间瘫痪。使用缓存不单单能够提升系统访问速度、提高并发访问量，也是保护数据库、保护系统的有效方式。大型网站一般主要是“读”，缓存的使用很容易被想到。 在大型“写”系统中，缓存也常常扮演者非常重要的角色。比如累积一">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2019-12-12T04:02:54.921Z">
+<meta property="og:updated_time" content="2020-04-09T06:29:17.611Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="高并发场景下如何做限流">
 <meta name="twitter:description" content="在开发高并发系统时有三把利器用来保护系统：缓存、降级和限流。本文介绍限流的相关概念、算法和常规的实现方式。 缓存缓存比较好理解，在大型高并发系统中，如果没有缓存数据库将分分钟被爆，系统也会瞬间瘫痪。使用缓存不单单能够提升系统访问速度、提高并发访问量，也是保护数据库、保护系统的有效方式。大型网站一般主要是“读”，缓存的使用很容易被想到。 在大型“写”系统中，缓存也常常扮演者非常重要的角色。比如累积一">
@@ -198,6 +198,8 @@
       <footer class="post-footer">
 		
 		<div class="post-tags">
+		  
+			<a href="/tags/高并发/">高并发</a>
 		  
 			<a href="/tags/限流/">限流</a>
 		  

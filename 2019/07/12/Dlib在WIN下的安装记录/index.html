@@ -43,7 +43,7 @@
 <meta property="og:site_name" content="Illusory">
 <meta property="og:description" content="1.dlib简介dlib 是一个机器学习的开源工具包（官网：http://dlib.net/ ），用于机器人、嵌入式设备、移动电话和大型高性能计算环境，也可以做人脸检测识别等；官网给出的Python Examples:  Binary Classification CNN Face Detector Face Alignment Face Clustering Face Detector Face">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2019-08-17T03:02:49.173Z">
+<meta property="og:updated_time" content="2020-04-09T06:24:46.963Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Dlib在WIN下的安装记录">
 <meta name="twitter:description" content="1.dlib简介dlib 是一个机器学习的开源工具包（官网：http://dlib.net/ ），用于机器人、嵌入式设备、移动电话和大型高性能计算环境，也可以做人脸检测识别等；官网给出的Python Examples:  Binary Classification CNN Face Detector Face Alignment Face Clustering Face Detector Face">
@@ -159,11 +159,11 @@
 <p>强烈建议按照上述地址下载，因为Anacon3-5.1.0需要与dlib的版本匹配，后面会讲版本不匹配的问题。如上述下载地址不能下载可访问<a href="https://mirrors.tuna.tsinghua.edu.cn/anaconda/archive/" target="_blank" rel="noopener">清华大学开源软件镜像站</a>、<a href="https://github.com/coneypo/Dlib_install" target="_blank" rel="noopener">Git个人站</a>自行下载。</p>
 <h4 id="3-软件安装"><a href="#3-软件安装" class="headerlink" title="3.软件安装"></a>3.软件安装</h4><p>1.Anaconda3安装（略）  </p>
 <p>2.安装dlib<br>打开Anaconda Promopt，cd到dlib-19.7.0-cp36-cp36m-win_amd64.whl所在路径，然后利用pip安装dlib的命令：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pip install dlib-19.7.0-cp36-cp36m-win_amd64.whl</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pip install dlib-19.7.0-cp36-cp36m-win_amd64.whl</span><br></pre></td></tr></table></figure>
 
 <p>安装之后显示 Successfully installed dlib-19.7.0</p>
 <p>如果你下载的Anaconda3是5.1.0以上，安装后的Python版本就会是v3.7，在这一步骤可能会遇到安装提示</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">dlib-19.7.0-cp36-cp36m-win_amd64.whl is not a supported wheel on this platform</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">dlib-19.7.0-cp36-cp36m-win_amd64.whl is not a supported wheel on this platform</span><br></pre></td></tr></table></figure>
 
 <p>pip文件cp36只能支持到Python3.6，所以需要特别注意。如果安装过程提示升级pip，按照提示升级即可。</p>
 <h4 id="4-测试验证"><a href="#4-测试验证" class="headerlink" title="4.测试验证"></a>4.测试验证</h4><p>进入python输入如下代码</p>

@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang>
+  <head><meta name="generator" content="Hexo 3.9.0">
+    
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1,minimum-scale=1,maximum-scale=1">
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+  <meta name="description" content="互联网业务为啥禁止使用MySQL存储过程">
+
+
+
+
+  <meta name="keywords" content="MySQL,">
+
+
+
+
+
+  <link rel="alternate" href="/default" title="Illusory">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=1.1">
+
+
+
+<link rel="canonical" href="http://yaoper.github.io/2020/04/09/互联网业务为啥禁止使用MySQL存储过程/">
+
+
+<meta name="description" content="1. 场景分析互联网业务的特点是读写分布不均衡，读多写少。单次请求涉及到的数据量小，数据关系简单。数据更新频次高，需求变更快导致数据关系随时可能被扩展。 互联网业务的高并发场景一般都是采用分库分表策略来最大限度的保护存储层，减少数据库的压力。尽力把逻辑运算放到应用的代码里面实现，让数据库的职责单一，发挥数据库存储查询的性能。 2.  使用风险 存储过程没有版本控制，版本迭代的时候要更新很麻烦。 业">
+<meta name="keywords" content="MySQL">
+<meta property="og:type" content="article">
+<meta property="og:title" content="互联网业务为啥禁止使用MySQL存储过程">
+<meta property="og:url" content="http://yaoper.github.io/2020/04/09/互联网业务为啥禁止使用MySQL存储过程/index.html">
+<meta property="og:site_name" content="Illusory">
+<meta property="og:description" content="1. 场景分析互联网业务的特点是读写分布不均衡，读多写少。单次请求涉及到的数据量小，数据关系简单。数据更新频次高，需求变更快导致数据关系随时可能被扩展。 互联网业务的高并发场景一般都是采用分库分表策略来最大限度的保护存储层，减少数据库的压力。尽力把逻辑运算放到应用的代码里面实现，让数据库的职责单一，发挥数据库存储查询的性能。 2.  使用风险 存储过程没有版本控制，版本迭代的时候要更新很麻烦。 业">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2020-04-09T03:16:17.004Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="互联网业务为啥禁止使用MySQL存储过程">
+<meta name="twitter:description" content="1. 场景分析互联网业务的特点是读写分布不均衡，读多写少。单次请求涉及到的数据量小，数据关系简单。数据更新频次高，需求变更快导致数据关系随时可能被扩展。 互联网业务的高并发场景一般都是采用分库分表策略来最大限度的保护存储层，减少数据库的压力。尽力把逻辑运算放到应用的代码里面实现，让数据库的职责单一，发挥数据库存储查询的性能。 2.  使用风险 存储过程没有版本控制，版本迭代的时候要更新很麻烦。 业">
+
+
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=1.1">
+<link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+
+
+
+
+
+<script type="text/javascript">
+  var themeConfig = {
+    fancybox: {
+      enable: false
+    },
+  };
+</script>
+
+
+
+
+  
+
+
+
+    <title> 互联网业务为啥禁止使用MySQL存储过程 - Illusory </title>
+  </head>
+
+  <body>
+    <div id="page">
+      <header id="masthead"><div class="site-header-inner">
+    <h1 class="site-title">
+        <a href="/." class="logo">Illusory</a>
+    </h1>
+
+    <nav id="nav-top">
+        
+            <ul id="menu-top" class="nav-top-items">
+                
+                    <li class="menu-item">
+                        <a href="/archives">
+                            
+                            
+                                Archives
+                            
+                        </a>
+                    </li>
+                
+                    <li class="menu-item">
+                        <a href="/about">
+                            
+                            
+                                About
+                            
+                        </a>
+                    </li>
+                
+            </ul>
+        
+  </nav>
+</div>
+
+      </header>
+      <div id="content">
+        
+    <div id="primary">
+        
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          互联网业务为啥禁止使用MySQL存储过程
+        
+      </h1>
+
+      <time class="post-time">
+          Apr 09 2020
+      </time>
+    </header>
+
+
+
+    
+            <div class="post-content">
+            <h3 id="1-场景分析"><a href="#1-场景分析" class="headerlink" title="1. 场景分析"></a>1. 场景分析</h3><p>互联网业务的特点是读写分布不均衡，读多写少。单次请求涉及到的数据量小，数据关系简单。数据更新频次高，需求变更快导致数据关系随时可能被扩展。</p>
+<p>互联网业务的高并发场景一般都是采用分库分表策略来最大限度的保护存储层，减少数据库的压力。尽力把逻辑运算放到应用的代码里面实现，让数据库的职责单一，发挥数据库存储查询的性能。</p>
+<h3 id="2-使用风险"><a href="#2-使用风险" class="headerlink" title="2.  使用风险"></a>2.  使用风险</h3><ul>
+<li>存储过程没有版本控制，版本迭代的时候要更新很麻烦。</li>
+<li>业务开发人员调试存储过程不方便，生产环境存储过程统一日志输出困难。</li>
+<li>T-SQL是标准的，但存储过程以及控制逻辑是数据库自已的方言，可移植性较差。</li>
+<li>存储过程和外部程序结合起来用，更新的时候很难无感升级，可能需要对外停止服务升级。</li>
+<li>横向扩展不友好，存储过程不利于将来分库分表。</li>
+<li>存储过程可能无法和一些中间件、ORM一起使用。</li>
+</ul>
+
+            </div>
+          
+
+    
+      <footer class="post-footer">
+		
+		<div class="post-tags">
+		  
+			<a href="/tags/MySQL/">MySQL</a>
+		  
+		</div>
+		
+
+        
+        
+  <nav class="post-nav">
+    
+    
+      <a class="next" href="/2020/04/01/高性能MySQL读书笔记/">
+        <span class="next-text nav-default">高性能MySQL读书笔记</span>
+        <span class="prev-text nav-mobile">Next</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    
+  </nav>
+
+        
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+      </footer>
+    
+  </article>
+
+    </div>
+
+      </div>
+
+      <footer id="colophon"><span class="copyright-year">
+    
+        &copy;
+    
+        2014 -
+    
+    2020
+    <span class="footer-author">yaoper.</span>
+    <span class="power-by">
+        Powered by <a class="hexo-link" href="https://hexo.io/">Hexo</a> and <a class="theme-link" href="https://github.com/frostfan/hexo-theme-polarbear">Polar Bear</a>
+    </span>
+</span>
+
+      </footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div>
+    
+
+
+    
+
+
+
+
+  
+    <script type="text/javascript" src="/lib/jquery/jquery-3.1.1.min.js"></script>
+  
+
+  
+
+    <script type="text/javascript" src="/js/src/theme.js?v=1.1"></script>
+<script type="text/javascript" src="/js/src/bootstrap.js?v=1.1"></script>
+
+  </body>
+</html>

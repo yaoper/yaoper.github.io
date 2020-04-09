@@ -17,7 +17,7 @@
 
 
 
-  <meta name="keywords" content="Apollo,">
+  <meta name="keywords" content="Apollo,Docker,">
 
 
 
@@ -36,7 +36,7 @@
 
 
 <meta name="description" content="Apollo开源地址：https://github.com/ctripcorp/apollo 第一步将项目clone到本地，然后在github的releases页面中下载三个zip文件 第二步打开clone到本地的项目，目录结构如下 第三步在此目录下创建docker-compose.yml文件，写入内容： 1234567891011121314151617181920212223242526272">
-<meta name="keywords" content="Apollo">
+<meta name="keywords" content="Apollo,Docker">
 <meta property="og:type" content="article">
 <meta property="og:title" content="CentOS7使用docker部署Apollo配置中心">
 <meta property="og:url" content="http://yaoper.github.io/2019/07/29/CentOS7使用docker部署Apollo配置中心/index.html">
@@ -44,7 +44,7 @@
 <meta property="og:description" content="Apollo开源地址：https://github.com/ctripcorp/apollo 第一步将项目clone到本地，然后在github的releases页面中下载三个zip文件 第二步打开clone到本地的项目，目录结构如下 第三步在此目录下创建docker-compose.yml文件，写入内容： 1234567891011121314151617181920212223242526272">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="https://uufe-web.oss-cn-beijing.aliyuncs.com/PicLib/uunote/images/QQ%E6%88%AA%E5%9B%BE20190729175843_1564394338274.png">
-<meta property="og:updated_time" content="2019-08-17T03:02:17.482Z">
+<meta property="og:updated_time" content="2020-04-09T06:24:37.395Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="CentOS7使用docker部署Apollo配置中心">
 <meta name="twitter:description" content="Apollo开源地址：https://github.com/ctripcorp/apollo 第一步将项目clone到本地，然后在github的releases页面中下载三个zip文件 第二步打开clone到本地的项目，目录结构如下 第三步在此目录下创建docker-compose.yml文件，写入内容： 1234567891011121314151617181920212223242526272">
@@ -144,7 +144,7 @@
 
 <p>第五步<br>登录mysql，进行数据库初始化。(初始化sql文件从GitHub上下载)</p>
 <p>第六步<br>将整个项目apollo文件夹打包成zip文件，使用ftp或scp命令将文件上传到centos7服务器中，在服务器上执行以下命令</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">unzip apollo.zip</span><br><span class="line">cd apollo</span><br><span class="line">docker-compose up -d</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">unzip apollo.zip</span><br><span class="line">cd apollo</span><br><span class="line">docker-compose up -d</span><br></pre></td></tr></table></figure>
 
 <p>可能遇到需要安装Docker Compose<br>Step0:首先检查linux有没有安装python-pip包，直接执行 yum install python-pip<br>Step1:没有python-pip包就执行命令 yum -y install epel-release<br>Step2:执行成功之后，再次执行 yum install python-pip<br>Step3:对安装好的pip进行升级 pip install –upgrade pip<br>Step4:安装Docker Compose，执行pip install -U docker-compose<br>Step5:检验docker-compose是否安装成功,执行docker-compose –version  </p>
 
@@ -157,6 +157,8 @@
 		<div class="post-tags">
 		  
 			<a href="/tags/Apollo/">Apollo</a>
+		  
+			<a href="/tags/Docker/">Docker</a>
 		  
 		</div>
 		

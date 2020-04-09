@@ -43,7 +43,7 @@
 <meta property="og:site_name" content="Illusory">
 <meta property="og:description" content="MySQL(5.7.25)大小写默认设置1）linux下：  数据库名与表名是严格区分大小写的； 表的别名是严格区分大小写的； 变量名也是严格区分大小写的； 列名与列的别名在所有的情况下均是忽略大小写的； 字段内容忽略大小写的  2）windows下：  都不区分大小写  3）Mac OS下（非UFS卷）：  都不区分大小写   MySQL控制大小写的配置项1）lower_case_table_n">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2019-11-11T09:59:58.052Z">
+<meta property="og:updated_time" content="2020-04-09T03:17:49.655Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="MySQL大小写敏感">
 <meta name="twitter:description" content="MySQL(5.7.25)大小写默认设置1）linux下：  数据库名与表名是严格区分大小写的； 表的别名是严格区分大小写的； 变量名也是严格区分大小写的； 列名与列的别名在所有的情况下均是忽略大小写的； 字段内容忽略大小写的  2）windows下：  都不区分大小写  3）Mac OS下（非UFS卷）：  都不区分大小写   MySQL控制大小写的配置项1）lower_case_table_n">
@@ -171,7 +171,7 @@
 <h4 id="MySQL在Linux下使用的注意事项"><a href="#MySQL在Linux下使用的注意事项" class="headerlink" title="MySQL在Linux下使用的注意事项"></a>MySQL在Linux下使用的注意事项</h4><ol>
 <li>为了避免大小写引发的问题，一种推荐的命名规则是：在定义数据库、表、列的时候全部采用小写字母加下划线的方式，不使用任何大写字母。</li>
 <li>在任何系统中都使用lower_case_tables_name=1。使用该选项的不利之处是当使用SHOW TABLES或SHOW DATABASES时，看不出名字原来是用大写还是小写。</li>
-<li>在查询时区分字段值的大小写，则字段值需要设置BINARY属性， 二进制大小写是敏感的。<br>也可以在查询条件的字段前加binary，但是不建议这么做，因为会使字段索引失效。<br>建表时设置校对规则（collate），_bin: 表示的是binary case sensitive collation，也就是说是<strong>区分大小写</strong> 。_ci: case insensitive collation，*<em>不区分大小写 *</em>。</li>
+<li>在查询时区分字段值的大小写，则字段值需要设置BINARY属性， 二进制大小写是敏感的。<br>也可以在查询条件的字段前加binary，但是不建议这么做，因为会使字段索引失效。<br>建表时设置校对规则（collate），_bin: 表示的是binary case sensitive collation，也就是说是<strong>区分大小写</strong> 。_ci: case insensitive collation，<strong>不区分大小写</strong>。</li>
 </ol>
 
             </div>
