@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang>
+  <head><meta name="generator" content="Hexo 3.9.0">
+    
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1,minimum-scale=1,maximum-scale=1">
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+  <meta name="description" content="Redis的分布式锁">
+
+
+
+
+  <meta name="keywords" content="Redis,">
+
+
+
+
+
+  <link rel="alternate" href="/default" title="Illusory">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=1.1">
+
+
+
+<link rel="canonical" href="http://yaoper.github.io/2020/04/13/Redis的分布式锁/">
+
+
+<meta name="description" content="1. SETNX现在我们说SETNX并不是指setnx key value 命令，而是指 set key value ex nx px，  上图是进程A使用SETNX加锁的过程，主要依托了它的 Key 不存在才能 Set 成功的特性，进程 A 拿到锁，在没有删除锁的 Key 时，进程 B 自然获取锁就失败了。使用 PX 30000 去设置一个超时时间是怕因为进程A的锁没等释放进程崩溃，导致系统中谁">
+<meta name="keywords" content="Redis">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Redis的分布式锁">
+<meta property="og:url" content="http://yaoper.github.io/2020/04/13/Redis的分布式锁/index.html">
+<meta property="og:site_name" content="Illusory">
+<meta property="og:description" content="1. SETNX现在我们说SETNX并不是指setnx key value 命令，而是指 set key value ex nx px，  上图是进程A使用SETNX加锁的过程，主要依托了它的 Key 不存在才能 Set 成功的特性，进程 A 拿到锁，在没有删除锁的 Key 时，进程 B 自然获取锁就失败了。使用 PX 30000 去设置一个超时时间是怕因为进程A的锁没等释放进程崩溃，导致系统中谁">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/yaoper/image-bucket/20200413174456.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/yaoper/image-bucket/20200413175019.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/yaoper/image-bucket/20200413181445.png">
+<meta property="og:updated_time" content="2020-04-13T10:16:54.805Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Redis的分布式锁">
+<meta name="twitter:description" content="1. SETNX现在我们说SETNX并不是指setnx key value 命令，而是指 set key value ex nx px，  上图是进程A使用SETNX加锁的过程，主要依托了它的 Key 不存在才能 Set 成功的特性，进程 A 拿到锁，在没有删除锁的 Key 时，进程 B 自然获取锁就失败了。使用 PX 30000 去设置一个超时时间是怕因为进程A的锁没等释放进程崩溃，导致系统中谁">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/yaoper/image-bucket/20200413174456.png">
+
+
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=1.1">
+<link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+
+
+
+
+
+<script type="text/javascript">
+  var themeConfig = {
+    fancybox: {
+      enable: false
+    },
+  };
+</script>
+
+
+
+
+  
+
+
+
+    <title> Redis的分布式锁 - Illusory </title>
+  </head>
+
+  <body>
+    <div id="page">
+      <header id="masthead"><div class="site-header-inner">
+    <h1 class="site-title">
+        <a href="/." class="logo">Illusory</a>
+    </h1>
+
+    <nav id="nav-top">
+        
+            <ul id="menu-top" class="nav-top-items">
+                
+                    <li class="menu-item">
+                        <a href="/archives">
+                            
+                            
+                                Archives
+                            
+                        </a>
+                    </li>
+                
+                    <li class="menu-item">
+                        <a href="/about">
+                            
+                            
+                                About
+                            
+                        </a>
+                    </li>
+                
+            </ul>
+        
+  </nav>
+</div>
+
+      </header>
+      <div id="content">
+        
+    <div id="primary">
+        
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          Redis的分布式锁
+        
+      </h1>
+
+      <time class="post-time">
+          Apr 13 2020
+      </time>
+    </header>
+
+
+
+    
+            <div class="post-content">
+            <h3 id="1-SETNX"><a href="#1-SETNX" class="headerlink" title="1. SETNX"></a>1. SETNX</h3><p>现在我们说SETNX并不是指<code>setnx key value</code> 命令，而是指 <code>set key value ex nx px</code>，</p>
+<p><img src="https://cdn.jsdelivr.net/gh/yaoper/image-bucket/20200413174456.png" alt></p>
+<p>上图是进程A使用SETNX加锁的过程，主要依托了它的 Key 不存在才能 Set 成功的特性，进程 A 拿到锁，在没有删除锁的 Key 时，进程 B 自然获取锁就失败了。使用 PX 30000 去设置一个超时时间是怕因为进程A的锁没等释放进程崩溃，导致系统中谁也拿不到锁。</p>
+<p>此外，我们还需要设置把 Value 值设置一个随机值，防止线程误删除锁对象。当解锁的时候，先获取 Value 判断是否是当前进程加的锁，再去删除。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/yaoper/image-bucket/20200413175019.png" alt></p>
+<p>伪代码如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">String uuid = xxxx;</span><br><span class="line">set Test uuid NX PX <span class="number">3000</span></span><br><span class="line"><span class="keyword">try</span>&#123;</span><br><span class="line"><span class="comment">// biz handle....</span></span><br><span class="line">&#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">    <span class="comment">// unlock</span></span><br><span class="line">    <span class="keyword">if</span>(uuid.equals(redisTool.get(<span class="string">'Test'</span>))&#123;</span><br><span class="line">        redisTool.del(<span class="string">'Test'</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>很明显的，在 Finally 代码块中，Get 和 Del 并非原子操作，会存在线程安全安全问题。删除锁的正确姿势之一，就是可以使用 Lua 脚本，通过 Redis 的 eval/evalsha 命令来运行：</p>
+<figure class="highlight lua"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">-- lua删除锁：</span></span><br><span class="line"><span class="comment">-- KEYS和ARGV分别是以集合方式传入的参数，对应上文的Test和uuid。</span></span><br><span class="line"><span class="comment">-- 如果对应的value等于传入的uuid。</span></span><br><span class="line"><span class="keyword">if</span> redis.call(<span class="string">'get'</span>, KEYS[<span class="number">1</span>]) == ARGV[<span class="number">1</span>] </span><br><span class="line">    <span class="keyword">then</span> </span><br><span class="line">    <span class="comment">-- 执行删除操作</span></span><br><span class="line">        <span class="keyword">return</span> redis.call(<span class="string">'del'</span>, KEYS[<span class="number">1</span>]) </span><br><span class="line">    <span class="keyword">else</span> </span><br><span class="line">    <span class="comment">-- 不成功，返回0</span></span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span> </span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>通过 Lua 脚本能保证原子性操作：</strong>  Lua的多个操作，执行也是一个命令（eval/evalsha）去执行的，一条命令没执行完，其他客户端是看不到的。</p>
+<p>这里简单解释下开篇的一个问题，谈论setnx的时候并不是谈论setnx命令，而是指 <code>set key value nx px</code>。因为 Redis 版本在 2.6.12 之前，Set 是不支持 NX 参数的，如果想要完成一个锁，那么需要两条命令：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">setnx Test uuid</span><br><span class="line">expire Test 30</span><br></pre></td></tr></table></figure>
+
+<p>因为setnx操作无法保证原子性，2013年 Redis 就发布了 2.6.12 版本，并且官网(Set 命令页)，也早早就说明了“SETNX，SETEX，PSETEX 可能在未来的版本中，会弃用并永久删除”。</p>
+<h3 id="2-Redisson"><a href="#2-Redisson" class="headerlink" title="2. Redisson"></a>2. Redisson</h3><p>Redisson 是 Java 的 Redis 客户端之一，提供了一些 API 方便操作 Redis。Redisson让Java程序员对多线程的操作仿佛又回到了JUC。比如 AtomicLong，直接用 RedissonAtomicLong 。Redisson 普通的锁实现源码主要是 RedissonLock。源码中加锁/释放锁操作都是用 Lua 脚本完成的，封装的非常完善，开箱即用。</p>
+<h3 id="3-RedLock"><a href="#3-RedLock" class="headerlink" title="3. RedLock"></a>3. RedLock</h3><p>RedLock的中文是直译过来的，就叫红锁。红锁并非是一个工具，而是 Redis 官方提出的一种分布式锁的算法。 Redisson 中，实现了 RedLock 版本的锁。也就是说除了 getLock 方法，还有 getRedLock 方法。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/yaoper/image-bucket/20200413181445.png" alt></p>
+<p>流程为：</p>
+<ul>
+<li>顺序向五个节点请求加锁</li>
+<li>根据一定的超时时间来推断是不是跳过该节点</li>
+<li>三个节点加锁成功并且花费时间小于锁的有效期</li>
+<li>认定加锁成功</li>
+</ul>
+
+            </div>
+          
+
+    
+      <footer class="post-footer">
+		
+		<div class="post-tags">
+		  
+			<a href="/tags/Redis/">Redis</a>
+		  
+		</div>
+		
+
+        
+        
+  <nav class="post-nav">
+    
+    
+      <a class="next" href="/2020/04/09/假性亲密关系读书笔记/">
+        <span class="next-text nav-default">假性亲密关系读书笔记</span>
+        <span class="prev-text nav-mobile">Next</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    
+  </nav>
+
+        
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+      </footer>
+    
+  </article>
+
+    </div>
+
+      </div>
+
+      <footer id="colophon"><span class="copyright-year">
+    
+        &copy;
+    
+        2014 -
+    
+    2020
+    <span class="footer-author">yaoper.</span>
+    <span class="power-by">
+        Powered by <a class="hexo-link" href="https://hexo.io/">Hexo</a> and <a class="theme-link" href="https://github.com/frostfan/hexo-theme-polarbear">Polar Bear</a>
+    </span>
+</span>
+
+      </footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div>
+    
+
+
+    
+
+
+
+
+  
+    <script type="text/javascript" src="/lib/jquery/jquery-3.1.1.min.js"></script>
+  
+
+  
+
+    <script type="text/javascript" src="/js/src/theme.js?v=1.1"></script>
+<script type="text/javascript" src="/js/src/bootstrap.js?v=1.1"></script>
+
+  </body>
+</html>
