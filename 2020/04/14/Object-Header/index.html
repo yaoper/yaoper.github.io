@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang>
+  <head><meta name="generator" content="Hexo 3.9.0">
+    
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1,minimum-scale=1,maximum-scale=1">
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+  <meta name="description" content="Object Header">
+
+
+
+
+  <meta name="keywords" content="Object,">
+
+
+
+
+
+  <link rel="alternate" href="/default" title="Illusory">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=1.1">
+
+
+
+<link rel="canonical" href="http://yaoper.github.io/2020/04/14/Object-Header/">
+
+
+<meta name="description" content="对于Java学习者来说，对象头是入门的知识点之一，也是深入了解Java语言必须要掌握的技能。我们先来了解一下Objective Header的组成部分：klass pointer和mark word。主要包括这些信息：  布局 GC状态 类型 同步状态 (identity) hash code 数组长度 (前提你得是数组)  identity hash code是指不经重写过由jvm计算的hash">
+<meta name="keywords" content="Object">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Object Header">
+<meta property="og:url" content="http://yaoper.github.io/2020/04/14/Object-Header/index.html">
+<meta property="og:site_name" content="Illusory">
+<meta property="og:description" content="对于Java学习者来说，对象头是入门的知识点之一，也是深入了解Java语言必须要掌握的技能。我们先来了解一下Objective Header的组成部分：klass pointer和mark word。主要包括这些信息：  布局 GC状态 类型 同步状态 (identity) hash code 数组长度 (前提你得是数组)  identity hash code是指不经重写过由jvm计算的hash">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/yaoper/image-bucket/20200406000549.jpg">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/yaoper/image-bucket/20200406001713.jpg">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/yaoper/image-bucket/QQ%E6%88%AA%E5%9B%BE20200406005258.png">
+<meta property="og:updated_time" content="2020-04-14T03:55:18.699Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Object Header">
+<meta name="twitter:description" content="对于Java学习者来说，对象头是入门的知识点之一，也是深入了解Java语言必须要掌握的技能。我们先来了解一下Objective Header的组成部分：klass pointer和mark word。主要包括这些信息：  布局 GC状态 类型 同步状态 (identity) hash code 数组长度 (前提你得是数组)  identity hash code是指不经重写过由jvm计算的hash">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/yaoper/image-bucket/20200406000549.jpg">
+
+
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=1.1">
+<link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+
+
+
+
+
+<script type="text/javascript">
+  var themeConfig = {
+    fancybox: {
+      enable: false
+    },
+  };
+</script>
+
+
+
+
+  
+
+
+
+    <title> Object Header - Illusory </title>
+  </head>
+
+  <body>
+    <div id="page">
+      <header id="masthead"><div class="site-header-inner">
+    <h1 class="site-title">
+        <a href="/." class="logo">Illusory</a>
+    </h1>
+
+    <nav id="nav-top">
+        
+            <ul id="menu-top" class="nav-top-items">
+                
+                    <li class="menu-item">
+                        <a href="/archives">
+                            
+                            
+                                Archives
+                            
+                        </a>
+                    </li>
+                
+                    <li class="menu-item">
+                        <a href="/about">
+                            
+                            
+                                About
+                            
+                        </a>
+                    </li>
+                
+            </ul>
+        
+  </nav>
+</div>
+
+      </header>
+      <div id="content">
+        
+    <div id="primary">
+        
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          Object Header
+        
+      </h1>
+
+      <time class="post-time">
+          Apr 14 2020
+      </time>
+    </header>
+
+
+
+    
+            <div class="post-content">
+            <p>对于Java学习者来说，对象头是入门的知识点之一，也是深入了解Java语言必须要掌握的技能。我们先来了解一下Objective Header的组成部分：klass pointer和mark word。主要包括这些信息：</p>
+<ul>
+<li>布局</li>
+<li>GC状态</li>
+<li>类型</li>
+<li>同步状态</li>
+<li>(identity) hash code</li>
+<li>数组长度 (<em>前提你得是数组</em>)</li>
+</ul>
+<p>identity hash code是指<strong>不经重写</strong>过由jvm计算的hashcode.</p>
+<h3 id="1-klass-pointer"><a href="#1-klass-pointer" class="headerlink" title="1. klass pointer"></a>1. klass pointer</h3><p>klass pointer一般占32个bit及4个字节，可以通过加上-XX:UserCompressedOops来关闭默认的指针压缩，那么它就占用64个bit。另外需要注意一个细节，如果堆大小超过32G后，如果不关闭指针压缩并不会报错，只是指针压缩会失效。</p>
+<p>klass pointer的存储内容是一个指针，指向了其类元数据的信息，JVM使用该指针来确定此类对象是哪个类的实例。我们举个例子，假设你有一个Person实例的引用，那么找到元数据就靠它了。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/yaoper/image-bucket/20200406000549.jpg" alt="klass pointer"></p>
+<h3 id="2-mark-word"><a href="#2-mark-word" class="headerlink" title="2. mark word"></a>2. mark word</h3><p>我们先来看一张图，这里是mark word里面比较重要的知识点。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/yaoper/image-bucket/20200406001713.jpg" alt="mark word"></p>
+<p>表格中的场景你可以理解为状态，一个对象在某一个时刻只能处于某一种状态，但是状态之间可能会切换。mark word在64位的虚拟机下，占用了64位大小即8个字节的空间。具体的内容包括：</p>
+<ul>
+<li><p>unused：未使用的 </p>
+</li>
+<li><p>hashcode：上文提到的identity hash code，本文出现的hashcode都是指identity hash code</p>
+</li>
+<li><p>thread: 偏向锁记录的线程标识</p>
+</li>
+<li><p>epoch: 验证偏向锁有效性的时间戳</p>
+</li>
+<li><p>age：分代年龄</p>
+</li>
+<li><p>biased_lock 偏向锁标志</p>
+</li>
+<li><p>lock 锁标志</p>
+</li>
+<li><p>pointer_to_lock_record 轻量锁lock record指针</p>
+</li>
+<li><p>pointer_to_heavyweight_monitor 重量锁monitor指针</p>
+<p>cms_free单从名字上看应该和cms垃圾回收器有关系，cms是一个标记-清理的回收器，内存碎片问题是将不可达对象维护在一个叫做free list的列表中。大胆猜测这个cms_free可能有可能是标记对象是否在free list中。</p>
+</li>
+</ul>
+<p>了解以上关于mark word的知识以后，之前的一些困惑会得到解决。比如：</p>
+<ol>
+<li>为什么晋升到老年代的年龄设置(XX:MaxTenuringThreshold)不能超过<strong>15</strong>？因为就给了age四个bit空间，最大就是1111(二进制)也就是15，多了没地方存。</li>
+<li>为什么你的<strong>synchronized</strong>锁住的对象，没有传说中的偏向锁优化？因为hashcode并不是对象实例化完就计算好的，是调用计算出来放在mark word里的。 调用过hashcode方法(或者隐式调用：存到hashset里，map的key，调用了默认未经重写的toString()方法等等)，把“坑位”占了，偏向锁想存的线程id没地方存了，自然就直接是轻量级锁了。</li>
+</ol>
+<h3 id="3-实操查看对象头信息"><a href="#3-实操查看对象头信息" class="headerlink" title="3. 实操查看对象头信息"></a>3. 实操查看对象头信息</h3><p>我们可以借助jol工具，openjdk提供的分析对象大小、布局等信息的工具。最简单的方法是maven中引入相关的包即可。</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.openjdk.jol<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>jol-core<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>0.10<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>下面我们看一下数组对象布局</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> org.openjdk.jol.info.ClassLayout;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MarkWord</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span>[] intArr = <span class="keyword">new</span> <span class="keyword">int</span>[<span class="number">3306</span>];</span><br><span class="line">        System.err.println(ClassLayout.parseInstance(intArr).toPrintable());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>运行结果打印信息</p>
+<p><img src="https://cdn.jsdelivr.net/gh/yaoper/image-bucket/QQ%E6%88%AA%E5%9B%BE20200406005258.png" alt></p>
+<p> 红色圈内打印的是mark word信息，绿色圈内是klass pointer信息，蓝色圈内是数组长度。打印出来的内容刚好印证了上文所说的三个部分。右边分布用三种进制（依次为16进制，2进制，10进制）展示每一行的value值。</p>
+
+            </div>
+          
+
+    
+      <footer class="post-footer">
+		
+		<div class="post-tags">
+		  
+			<a href="/tags/Object/">Object</a>
+		  
+		</div>
+		
+
+        
+        
+  <nav class="post-nav">
+    
+      <a class="prev" href="/2020/04/14/GC基础知识/">
+        <i class="iconfont icon-left"></i>
+        <span class="prev-text nav-default">GC基础知识</span>
+        <span class="prev-text nav-mobile">Prev</span>
+      </a>
+    
+    
+      <a class="next" href="/2020/04/14/Redis-Clsuter/">
+        <span class="next-text nav-default">Redis Clsuter</span>
+        <span class="prev-text nav-mobile">Next</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    
+  </nav>
+
+        
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+      </footer>
+    
+  </article>
+
+    </div>
+
+      </div>
+
+      <footer id="colophon"><span class="copyright-year">
+    
+        &copy;
+    
+        2014 -
+    
+    2020
+    <span class="footer-author">yaoper.</span>
+    <span class="power-by">
+        Powered by <a class="hexo-link" href="https://hexo.io/">Hexo</a> and <a class="theme-link" href="https://github.com/frostfan/hexo-theme-polarbear">Polar Bear</a>
+    </span>
+</span>
+
+      </footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div>
+    
+
+
+    
+
+
+
+
+  
+    <script type="text/javascript" src="/lib/jquery/jquery-3.1.1.min.js"></script>
+  
+
+  
+
+    <script type="text/javascript" src="/js/src/theme.js?v=1.1"></script>
+<script type="text/javascript" src="/js/src/bootstrap.js?v=1.1"></script>
+
+  </body>
+</html>

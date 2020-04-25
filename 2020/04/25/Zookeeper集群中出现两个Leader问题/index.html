@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang>
+  <head><meta name="generator" content="Hexo 3.9.0">
+    
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1,minimum-scale=1,maximum-scale=1">
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+  <meta name="description" content="Zookeeper集群中出现两个Leader问题">
+
+
+
+
+  <meta name="keywords" content="Zookeeper,">
+
+
+
+
+
+  <link rel="alternate" href="/default" title="Illusory">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=1.1">
+
+
+
+<link rel="canonical" href="http://yaoper.github.io/2020/04/25/Zookeeper集群中出现两个Leader问题/">
+
+
+<meta name="description" content="1. 问题缘由我们的生产环境有一个ZooKeeper集群，发现 5 节点的集群存在两个 leader 节点的情况。集群的服务器信息大致如下：    IP地址 myid 服务端口 角色    192.178.174.92 1 2181 Follower   192.178.174.93 2 2181 Follower   192.179.168.17 3 2181 Follower   192.17">
+<meta name="keywords" content="Zookeeper">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Zookeeper集群中出现两个Leader问题">
+<meta property="og:url" content="http://yaoper.github.io/2020/04/25/Zookeeper集群中出现两个Leader问题/index.html">
+<meta property="og:site_name" content="Illusory">
+<meta property="og:description" content="1. 问题缘由我们的生产环境有一个ZooKeeper集群，发现 5 节点的集群存在两个 leader 节点的情况。集群的服务器信息大致如下：    IP地址 myid 服务端口 角色    192.178.174.92 1 2181 Follower   192.178.174.93 2 2181 Follower   192.179.168.17 3 2181 Follower   192.17">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/yaoper/image-bucket/b9839da02213de4238a57b1427d0f821.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/yaoper/image-bucket/acb4ca821c5a175a0422e623c6ecba5c.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/yaoper/image-bucket/d1fd466f85d5105852eff896cf7938eb.png">
+<meta property="og:updated_time" content="2020-04-25T04:09:22.329Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Zookeeper集群中出现两个Leader问题">
+<meta name="twitter:description" content="1. 问题缘由我们的生产环境有一个ZooKeeper集群，发现 5 节点的集群存在两个 leader 节点的情况。集群的服务器信息大致如下：    IP地址 myid 服务端口 角色    192.178.174.92 1 2181 Follower   192.178.174.93 2 2181 Follower   192.179.168.17 3 2181 Follower   192.17">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/yaoper/image-bucket/b9839da02213de4238a57b1427d0f821.png">
+
+
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=1.1">
+<link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+
+
+
+
+
+<script type="text/javascript">
+  var themeConfig = {
+    fancybox: {
+      enable: false
+    },
+  };
+</script>
+
+
+
+
+  
+
+
+
+    <title> Zookeeper集群中出现两个Leader问题 - Illusory </title>
+  </head>
+
+  <body>
+    <div id="page">
+      <header id="masthead"><div class="site-header-inner">
+    <h1 class="site-title">
+        <a href="/." class="logo">Illusory</a>
+    </h1>
+
+    <nav id="nav-top">
+        
+            <ul id="menu-top" class="nav-top-items">
+                
+                    <li class="menu-item">
+                        <a href="/archives">
+                            
+                            
+                                Archives
+                            
+                        </a>
+                    </li>
+                
+                    <li class="menu-item">
+                        <a href="/about">
+                            
+                            
+                                About
+                            
+                        </a>
+                    </li>
+                
+            </ul>
+        
+  </nav>
+</div>
+
+      </header>
+      <div id="content">
+        
+    <div id="primary">
+        
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          Zookeeper集群中出现两个Leader问题
+        
+      </h1>
+
+      <time class="post-time">
+          Apr 25 2020
+      </time>
+    </header>
+
+
+
+    
+            <div class="post-content">
+            <h3 id="1-问题缘由"><a href="#1-问题缘由" class="headerlink" title="1. 问题缘由"></a>1. 问题缘由</h3><p>我们的生产环境有一个ZooKeeper集群，发现 5 节点的集群存在两个 leader 节点的情况。集群的服务器信息大致如下：</p>
+<table>
+<thead>
+<tr>
+<th>IP地址</th>
+<th>myid</th>
+<th>服务端口</th>
+<th>角色</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>192.178.174.92</td>
+<td>1</td>
+<td>2181</td>
+<td>Follower</td>
+</tr>
+<tr>
+<td>192.178.174.93</td>
+<td>2</td>
+<td>2181</td>
+<td>Follower</td>
+</tr>
+<tr>
+<td>192.179.168.17</td>
+<td>3</td>
+<td>2181</td>
+<td>Follower</td>
+</tr>
+<tr>
+<td>192.176.238.219</td>
+<td>4</td>
+<td>2181</td>
+<td>Leader</td>
+</tr>
+<tr>
+<td>192.176.238.220</td>
+<td>5</td>
+<td>2181</td>
+<td>Leader</td>
+</tr>
+</tbody></table>
+<p>正常情况下一个 ZooKeeper 集群只能有一个 leader 节点，若干个 follower 节点。如下图：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/yaoper/image-bucket/b9839da02213de4238a57b1427d0f821.png" alt="ZK Leader选举"></p>
+<p>但是该集群在两个 leader 节点的情况下，各节点依然状态正常，并能够正常提供服务，确实有点奇怪。为了能够说明清楚该问题，我们先了解下 ZooKeeper 集群的选举原则。</p>
+<h3 id="2-ZooKeeper集群选举原则"><a href="#2-ZooKeeper集群选举原则" class="headerlink" title="2. ZooKeeper集群选举原则"></a>2. ZooKeeper集群选举原则</h3><p>ZooKeeper 集群的 leader 选举三原则：</p>
+<ul>
+<li>集群中只有超过半数以上的节点启动，集群才能正常工作。</li>
+<li>集群正常工作前，myid小的节点给myid大的节点投票，直到选举出leader。</li>
+<li>选举出leader之后，之前的节点状态由Looking变为Following，以后该节点的角色就是Follower。</li>
+</ul>
+<p>假设一个 5 节点的集群，myid 分别是 1、2、3、4、5，依序启动：</p>
+<p><strong>1）节点 1 启动</strong></p>
+<ul>
+<li>各节点状态（1：启动；2：关停；3：关停；4：关停；5：关停）</li>
+<li>选取状态（1: LOOKING；2：-；3：-；4：-；5：-）</li>
+<li>集群状态（节点未满半数：失败）</li>
+</ul>
+<p><strong>2）节点 2 启动</strong></p>
+<ul>
+<li>各节点状态（1：启动；2：启动；3：关停；4：关停；5：关停）</li>
+<li>选取状态（1: LOOKING；2：LOOKING；3：-；4：-；5：-）</li>
+<li>集群状态（节点未满半数：失败）</li>
+</ul>
+<p><strong>3）节点 3 启动</strong></p>
+<ul>
+<li>各节点状态（1：启动；2：启动；3：启动；4：关停；5：关停）</li>
+<li>选取状态（1: FOLLOWING；2：FOLLOWING；3：LEADING；4：-；5：-）</li>
+<li>集群状态（节点过半数：成功）</li>
+</ul>
+<p><strong>4）节点 4 启动</strong></p>
+<ul>
+<li>各节点状态（1：启动；2：启动；3：启动；4：启动；5：关停）</li>
+<li>选取状态（1: FOLLOWING；2：FOLLOWING；3：LEADING；4：FOLLOWING；5：-）</li>
+<li>集群状态（节点过半数：成功）</li>
+</ul>
+<p><strong>5）节点 5 启动</strong></p>
+<ul>
+<li>各节点状态（1：启动；2：启动；3：启动；4：启动；5：启动）</li>
+<li>选取状态（1: FOLLOWING；2：FOLLOWING；3：LEADING；4：FOLLOWING；5：FOLLOWING）</li>
+<li>集群状态（节点过半数：成功）</li>
+</ul>
+<h3 id="3-问题分析"><a href="#3-问题分析" class="headerlink" title="3. 问题分析"></a>3. 问题分析</h3><p>查看 192.176.238.219 的日志发现 4 号节点成为 LEADING 状态时，集群中有 3 个节点：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[myid:4] - INFO  [QuorumPeer[myid=4]/0:0:0:0:0:0:0:0:2181:Leader@946] - Have quorum of supporters, sids: [ 1,2,4 ];</span><br></pre></td></tr></table></figure>
+
+<p>满足节点数过半的原则，集群正常服务，但是查看节点内容，发现节点 1、2 的内容和 4 不一致，反而是节点 1、2、3、5 内容是一致的。</p>
+<p>查看节点 4 的内容：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/yaoper/image-bucket/acb4ca821c5a175a0422e623c6ecba5c.png" alt></p>
+<p>查看节点 5 内容：</p>
+<p><img src="https://cdn.jsdelivr.net/gh/yaoper/image-bucket/d1fd466f85d5105852eff896cf7938eb.png" alt></p>
+<p>通过内容排查可以看出节点 1、2、3、5 内容一致，可能属于同一集群，那么节点 4 为什么和其它节点内容不一致呢？继续排查节点的配置信息，发现节点 4 配置的内部通讯端口：选举端口与其它节点配置的不一致！</p>
+<p>节点 4 配置情况：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">server.1=192.178.174.92:2888:3888</span><br><span class="line">server.2=192.178.174.93:2888:3888</span><br><span class="line">server.3=192.178.168.17:2888:3888</span><br><span class="line">server.4=192.176.238.219:2888:3888</span><br><span class="line">server.5=192.176.174.220:2888:3888</span><br></pre></td></tr></table></figure>
+
+<p>节点1、2、3、5的配置情况：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">server.1=192.178.174.92:2889:3889</span><br><span class="line">server.2=192.178.174.93:2889:3889</span><br><span class="line">server.3=192.178.168.17:2889:3889</span><br><span class="line">server.4=192.176.238.219:2889:3889</span><br><span class="line">server.5=192.176.174.220:2889:3889</span><br></pre></td></tr></table></figure>
+
+<p>通过配置排查可以确认 1、2、3、5 是属于同一个集群，那 4 节点又是哪个集群呢？继续排查发现，在同一批主机下面部署了另一个 ZooKeeper 实例，开放的服务端口是 2182，而其配置的内部通讯端口：选举端口正是 2888:3888。</p>
+<h3 id="4-解决方案"><a href="#4-解决方案" class="headerlink" title="4. 解决方案"></a>4. 解决方案</h3><p>由节点1、2、4组成的集群有问题，需要将该集群的数据导出并根据业务类型进行区分，待集群恢复正常后，再将这部分数据依据业务归属分别重新写入到对应的集群。</p>
+<p>集群恢复步骤：</p>
+<p>1）为防止数据丢失，备份集群 1、集群 2、集群 3 的数据（snapshot 和 log）。</p>
+<p>2）提取集群 2 的数据，并依据业务类型将数据分类，并准备重新写入。</p>
+<p>3）关停集群 2 节点 4（192.176.238.219:2181）实例，集群 2 剩余 2 个节点，不满足半数要求，集群重新进行选举，由于集群 2 的 1、2 两个节点的通讯、选举端口和集群 3 配置一致，并且集群 3 已经选举了节点 5 为 leader，那么集群 2 的节点 1、2 将加入到集群 3 成为 follower，形成 5 节点的集群。</p>
+<p>4）修改集群 2 节点 4（192.176.238.219:2181）的内部通讯端口: 选举端口为 2889:3889</p>
+<p>5）启动 192.176.238.219:2181 实例，由于该实例的通讯、选举端口和集群 1 配置一致，并且集群 1 已经选举了节点 5 为 leader， 该实例将加入集群 1 成为 follower，形成 5 节点的集群。</p>
+<p>6）分别将原集群 2 的数据分类后重新写入到集群 1 和集群 3。</p>
+<p>7）检查集群状态，检查集群数据信息，并进行业务测试。</p>
+
+            </div>
+          
+
+    
+      <footer class="post-footer">
+		
+		<div class="post-tags">
+		  
+			<a href="/tags/Zookeeper/">Zookeeper</a>
+		  
+		</div>
+		
+
+        
+        
+  <nav class="post-nav">
+    
+      <a class="prev" href="/2020/04/25/TOP-K-算法分析/">
+        <i class="iconfont icon-left"></i>
+        <span class="prev-text nav-default">TOP K 算法分析</span>
+        <span class="prev-text nav-mobile">Prev</span>
+      </a>
+    
+    
+      <a class="next" href="/2020/04/24/Hash冲突解决方法/">
+        <span class="next-text nav-default">Hash冲突解决方法</span>
+        <span class="prev-text nav-mobile">Next</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    
+  </nav>
+
+        
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+      </footer>
+    
+  </article>
+
+    </div>
+
+      </div>
+
+      <footer id="colophon"><span class="copyright-year">
+    
+        &copy;
+    
+        2014 -
+    
+    2020
+    <span class="footer-author">yaoper.</span>
+    <span class="power-by">
+        Powered by <a class="hexo-link" href="https://hexo.io/">Hexo</a> and <a class="theme-link" href="https://github.com/frostfan/hexo-theme-polarbear">Polar Bear</a>
+    </span>
+</span>
+
+      </footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div>
+    
+
+
+    
+
+
+
+
+  
+    <script type="text/javascript" src="/lib/jquery/jquery-3.1.1.min.js"></script>
+  
+
+  
+
+    <script type="text/javascript" src="/js/src/theme.js?v=1.1"></script>
+<script type="text/javascript" src="/js/src/bootstrap.js?v=1.1"></script>
+
+  </body>
+</html>

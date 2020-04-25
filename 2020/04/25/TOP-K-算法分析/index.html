@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang>
+  <head><meta name="generator" content="Hexo 3.9.0">
+    
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1,minimum-scale=1,maximum-scale=1">
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+  <meta name="description" content="TOP K 算法分析">
+
+
+
+
+  <meta name="keywords" content="算法,TOPK,">
+
+
+
+
+
+  <link rel="alternate" href="/default" title="Illusory">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=1.1">
+
+
+
+<link rel="canonical" href="http://yaoper.github.io/2020/04/25/TOP-K-算法分析/">
+
+
+<meta name="description" content="1. 什么是TOP K问题？简单来说就是在一堆数据里面找到前 K 大（当然也可以是前 K 小）的数。这个问题也是十分经典的算法问题，不论是面试中还是实际开发中，都非常典型。 2. TOP K 解法从arr[1, 12]={5,3,7,1,8,2,9,4,7,2,6,6} 这n=12个数中，找出最大的k=5个。 2.2.1 排序解法2.2.2 部分排序2.2.3 小（大）顶堆2.2.4 随机选择算法">
+<meta name="keywords" content="算法,TOPK">
+<meta property="og:type" content="article">
+<meta property="og:title" content="TOP K 算法分析">
+<meta property="og:url" content="http://yaoper.github.io/2020/04/25/TOP-K-算法分析/index.html">
+<meta property="og:site_name" content="Illusory">
+<meta property="og:description" content="1. 什么是TOP K问题？简单来说就是在一堆数据里面找到前 K 大（当然也可以是前 K 小）的数。这个问题也是十分经典的算法问题，不论是面试中还是实际开发中，都非常典型。 2. TOP K 解法从arr[1, 12]={5,3,7,1,8,2,9,4,7,2,6,6} 这n=12个数中，找出最大的k=5个。 2.2.1 排序解法2.2.2 部分排序2.2.3 小（大）顶堆2.2.4 随机选择算法">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2020-04-25T10:20:13.740Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="TOP K 算法分析">
+<meta name="twitter:description" content="1. 什么是TOP K问题？简单来说就是在一堆数据里面找到前 K 大（当然也可以是前 K 小）的数。这个问题也是十分经典的算法问题，不论是面试中还是实际开发中，都非常典型。 2. TOP K 解法从arr[1, 12]={5,3,7,1,8,2,9,4,7,2,6,6} 这n=12个数中，找出最大的k=5个。 2.2.1 排序解法2.2.2 部分排序2.2.3 小（大）顶堆2.2.4 随机选择算法">
+
+
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=1.1">
+<link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+
+
+
+
+
+<script type="text/javascript">
+  var themeConfig = {
+    fancybox: {
+      enable: false
+    },
+  };
+</script>
+
+
+
+
+  
+
+
+
+    <title> TOP K 算法分析 - Illusory </title>
+  </head>
+
+  <body>
+    <div id="page">
+      <header id="masthead"><div class="site-header-inner">
+    <h1 class="site-title">
+        <a href="/." class="logo">Illusory</a>
+    </h1>
+
+    <nav id="nav-top">
+        
+            <ul id="menu-top" class="nav-top-items">
+                
+                    <li class="menu-item">
+                        <a href="/archives">
+                            
+                            
+                                Archives
+                            
+                        </a>
+                    </li>
+                
+                    <li class="menu-item">
+                        <a href="/about">
+                            
+                            
+                                About
+                            
+                        </a>
+                    </li>
+                
+            </ul>
+        
+  </nav>
+</div>
+
+      </header>
+      <div id="content">
+        
+    <div id="primary">
+        
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          TOP K 算法分析
+        
+      </h1>
+
+      <time class="post-time">
+          Apr 25 2020
+      </time>
+    </header>
+
+
+
+    
+            <div class="post-content">
+            <h3 id="1-什么是TOP-K问题？"><a href="#1-什么是TOP-K问题？" class="headerlink" title="1. 什么是TOP K问题？"></a>1. 什么是TOP K问题？</h3><p>简单来说就是在一堆数据里面找到前 K 大（当然也可以是前 K 小）的数。这个问题也是十分经典的算法问题，不论是面试中还是实际开发中，都非常典型。</p>
+<h3 id="2-TOP-K-解法"><a href="#2-TOP-K-解法" class="headerlink" title="2. TOP K 解法"></a>2. TOP K 解法</h3><p>从arr[1, 12]={5,3,7,1,8,2,9,4,7,2,6,6} 这n=12个数中，找出最大的k=5个。</p>
+<h4 id="2-2-1-排序解法"><a href="#2-2-1-排序解法" class="headerlink" title="2.2.1 排序解法"></a>2.2.1 排序解法</h4><h4 id="2-2-2-部分排序"><a href="#2-2-2-部分排序" class="headerlink" title="2.2.2 部分排序"></a>2.2.2 部分排序</h4><h4 id="2-2-3-小（大）顶堆"><a href="#2-2-3-小（大）顶堆" class="headerlink" title="2.2.3 小（大）顶堆"></a>2.2.3 小（大）顶堆</h4><h4 id="2-2-4-随机选择算法"><a href="#2-2-4-随机选择算法" class="headerlink" title="2.2.4 随机选择算法"></a>2.2.4 随机选择算法</h4>
+            </div>
+          
+
+    
+      <footer class="post-footer">
+		
+		<div class="post-tags">
+		  
+			<a href="/tags/算法/">算法</a>
+		  
+			<a href="/tags/TOPK/">TOPK</a>
+		  
+		</div>
+		
+
+        
+        
+  <nav class="post-nav">
+    
+    
+      <a class="next" href="/2020/04/25/Zookeeper集群中出现两个Leader问题/">
+        <span class="next-text nav-default">Zookeeper集群中出现两个Leader问题</span>
+        <span class="prev-text nav-mobile">Next</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    
+  </nav>
+
+        
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+      </footer>
+    
+  </article>
+
+    </div>
+
+      </div>
+
+      <footer id="colophon"><span class="copyright-year">
+    
+        &copy;
+    
+        2014 -
+    
+    2020
+    <span class="footer-author">yaoper.</span>
+    <span class="power-by">
+        Powered by <a class="hexo-link" href="https://hexo.io/">Hexo</a> and <a class="theme-link" href="https://github.com/frostfan/hexo-theme-polarbear">Polar Bear</a>
+    </span>
+</span>
+
+      </footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div>
+    
+
+
+    
+
+
+
+
+  
+    <script type="text/javascript" src="/lib/jquery/jquery-3.1.1.min.js"></script>
+  
+
+  
+
+    <script type="text/javascript" src="/js/src/theme.js?v=1.1"></script>
+<script type="text/javascript" src="/js/src/bootstrap.js?v=1.1"></script>
+
+  </body>
+</html>

@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang>
+  <head><meta name="generator" content="Hexo 3.9.0">
+    
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1,minimum-scale=1,maximum-scale=1">
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+  <meta name="description" content="Hash冲突解决方法">
+
+
+
+
+  <meta name="keywords" content="Hash,HashMap,">
+
+
+
+
+
+  <link rel="alternate" href="/default" title="Illusory">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=1.1">
+
+
+
+<link rel="canonical" href="http://yaoper.github.io/2020/04/24/Hash冲突解决方法/">
+
+
+<meta name="description" content="1. 什么是Hash冲突由于哈希算法被计算的数据是无限的，而计算后的结果范围有限，因此总会存在不同的数据经过计算后得到的值相同，这就是哈希冲突。 2. 冲突解决办法2.1 拉链法拉链法的思路是将哈希值相同的元素构成一个同义词的单链表，并将单链表的头指针存放在哈希表的第i个单元中，查找、插入和删除主要在同义词链表中进行。拉链法适用于经常进行插入和删除的情况。 如下一组数字,(32、40、36、53、">
+<meta name="keywords" content="Hash,HashMap">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Hash冲突解决方法">
+<meta property="og:url" content="http://yaoper.github.io/2020/04/24/Hash冲突解决方法/index.html">
+<meta property="og:site_name" content="Illusory">
+<meta property="og:description" content="1. 什么是Hash冲突由于哈希算法被计算的数据是无限的，而计算后的结果范围有限，因此总会存在不同的数据经过计算后得到的值相同，这就是哈希冲突。 2. 冲突解决办法2.1 拉链法拉链法的思路是将哈希值相同的元素构成一个同义词的单链表，并将单链表的头指针存放在哈希表的第i个单元中，查找、插入和删除主要在同义词链表中进行。拉链法适用于经常进行插入和删除的情况。 如下一组数字,(32、40、36、53、">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/yaoper/image-bucket/20200425143434.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/yaoper/image-bucket/20200425143916.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/yaoper/image-bucket/20200425144844.png">
+<meta property="og:updated_time" content="2020-04-25T10:10:09.878Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Hash冲突解决方法">
+<meta name="twitter:description" content="1. 什么是Hash冲突由于哈希算法被计算的数据是无限的，而计算后的结果范围有限，因此总会存在不同的数据经过计算后得到的值相同，这就是哈希冲突。 2. 冲突解决办法2.1 拉链法拉链法的思路是将哈希值相同的元素构成一个同义词的单链表，并将单链表的头指针存放在哈希表的第i个单元中，查找、插入和删除主要在同义词链表中进行。拉链法适用于经常进行插入和删除的情况。 如下一组数字,(32、40、36、53、">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/yaoper/image-bucket/20200425143434.png">
+
+
+<link rel="stylesheet" type="text/css" href="/css/style.css?v=1.1">
+<link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+
+
+
+
+
+<script type="text/javascript">
+  var themeConfig = {
+    fancybox: {
+      enable: false
+    },
+  };
+</script>
+
+
+
+
+  
+
+
+
+    <title> Hash冲突解决方法 - Illusory </title>
+  </head>
+
+  <body>
+    <div id="page">
+      <header id="masthead"><div class="site-header-inner">
+    <h1 class="site-title">
+        <a href="/." class="logo">Illusory</a>
+    </h1>
+
+    <nav id="nav-top">
+        
+            <ul id="menu-top" class="nav-top-items">
+                
+                    <li class="menu-item">
+                        <a href="/archives">
+                            
+                            
+                                Archives
+                            
+                        </a>
+                    </li>
+                
+                    <li class="menu-item">
+                        <a href="/about">
+                            
+                            
+                                About
+                            
+                        </a>
+                    </li>
+                
+            </ul>
+        
+  </nav>
+</div>
+
+      </header>
+      <div id="content">
+        
+    <div id="primary">
+        
+  <article class="post">
+    <header class="post-header">
+      <h1 class="post-title">
+        
+          Hash冲突解决方法
+        
+      </h1>
+
+      <time class="post-time">
+          Apr 24 2020
+      </time>
+    </header>
+
+
+
+    
+            <div class="post-content">
+            <h3 id="1-什么是Hash冲突"><a href="#1-什么是Hash冲突" class="headerlink" title="1. 什么是Hash冲突"></a>1. 什么是Hash冲突</h3><p>由于哈希算法被计算的数据是无限的，而计算后的结果范围有限，因此总会存在不同的数据经过计算后得到的值相同，这就是哈希冲突。</p>
+<h3 id="2-冲突解决办法"><a href="#2-冲突解决办法" class="headerlink" title="2. 冲突解决办法"></a>2. 冲突解决办法</h3><h4 id="2-1-拉链法"><a href="#2-1-拉链法" class="headerlink" title="2.1 拉链法"></a>2.1 拉链法</h4><p>拉链法的思路是将哈希值相同的元素构成一个同义词的单链表，并将单链表的头指针存放在哈希表的第i个单元中，查找、插入和删除主要在同义词链表中进行。拉链法适用于经常进行插入和删除的情况。<br> 如下一组数字,(32、40、36、53、16、46、71、27、42、24、49、64)哈希表长度为13，哈希函数为H(key)=key%13,则链表法结果如下：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">0       </span><br><span class="line">1  -&gt; 40 -&gt; 27 -&gt; 53 </span><br><span class="line">2</span><br><span class="line">3  -&gt; 16 -&gt; 42</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6  -&gt; 32 -&gt; 71</span><br><span class="line">7  -&gt; 46</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10 -&gt; 36 -&gt; 49</span><br><span class="line">11 -&gt; 24</span><br><span class="line">12 -&gt; 64</span><br></pre></td></tr></table></figure>
+
+<p>在Java中，拉链法也是HashMap解决哈希冲突的方法之一，jdk1.7完全采用单链表来存储同义词，jdk1.8则采用了一种混合模式，对于链表长度大于8的，会转换为红黑树存储。</p>
+<p><strong>时间复杂度</strong></p>
+<p>拉链法因为加入了链表，所以在查找删除的时候时间复杂度也退化为了O（N），但是如果在哈希函数给的合理，并且哈希表的容量足够的时候，拉链法的时间复杂度肯定是远远小于O（N）。</p>
+<p><strong>优点：</strong><br>解决了哈希表堆聚现象，减小了平均查找长度。删除结点相对于线性探测更加易于实现，只需要找到相应结点再删除就可以了，而开放地址法中不能这样做，因为在哈希表中置空数组中的结点会导致后面的数据无法访问。</p>
+<p><strong>缺陷：</strong><br>当数据量比较小的时候，开放地址法不用开辟空间，如果相对于拉链法节省的结点空间用来扩大散列表则可以使装填因子（结点数与表长的比值），这样也就减少了开放地址法的冲突，提高平均查找速度。</p>
+<h4 id="2-2-开放地址法"><a href="#2-2-开放地址法" class="headerlink" title="2.2 开放地址法"></a>2.2 开放地址法</h4><p>所谓开放地址法就是发生冲突时在散列表（也就是数组里）里去寻找合适的位置存取对应的元素。有三种方式在散列表里寻找合适的位置。</p>
+<h5 id="2-2-1-线性探测"><a href="#2-2-1-线性探测" class="headerlink" title="2.2.1 线性探测"></a>2.2.1 线性探测</h5><p>当前位置冲突的话，就去寻找相邻的下一个位置，这种方式我们称之为线性探测。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/yaoper/image-bucket/20200425143434.png" alt="线性探测法"></p>
+<p>这样会带来一个问题，就是当键值对越来越多的时候，在哈希表上会形成连续的键值对。这样的话，再次插入新的元素的时候，任意一个落入这个区间的元素都要一直探测到区间末尾。这样就会导致落在区间内的关键字Key要进行多次探测才能找到合适的位置，并且还会继续增大这个连续区间，使探测时间变得更长，这样的现象被称为“一次聚集（primary clustering）”。</p>
+<h5 id="2-2-2-平方探测"><a href="#2-2-2-平方探测" class="headerlink" title="2.2.2 平方探测"></a>2.2.2 平方探测</h5><p>既然线性探测会是顺序的去探测，那么也可以跳跃着去探测，这就是平方探测。平方探测按照 i^2 的规律来跳跃探测，这样就不会形成连续的键值对，避免一次聚集。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/yaoper/image-bucket/20200425143916.png" alt="平方探测"></p>
+<p>平方探测对于许多落在同一位置的关键字而言，越是后面插入的元素，探测的时间就越长。由于对于落在同一个位置的关键字我们采取了一个依赖 i 的函数（i或者i^2）来进行探测，它不会因为关键字的不同或其他因素而改变探测的路径。这种现象被称作“二次聚集(secondary clustering)”。</p>
+<h5 id="2-2-3-伪随机探测"><a href="#2-2-3-伪随机探测" class="headerlink" title="2.2.3 伪随机探测"></a>2.2.3 伪随机探测</h5><p>随机探测的基本思想是：将线性探测的步长从常数改为随机数，即令： hash ＝ (hash ＋ RN) % m ，其中 RN 是一个随机数。在实际程序中应预先用随机数发生器产生一个随机序列，将此序列作为依次探测的步长。这样就能使不同的关键字具有不同的探测次序，从而可以避 免或减少堆聚。基于与线性探测法相同的理由，在线性补偿探测法和随机探测法中，删除一个记录后也要打上删除标记。</p>
+<h4 id="2-3-再哈希法"><a href="#2-3-再哈希法" class="headerlink" title="2.3 再哈希法"></a>2.3 再哈希法</h4><p>我们可以再弄另外一个Hash函数，对落在同一个位置的关键字进行再次的Hash,探测的时候就用依赖这个Hash值去探测。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/yaoper/image-bucket/20200425144844.png" alt="双重哈希"></p>
+<p>由于Hash2函数不同于Hash1,所以两个不同的关键字Hash1值和Hash2值同时相同的概率就会变得非常低。这样就避免了二次聚集，但同时也付出了计算另一个散列函数Hash2的代价。</p>
+<h3 id="2-4-建立公共溢出区域法"><a href="#2-4-建立公共溢出区域法" class="headerlink" title="2.4 建立公共溢出区域法"></a>2.4 建立公共溢出区域法</h3><p>基本思想是：将哈希表分为基本表和溢出表两部分，凡是和基本表发生冲突的元素，一律填入溢出表。</p>
+
+            </div>
+          
+
+    
+      <footer class="post-footer">
+		
+		<div class="post-tags">
+		  
+			<a href="/tags/Hash/">Hash</a>
+		  
+			<a href="/tags/HashMap/">HashMap</a>
+		  
+		</div>
+		
+
+        
+        
+  <nav class="post-nav">
+    
+      <a class="prev" href="/2020/04/25/Zookeeper集群中出现两个Leader问题/">
+        <i class="iconfont icon-left"></i>
+        <span class="prev-text nav-default">Zookeeper集群中出现两个Leader问题</span>
+        <span class="prev-text nav-mobile">Prev</span>
+      </a>
+    
+    
+      <a class="next" href="/2020/04/23/如何优雅的使用闲小蜜/">
+        <span class="next-text nav-default">如何优雅的使用闲小蜜</span>
+        <span class="prev-text nav-mobile">Next</span>
+        <i class="iconfont icon-right"></i>
+      </a>
+    
+  </nav>
+
+        
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+      </footer>
+    
+  </article>
+
+    </div>
+
+      </div>
+
+      <footer id="colophon"><span class="copyright-year">
+    
+        &copy;
+    
+        2014 -
+    
+    2020
+    <span class="footer-author">yaoper.</span>
+    <span class="power-by">
+        Powered by <a class="hexo-link" href="https://hexo.io/">Hexo</a> and <a class="theme-link" href="https://github.com/frostfan/hexo-theme-polarbear">Polar Bear</a>
+    </span>
+</span>
+
+      </footer>
+
+      <div class="back-to-top" id="back-to-top">
+        <i class="iconfont icon-up"></i>
+      </div>
+    </div>
+    
+
+
+    
+
+
+
+
+  
+    <script type="text/javascript" src="/lib/jquery/jquery-3.1.1.min.js"></script>
+  
+
+  
+
+    <script type="text/javascript" src="/js/src/theme.js?v=1.1"></script>
+<script type="text/javascript" src="/js/src/bootstrap.js?v=1.1"></script>
+
+  </body>
+</html>
